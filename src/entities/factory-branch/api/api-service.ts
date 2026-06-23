@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   FactoryBranchCreateRq,
+  FactoryBranchDuplicateRq,
   FactoryBranchExportSqlRq,
   FactoryBranchFilters,
   FactoryBranchUpdateRq,
@@ -75,6 +76,15 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
+  function duplicate({ body }: { body: FactoryBranchDuplicateRq }) {
+    return settings.client.POST("/private/factory_branch/duplicate/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body: body,
+    });
+  }
+
   function exportSql({ body }: { body: FactoryBranchExportSqlRq }) {
     return settings.client.POST("/private/factory_branch/export/sql/v1", {
       params: {
@@ -85,7 +95,7 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, create, update, exportSql };
+  return { search, getById, create, update, duplicate, exportSql };
 }
 
 export type FactoryBranchApi = ReturnType<typeof createFactoryBranchApi>;

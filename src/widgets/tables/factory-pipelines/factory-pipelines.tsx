@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,10 @@ import {
 } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryPipelineDuplicateDialog,
+  FactoryPipelineDuplicateDialogRef,
+} from "./factory-pipeline-duplicate-dialog";
 import {
   FactoryPipelineExportSqlDialog,
   FactoryPipelineExportSqlDialogRef,
@@ -181,6 +185,7 @@ export function FactoryPipelinesTable({
   const router = useRouter();
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
   const { createFactoryPipeline } = useFactoryPipelineCreate();
+  const duplicateDialogRef = useRef<FactoryPipelineDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryPipelineExportSqlDialogRef>(null);
 
   const actionsCol: ColumnDef<FactoryPipeline_DETAILED> = {
@@ -203,6 +208,18 @@ export function FactoryPipelinesTable({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(
+                  original as FactoryPipeline_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -352,6 +369,7 @@ export function FactoryPipelinesTable({
         )}
       />
 
+      <FactoryPipelineDuplicateDialog ref={duplicateDialogRef} />
       <FactoryPipelineExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

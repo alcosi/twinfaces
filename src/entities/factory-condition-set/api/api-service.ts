@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   FactoryConditionSetCreateRq,
+  FactoryConditionSetDuplicateRq,
   FactoryConditionSetFilters,
   FactoryConditionSetUpdateRq,
   FactoryConditionSetViewQuery,
@@ -77,7 +78,14 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
     );
   }
 
-  return { search, create, update, getById };
+  function duplicate({ body }: { body: FactoryConditionSetDuplicateRq }) {
+    return settings.client.POST("/private/factory_condition_set/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, create, update, getById, duplicate };
 }
 
 export type FactoryConditionSetApi = ReturnType<

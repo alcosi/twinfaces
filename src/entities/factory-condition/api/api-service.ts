@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   FactoryConditionCreateRq,
+  FactoryConditionDuplicateRq,
   FactoryConditionFilters,
   FactoryConditionUpdateRq,
 } from "./types";
@@ -53,7 +54,14 @@ export function createFactoryConditionApi(settings: ApiSettings) {
     });
   }
 
-  return { search, update, create };
+  function duplicate({ body }: { body: FactoryConditionDuplicateRq }) {
+    return settings.client.POST("/private/factory_condition/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, update, create, duplicate };
 }
 
 export type FactoryConditionApi = ReturnType<typeof createFactoryConditionApi>;

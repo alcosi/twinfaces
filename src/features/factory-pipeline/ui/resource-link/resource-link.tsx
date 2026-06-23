@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRef } from "react";
 
 import { FactoryPipeline } from "@/entities/factory-pipeline";
@@ -20,6 +20,8 @@ import {
 } from "@/shared/ui";
 // eslint-disable-next-line fsd-import/layer-imports
 import {
+  FactoryPipelineDuplicateDialog,
+  FactoryPipelineDuplicateDialogRef,
   FactoryPipelineExportSqlDialog,
   FactoryPipelineExportSqlDialogRef,
 } from "@/widgets/tables";
@@ -40,6 +42,7 @@ export function FactoryPipelineResourceLink({
 }: Props) {
   const title = isPopulatedString(data.id) ? shortenUUID(data.id) : "N/A";
   const link = `/${PlatformArea.core}/pipelines/${data.id}`;
+  const duplicateDialogRef = useRef<FactoryPipelineDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryPipelineExportSqlDialogRef>(null);
   const { canForRoute } = usePermissionsAccess();
   const canCreate = canForRoute(link, "CREATE");
@@ -76,6 +79,16 @@ export function FactoryPipelineResourceLink({
                           <DropdownMenuItem
                             onClick={(event) => {
                               event.stopPropagation();
+                              duplicateDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Copy className="mr-2 h-4 w-4" />
+                            Duplicate
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
                               exportSqlDialogRef.current?.open(data);
                             }}
                             className="cursor-pointer"
@@ -93,6 +106,7 @@ export function FactoryPipelineResourceLink({
         }
       />
 
+      <FactoryPipelineDuplicateDialog ref={duplicateDialogRef} />
       <FactoryPipelineExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

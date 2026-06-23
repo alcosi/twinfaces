@@ -4,6 +4,7 @@ export * from "./comments";
 export * from "./datalist-options";
 export * from "./factory-branches";
 export * from "./factory-conditions";
+export * from "./factory-multiplier-filters";
 export * from "./factory-multipliers";
 export * from "./factory-pipelines";
 export * from "./factory-triggers";

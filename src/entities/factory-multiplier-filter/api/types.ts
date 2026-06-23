@@ -30,3 +30,5 @@ export type FactoryMultiplierFilterFilterKeys =
 export type FactoryMultiplierFilterFilters = Partial<
   Pick<FactoryMultiplierFilterSearchRq, FactoryMultiplierFilterFilterKeys>
 >;
+export type FactoryMultiplierFilterDuplicateRq =
+  components["schemas"]["FactoryMultiplierFilterDuplicateRqV1"];

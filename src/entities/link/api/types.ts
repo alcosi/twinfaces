@@ -41,8 +41,21 @@ export type LinkFilterKeys =
   | "strengthLikeList";
 
 export type LinkFilters = Partial<
-  Pick<components["schemas"]["LinkSearchRqV1"], LinkFilterKeys>
+  Pick<components["schemas"]["LinkSearchDTOv1"], LinkFilterKeys>
 >;
+
+export type LinkSortField = NonNullable<
+  components["schemas"]["LinkSearchRqV2"]["sortField"]
+>;
+
+export type LinkCountGroupField = NonNullable<
+  components["schemas"]["LinkCountRqV1"]["groupFields"]
+>[number];
+
+export type LinkCountItem = components["schemas"]["LinkCountV1"] & {
+  srcTwinClass?: TwinClass_DETAILED;
+  dstTwinClass?: TwinClass_DETAILED;
+};
 
 export type QueryLinkViewV1 = operations["linkViewV1"]["parameters"]["query"];
 export type CreateLinkRequestBody = components["schemas"]["LinkCreateV1"];

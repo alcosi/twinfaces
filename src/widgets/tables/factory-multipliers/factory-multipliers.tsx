@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -33,6 +33,10 @@ import {
 } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryMultiplierDuplicateDialog,
+  FactoryMultiplierDuplicateDialogRef,
+} from "./factory-multiplier-duplicate-dialog";
 import {
   FactoryMultiplierExportSqlDialog,
   FactoryMultiplierExportSqlDialogRef,
@@ -144,6 +148,7 @@ export function FactoryMultipliersTable({
         : undefined,
     });
   const { createFactoryMultiplier } = useFactoryMultiplierCreate();
+  const duplicateDialogRef = useRef<FactoryMultiplierDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryMultiplierExportSqlDialogRef>(null);
 
   const actionsCol: ColumnDef<FactoryMultiplier_DETAILED> = {
@@ -166,6 +171,18 @@ export function FactoryMultipliersTable({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(
+                  original as FactoryMultiplier_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -272,6 +289,7 @@ export function FactoryMultipliersTable({
         title={title}
       />
 
+      <FactoryMultiplierDuplicateDialog ref={duplicateDialogRef} />
       <FactoryMultiplierExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

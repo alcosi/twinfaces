@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
 import { FactoryConditionSetContext } from "@/features/factory-condition-set";
 import { Tab, TabsLayout } from "@/widgets/layout";
@@ -8,7 +8,11 @@ import { FactoryConditionsTable } from "@/widgets/tables";
 
 import { FactoryConditionSetGeneral } from "./views";
 
-export function FactoryConditionSetScreen() {
+export function FactoryConditionSetScreen({
+  rightSlot,
+}: {
+  rightSlot?: ReactNode;
+}) {
   const { factoryConditionSet } = useContext(FactoryConditionSetContext);
   const tabs: Tab[] = [
     {
@@ -27,5 +31,5 @@ export function FactoryConditionSetScreen() {
     },
   ];
 
-  return <TabsLayout tabs={tabs} />;
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +25,10 @@ import {
 } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
+import {
+  FactoryEraserDuplicateDialog,
+  FactoryEraserDuplicateDialogRef,
+} from "./factory-eraser-duplicate-dialog";
 import {
   FactoryEraserExportSqlDialog,
   FactoryEraserExportSqlDialogRef,
@@ -129,6 +133,7 @@ const colDefs: Record<
 export function FactoryErasers() {
   const { searchFactoryErasers } = useFactoryEraserSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryEraserFilters();
+  const duplicateDialogRef = useRef<FactoryEraserDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryEraserExportSqlDialogRef>(null);
 
   const actionsCol: ColumnDef<FactoryEraser_DETAILED> = {
@@ -151,6 +156,18 @@ export function FactoryErasers() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(
+                  original as FactoryEraser_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -219,6 +236,7 @@ export function FactoryErasers() {
         }}
       />
 
+      <FactoryEraserDuplicateDialog ref={duplicateDialogRef} />
       <FactoryEraserExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

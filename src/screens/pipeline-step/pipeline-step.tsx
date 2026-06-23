@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { PipelineStepGeneral } from "./views";
@@ -12,6 +14,6 @@ const tabs: Tab[] = [
   },
 ];
 
-export function PipelineStepScreen() {
-  return <TabsLayout tabs={tabs} />;
+export function PipelineStepScreen({ rightSlot }: { rightSlot?: ReactNode }) {
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

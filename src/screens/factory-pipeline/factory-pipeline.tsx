@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
 import { FactoryPipelineContext } from "@/features/factory-pipeline";
 import { Tab, TabsLayout } from "@/widgets/layout";
@@ -8,7 +8,11 @@ import { PipelineStepsTable } from "@/widgets/tables";
 
 import { FactoryPipelineGeneral } from "./views";
 
-export function FactoryPipelineScreen() {
+export function FactoryPipelineScreen({
+  rightSlot,
+}: {
+  rightSlot?: ReactNode;
+}) {
   const { pipelineId } = useContext(FactoryPipelineContext);
 
   const tabs: Tab[] = [
@@ -24,5 +28,5 @@ export function FactoryPipelineScreen() {
     },
   ];
 
-  return <TabsLayout tabs={tabs} />;
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -33,6 +33,10 @@ import {
 } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryBranchDuplicateDialog,
+  FactoryBranchDuplicateDialogRef,
+} from "./factory-branch-duplicate-dialog";
 import {
   FactoryBranchExportSqlDialog,
   FactoryBranchExportSqlDialogRef,
@@ -138,6 +142,7 @@ export function FactoryBranchesTable({
       : undefined,
   });
   const { createFactoryBranch } = useFactoryBranchCreate();
+  const duplicateDialogRef = useRef<FactoryBranchDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryBranchExportSqlDialogRef>(null);
 
   const actionsCol: ColumnDef<FactoryBranch> = {
@@ -160,6 +165,18 @@ export function FactoryBranchesTable({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(
+                  original as FactoryBranch_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -258,6 +275,7 @@ export function FactoryBranchesTable({
         title={title}
       />
 
+      <FactoryBranchDuplicateDialog ref={duplicateDialogRef} />
       <FactoryBranchExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

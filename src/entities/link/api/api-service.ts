@@ -1,8 +1,12 @@
-import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 import { PaginationState } from "@tanstack/react-table";
+
+import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
+
 import {
   CreateLinkRequestBody,
+  LinkCountGroupField,
   LinkFilters,
+  LinkSortField,
   QueryLinkViewV1,
   UpdateLinkRequestBody,
 } from "./types";
@@ -11,11 +15,15 @@ export function createLinkApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: LinkFilters;
+    sortField?: LinkSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
-    return settings.client.POST("/private/link/search/v1", {
+    return settings.client.POST("/private/link/search/v2", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
@@ -29,7 +37,43 @@ export function createLinkApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: LinkFilters;
+    groupFields: LinkCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/link/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showLinkMode: "MANAGED",
+          showLinkSrc2TwinClassMode: "DETAILED",
+          showLinkDst2TwinClassMode: "DETAILED",
+          showLink2UserMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -75,7 +119,7 @@ export function createLinkApi(settings: ApiSettings) {
     });
   }
 
-  return { search, create, update, getById };
+  return { search, count, create, update, getById };
 }
 
 export type LinkApi = ReturnType<typeof createLinkApi>;

@@ -35,3 +35,5 @@ export type FactoryEraserFilterKeys =
 export type FactoryEraserFilters = Partial<
   Pick<FactoryEraserSearchRq, FactoryEraserFilterKeys>
 >;
+export type FactoryEraserDuplicateRq =
+  components["schemas"]["FactoryEraserDuplicateRqV1"];

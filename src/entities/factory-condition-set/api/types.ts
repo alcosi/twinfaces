@@ -31,3 +31,5 @@ export type FactoryConditionSetCreateRq =
 
 export type FactoryConditionSetUpdateRq =
   components["schemas"]["FactoryConditionSetUpdateRqV1"];
+export type FactoryConditionSetDuplicateRq =
+  components["schemas"]["FactoryConditionSetDuplicateRqV1"];

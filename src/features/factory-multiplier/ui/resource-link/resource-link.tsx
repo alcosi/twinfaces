@@ -1,6 +1,6 @@
 "use client";
 
-import { AsteriskIcon, EllipsisVertical, FolderUp } from "lucide-react";
+import { AsteriskIcon, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRef } from "react";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
@@ -16,6 +16,8 @@ import {
 } from "@/shared/ui";
 // eslint-disable-next-line fsd-import/layer-imports
 import {
+  FactoryMultiplierDuplicateDialog,
+  FactoryMultiplierDuplicateDialogRef,
   FactoryMultiplierExportSqlDialog,
   FactoryMultiplierExportSqlDialogRef,
 } from "@/widgets/tables";
@@ -41,6 +43,7 @@ export function FactoryMultiplierResourceLink({
         ? `N/A | ${data.description}`
         : "N/A";
   const link = `/${PlatformArea.core}/multipliers/${data.id}`;
+  const duplicateDialogRef = useRef<FactoryMultiplierDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryMultiplierExportSqlDialogRef>(null);
   const { canForRoute } = usePermissionsAccess();
   const canCreate = canForRoute(link, "CREATE");
@@ -77,6 +80,16 @@ export function FactoryMultiplierResourceLink({
                           <DropdownMenuItem
                             onClick={(event) => {
                               event.stopPropagation();
+                              duplicateDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Copy className="mr-2 h-4 w-4" />
+                            Duplicate
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
                               exportSqlDialogRef.current?.open(data);
                             }}
                             className="cursor-pointer"
@@ -94,6 +107,7 @@ export function FactoryMultiplierResourceLink({
         }
       />
 
+      <FactoryMultiplierDuplicateDialog ref={duplicateDialogRef} />
       <FactoryMultiplierExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

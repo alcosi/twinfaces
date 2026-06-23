@@ -4,6 +4,7 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   FactoryMultiplierCreateRq,
+  FactoryMultiplierDuplicateRq,
   FactoryMultiplierExportSqlRq,
   FactoryMultiplierFilters,
   FactoryMultiplierUpdateRq,
@@ -106,7 +107,14 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create, exportSql };
+  function duplicate({ body }: { body: FactoryMultiplierDuplicateRq }) {
+    return settings.client.POST("/private/factory_multiplier/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, getById, update, create, exportSql, duplicate };
 }
 
 export type FactoryMultiplierApi = ReturnType<

@@ -1,11 +1,13 @@
 "use client";
 
-import { EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useContext, useRef } from "react";
 
 import { FactoryEraserContext } from "@/features/factory-eraser";
 import { FactoryEraserScreen } from "@/screens/factory-eraser";
 import {
+  FactoryEraserDuplicateDialog,
+  FactoryEraserDuplicateDialogRef,
   FactoryEraserExportSqlDialog,
   FactoryEraserExportSqlDialogRef,
 } from "@/screens/factory-erasers";
@@ -20,6 +22,7 @@ import {
 
 export default function Page() {
   const { eraser } = useContext(FactoryEraserContext);
+  const duplicateDialogRef = useRef<FactoryEraserDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryEraserExportSqlDialogRef>(null);
   const { canForCurrentRoute } = usePermissionsAccess();
   const canCreate = canForCurrentRoute("CREATE");
@@ -42,6 +45,13 @@ export default function Page() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
+                  onClick={() => duplicateDialogRef.current?.open(eraser)}
+                  className="cursor-pointer"
+                >
+                  <Copy className="mr-2 h-5 w-5" />
+                  Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={() => exportSqlDialogRef.current?.open(eraser)}
                   className="cursor-pointer"
                 >
@@ -54,6 +64,7 @@ export default function Page() {
         }
       />
 
+      <FactoryEraserDuplicateDialog ref={duplicateDialogRef} />
       <FactoryEraserExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

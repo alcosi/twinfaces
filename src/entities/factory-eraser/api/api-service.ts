@@ -1,6 +1,7 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryEraserDuplicateRq,
   FactoryEraserExportSqlRq,
   FactoryEraserRqQuery,
   FactoryEraserSearchRq,
@@ -80,7 +81,14 @@ export function createFactoryEraserApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, exportSql };
+  function duplicate({ body }: { body: FactoryEraserDuplicateRq }) {
+    return settings.client.POST("/private/factory_eraser/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, getById, update, exportSql, duplicate };
 }
 
 export type FactoryEraserApi = ReturnType<typeof createFactoryEraserApi>;

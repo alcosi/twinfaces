@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
@@ -7,13 +9,18 @@ import { FactoryConditionSetIcon } from "../factory-condition-set-icon";
 type Props = {
   data: FactoryConditionSet;
   link: string;
+  actions?: ReactNode;
 };
 
-export function FactoryConditionSetResourceTooltip({ data, link }: Props) {
+export function FactoryConditionSetResourceTooltip({
+  data,
+  link,
+  actions,
+}: Props) {
   const title = isPopulatedString(data.name) ? data.name : "N/A";
 
   return (
-    <ResourceLinkTooltip uuid={data.id!} link={link}>
+    <ResourceLinkTooltip uuid={data.id!} link={link} actions={actions}>
       <ResourceLinkTooltip.Header
         title={title}
         subTitle={data.description}
