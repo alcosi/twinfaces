@@ -1,3 +1,4 @@
+import { DataList } from "@/entities/datalist";
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Featurer } from "@/entities/featurer";
 import { Permission } from "@/entities/permission";
@@ -35,6 +36,7 @@ export type TwinClass_DETAILED = RequireFields<
   segment: boolean;
   twinClassFreeze?: TwinClassBaseV1;
   headHunterDetailedParams?: ExtendedFeaturerParam[];
+  tagMap?: DataList;
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,
