@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,6 +33,10 @@ import {
   FiltersState,
 } from "@/widgets/crud-data-table";
 
+import {
+  FactoryDuplicateDialog,
+  FactoryDuplicateDialogRef,
+} from "./factory-duplicate-dialog";
 import {
   FactoryExportSqlDialog,
   FactoryExportSqlDialogRef,
@@ -116,6 +120,7 @@ const colDefs: Record<
 
 export function Factories() {
   const tableRef = useRef<DataTableHandle>(null);
+  const duplicateDialogRef = useRef<FactoryDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryExportSqlDialogRef>(null);
   const { searchFactories } = useFactorySearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
@@ -141,6 +146,16 @@ export function Factories() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -232,6 +247,7 @@ export function Factories() {
         )}
       />
 
+      <FactoryDuplicateDialog ref={duplicateDialogRef} />
       <FactoryExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

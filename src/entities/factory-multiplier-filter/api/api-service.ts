@@ -3,6 +3,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  FactoryMultiplierFilterDuplicateRq,
   FactoryMultiplierFilterFilters,
   FactoryMultiplierFilterViewQuery,
 } from "./types";
@@ -58,7 +59,17 @@ export function createFactoryMultiplierFilterApi(settings: ApiSettings) {
     );
   }
 
-  return { getById, search };
+  function duplicate({ body }: { body: FactoryMultiplierFilterDuplicateRq }) {
+    return settings.client.POST(
+      "/private/factory_multiplier_filter/duplicate/v1",
+      {
+        params: { header: getApiDomainHeaders(settings) },
+        body,
+      }
+    );
+  }
+
+  return { getById, search, duplicate };
 }
 
 export type FactoryMultiplierFilterApi = ReturnType<

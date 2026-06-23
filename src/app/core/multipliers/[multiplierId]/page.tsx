@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useContext, useRef } from "react";
 
 import { FactoryMultiplierContext } from "@/features/factory-multiplier";
@@ -14,12 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui";
 import {
+  FactoryMultiplierDuplicateDialog,
+  FactoryMultiplierDuplicateDialogRef,
   FactoryMultiplierExportSqlDialog,
   FactoryMultiplierExportSqlDialogRef,
 } from "@/widgets/tables";
 
 export default function Page() {
   const { factoryMultiplier } = useContext(FactoryMultiplierContext);
+  const duplicateDialogRef = useRef<FactoryMultiplierDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryMultiplierExportSqlDialogRef>(null);
   const { canForCurrentRoute } = usePermissionsAccess();
   const canCreate = canForCurrentRoute("CREATE");
@@ -43,6 +46,15 @@ export default function Page() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={() =>
+                    duplicateDialogRef.current?.open(factoryMultiplier)
+                  }
+                  className="cursor-pointer"
+                >
+                  <Copy className="mr-2 h-5 w-5" />
+                  Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
                     exportSqlDialogRef.current?.open(factoryMultiplier)
                   }
                   className="cursor-pointer"
@@ -56,6 +68,7 @@ export default function Page() {
         }
       />
 
+      <FactoryMultiplierDuplicateDialog ref={duplicateDialogRef} />
       <FactoryMultiplierExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

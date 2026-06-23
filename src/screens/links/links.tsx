@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,19 +12,30 @@ import {
   CreateLinkRequestBody,
   LINK_SCHEMA,
   Link,
+  LinkCountGroup,
+  LinkFilterKeys,
   LinkStrengthEnum,
   LinkTypesEnum,
   useCreateLink,
+  useLinkCount,
   useLinkFilters,
   useLinkSearch,
 } from "@/entities/link";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "@/widgets/crud-data-table";
 
 import { CreateLinkFormFields } from "./form-fields";
 
@@ -48,17 +60,21 @@ const colDefs: Record<
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="forwardName" />,
   },
   backwardName: {
     id: "backwardName",
     accessorKey: "backwardName",
-    header: "Backward name",
+    header: () => (
+      <SortableHeader title="Backward name" sortField="backwardName" />
+    ),
   },
   srcTwinClass: {
     id: "srcTwinClass",
     accessorKey: "srcTwinClass",
-    header: "Source Twin Class",
+    header: () => (
+      <SortableHeader title="Source Twin Class" sortField="srcTwinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.srcTwinClass && (
         <div className="inline-flex max-w-48">
@@ -72,7 +88,12 @@ const colDefs: Record<
   dstTwinClass: {
     id: "dstTwinClass",
     accessorKey: "dstTwinClass",
-    header: "Destination Twin Class",
+    header: () => (
+      <SortableHeader
+        title="Destination Twin Class"
+        sortField="dstTwinClassName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.dstTwinClass && (
         <div className="inline-flex max-w-48">
@@ -85,14 +106,16 @@ const colDefs: Record<
   },
   type: {
     accessorKey: "type",
-    header: "Type",
+    header: () => <SortableHeader title="Type" sortField="type" />,
     cell: ({ row: { original } }) => (
       <Badge variant="outline">{original.type}</Badge>
     ),
   },
   linkStrengthId: {
     accessorKey: "linkStrengthId",
-    header: "Link strength",
+    header: () => (
+      <SortableHeader title="Link strength" sortField="linkStrength" />
+    ),
     cell: ({ row: { original } }) => (
       <Badge variant="outline">{original.linkStrengthId}</Badge>
     ),
@@ -100,7 +123,9 @@ const colDefs: Record<
   createdByUser: {
     id: "createdByUser",
     accessorKey: "createdByUser",
-    header: "Created by User",
+    header: () => (
+      <SortableHeader title="Created by User" sortField="createdByUser" />
+    ),
     cell: ({ row: { original } }) =>
       original.createdByUser && (
         <div className="inline-flex max-w-48">
@@ -111,7 +136,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Created at",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -121,6 +146,7 @@ const colDefs: Record<
 export function LinksScreen() {
   const router = useRouter();
   const { searchLinks } = useLinkSearch();
+  const { countLinks } = useLinkCount();
   const { buildFilterFields, mapFiltersToPayload } = useLinkFilters();
   const { createLink } = useCreateLink();
 
@@ -135,16 +161,174 @@ export function LinksScreen() {
     },
   });
 
-  async function fetchLink(pagination: PaginationState, filters: FiltersState) {
-    const _filters = mapFiltersToPayload(filters.filters);
+  async function fetchLink(
+    pagination: PaginationState,
+    filters: FiltersState,
+    sort?: SortV1
+  ): Promise<PagedResponse<Link>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<LinkFilterKeys, unknown>
+    );
 
     try {
-      return searchLinks({ pagination, filters: _filters });
+      return searchLinks({ pagination, filters: _filters, sort });
     } catch (error) {
       toast.error("An error occured while fetching links: " + error);
       throw new Error("An error occured while fetching links: " + error);
     }
   }
+
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<LinkFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "type",
+          label: "Type",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "type",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => g.type,
+            (g: LinkCountGroup) => g.type,
+            (g: LinkCountGroup) =>
+              g.type && <Badge variant="outline">{g.type}</Badge>
+          ),
+        },
+        {
+          key: "linkStrength",
+          label: "Link strength",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "linkStrength",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => g.linkStrength,
+            (g: LinkCountGroup) => g.linkStrength,
+            (g: LinkCountGroup) =>
+              g.linkStrength && (
+                <Badge variant="outline">{g.linkStrength}</Badge>
+              )
+          ),
+        },
+        {
+          key: "srcTwinClass",
+          label: "Source Twin Class",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "srcTwinClassId",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => g.srcTwinClassId,
+            (g: LinkCountGroup) => g.srcTwinClass?.name,
+            (g: LinkCountGroup) =>
+              g.srcTwinClass && (
+                <TwinClassResourceLink data={g.srcTwinClass} withTooltip />
+              )
+          ),
+        },
+        {
+          key: "dstTwinClass",
+          label: "Destination Twin Class",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "dstTwinClassId",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => g.dstTwinClassId,
+            (g: LinkCountGroup) => g.dstTwinClass?.name,
+            (g: LinkCountGroup) =>
+              g.dstTwinClass && (
+                <TwinClassResourceLink data={g.dstTwinClass} withTooltip />
+              )
+          ),
+        },
+        {
+          key: "createdByUserId",
+          label: "Created by User",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "createdByUserId",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => g.createdByUserId,
+            (g: LinkCountGroup) =>
+              g.createdByUser?.email ??
+              g.createdByUser?.fullName ??
+              g.createdByUserId,
+            (g: LinkCountGroup) =>
+              g.createdByUser ? (
+                <UserResourceLink data={g.createdByUser} withTooltip />
+              ) : g.createdByUserId ? (
+                <GuidWithCopy value={g.createdByUserId} />
+              ) : undefined
+          ),
+        },
+        {
+          key: "srcTwinClassInheritable",
+          label: "Src Twin Class Inheritable",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "srcTwinClassInheritable",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => String(g.srcTwinClassInheritable),
+            (g: LinkCountGroup) =>
+              g.srcTwinClassInheritable ? "Inheritable" : "Not inheritable",
+            (g: LinkCountGroup) => (
+              <Badge variant="outline">
+                {g.srcTwinClassInheritable ? "Inheritable" : "Not inheritable"}
+              </Badge>
+            )
+          ),
+        },
+        {
+          key: "dstTwinClassInheritable",
+          label: "Dst Twin Class Inheritable",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countLinks({
+                filters: resolved,
+                groupField: "dstTwinClassInheritable",
+                offset,
+                limit,
+              }),
+            (g: LinkCountGroup) => String(g.dstTwinClassInheritable),
+            (g: LinkCountGroup) =>
+              g.dstTwinClassInheritable ? "Inheritable" : "Not inheritable",
+            (g: LinkCountGroup) => (
+              <Badge variant="outline">
+                {g.dstTwinClassInheritable ? "Inheritable" : "Not inheritable"}
+              </Badge>
+            )
+          ),
+        },
+      ];
+    },
+    [countLinks, mapFiltersToPayload]
+  );
 
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
@@ -194,6 +378,7 @@ export function LinksScreen() {
         colDefs.createdAt,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      chartGroupings={buildChartGroupings}
       dialogForm={linkForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

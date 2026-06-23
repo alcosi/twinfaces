@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Copy,
   EllipsisVertical,
   Factory as FactoryIcon,
   FolderUp,
@@ -10,6 +11,8 @@ import { useRef } from "react";
 import { Factory } from "@/entities/factory";
 // eslint-disable-next-line fsd-import/layer-imports
 import {
+  FactoryDuplicateDialog,
+  FactoryDuplicateDialogRef,
   FactoryExportSqlDialog,
   FactoryExportSqlDialogRef,
 } from "@/screens/factories";
@@ -33,6 +36,7 @@ type Props = {
 };
 
 export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
+  const duplicateDialogRef = useRef<FactoryDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryExportSqlDialogRef>(null);
 
   let title: string = "N/A";
@@ -75,6 +79,16 @@ export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
                           <DropdownMenuItem
                             onClick={(event) => {
                               event.stopPropagation();
+                              duplicateDialogRef.current?.open(data);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Copy className="mr-2 h-4 w-4" />
+                            Duplicate
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(event) => {
+                              event.stopPropagation();
                               exportSqlDialogRef.current?.open(data);
                             }}
                             className="cursor-pointer"
@@ -92,6 +106,7 @@ export function FactoryResourceLink({ data, disabled, withTooltip }: Props) {
         }
       />
 
+      <FactoryDuplicateDialog ref={duplicateDialogRef} />
       <FactoryExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

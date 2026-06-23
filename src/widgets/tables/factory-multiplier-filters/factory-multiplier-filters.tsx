@@ -1,8 +1,9 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
+import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { toast } from "sonner";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
@@ -19,9 +20,20 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryMultiplierFilterDuplicateDialog,
+  FactoryMultiplierFilterDuplicateDialogRef,
+} from "./factory-multiplier-filter-duplicate-dialog";
 
 const colDefs: Record<
   | "id"
@@ -124,6 +136,8 @@ export function FactoryMultiplierFiltersTable({
   factoryMultiplierId?: string;
 }) {
   const router = useRouter();
+  const duplicateDialogRef =
+    useRef<FactoryMultiplierFilterDuplicateDialogRef>(null);
   const { searchFactoryMultiplierFilters } = useFactoryMultiplierFilterSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilterFilters({
@@ -139,6 +153,42 @@ export function FactoryMultiplierFiltersTable({
           ]
         : undefined,
     });
+
+  const actionsCol: ColumnDef<FactoryMultiplierFilter_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   async function fetchFactoryMultiplierFilter(
     pagination: PaginationState,
@@ -167,34 +217,40 @@ export function FactoryMultiplierFiltersTable({
   }
 
   return (
-    <CrudDataTable
-      permissionSegment="multiplier-filters"
-      columns={[
-        colDefs.id,
-        colDefs.factory,
-        ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
-        colDefs.inputTwinClass,
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        colDefs.description,
-      ]}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/multiplier-filters/${row.id}`)
-      }
-      fetcher={fetchFactoryMultiplierFilter}
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.factory,
-        ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
-        colDefs.inputTwinClass,
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionSetInvert,
-        colDefs.active,
-        colDefs.description,
-      ]}
-      getRowId={(row) => row.id!}
-      filters={{ filtersInfo: buildFilterFields() }}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="multiplier-filters"
+        columns={[
+          colDefs.id,
+          colDefs.factory,
+          ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
+          colDefs.inputTwinClass,
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          colDefs.description,
+          actionsCol,
+        ]}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/multiplier-filters/${row.id}`)
+        }
+        fetcher={fetchFactoryMultiplierFilter}
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.factory,
+          ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
+          colDefs.inputTwinClass,
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionSetInvert,
+          colDefs.active,
+          colDefs.description,
+          actionsCol,
+        ]}
+        getRowId={(row) => row.id!}
+        filters={{ filtersInfo: buildFilterFields() }}
+      />
+
+      <FactoryMultiplierFilterDuplicateDialog ref={duplicateDialogRef} />
+    </>
   );
 }

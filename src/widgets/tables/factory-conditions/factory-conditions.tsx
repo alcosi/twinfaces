@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
+import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -21,9 +22,20 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryConditionDuplicateDialog,
+  FactoryConditionDuplicateDialogRef,
+} from "./factory-condition-duplicate-dialog";
 import { FactoryConditionFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -106,6 +118,7 @@ export function FactoryConditionsTable({
   title?: string;
 }) {
   const router = useRouter();
+  const duplicateDialogRef = useRef<FactoryConditionDuplicateDialogRef>(null);
   const { searchFactoryCondition } = useFactoryConditionSearch();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryConditionFilters(
     {
@@ -133,6 +146,42 @@ export function FactoryConditionsTable({
       description: undefined,
     },
   });
+
+  const actionsCol: ColumnDef<FactoryCondition_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   async function fetchFactoryConditions(
     pagination: PaginationState,
@@ -170,43 +219,49 @@ export function FactoryConditionsTable({
   };
 
   return (
-    <CrudDataTable
-      permissionSegment="conditions"
-      columns={[
-        colDefs.id,
-        ...(isFalsy(factoryConditionSetId)
-          ? [colDefs.factoryConditionSet]
-          : []),
-        colDefs.conditionerFeaturer,
-        colDefs.description,
-        colDefs.active,
-        colDefs.invert,
-      ]}
-      fetcher={fetchFactoryConditions}
-      getRowId={(row) => row.id}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/conditions/${row.id}`)
-      }
-      defaultVisibleColumns={[
-        colDefs.id,
-        ...(isFalsy(factoryConditionSetId)
-          ? [colDefs.factoryConditionSet]
-          : []),
-        colDefs.conditionerFeaturer,
-        colDefs.description,
-        colDefs.active,
-        colDefs.invert,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={factoryConditionForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <FactoryConditionFormFields
-          control={factoryConditionForm.control}
-          factoryConditionSetId={factoryConditionSetId}
-        />
-      )}
-      title={title}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="conditions"
+        columns={[
+          colDefs.id,
+          ...(isFalsy(factoryConditionSetId)
+            ? [colDefs.factoryConditionSet]
+            : []),
+          colDefs.conditionerFeaturer,
+          colDefs.description,
+          colDefs.active,
+          colDefs.invert,
+          actionsCol,
+        ]}
+        fetcher={fetchFactoryConditions}
+        getRowId={(row) => row.id}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/conditions/${row.id}`)
+        }
+        defaultVisibleColumns={[
+          colDefs.id,
+          ...(isFalsy(factoryConditionSetId)
+            ? [colDefs.factoryConditionSet]
+            : []),
+          colDefs.conditionerFeaturer,
+          colDefs.description,
+          colDefs.active,
+          colDefs.invert,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        dialogForm={factoryConditionForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <FactoryConditionFormFields
+            control={factoryConditionForm.control}
+            factoryConditionSetId={factoryConditionSetId}
+          />
+        )}
+        title={title}
+      />
+
+      <FactoryConditionDuplicateDialog ref={duplicateDialogRef} />
+    </>
   );
 }

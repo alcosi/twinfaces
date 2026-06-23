@@ -1,5 +1,7 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { Tab, TabsLayout } from "@/widgets/layout";
 
 import { FactoryMultiplierFilterGeneral } from "./views";
@@ -12,6 +14,10 @@ const tabs: Tab[] = [
   },
 ];
 
-export function FactoryMultiplierFilterScreen() {
-  return <TabsLayout tabs={tabs} />;
+export function FactoryMultiplierFilterScreen({
+  rightSlot,
+}: {
+  rightSlot?: ReactNode;
+}) {
+  return <TabsLayout tabs={tabs} rightSlot={rightSlot} />;
 }

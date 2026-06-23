@@ -3,6 +3,8 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  FactoryPipelineStepDuplicateRq,
+  FactoryPipelineStepExportSqlRq,
   FactoryPipelineStepRqQuery,
   FactoryPipelineStepUpdateRq,
   PipelineStepCreateRq,
@@ -88,7 +90,27 @@ export function createPipelineStepApi(settings: ApiSettings) {
     );
   }
 
-  return { search, create, getById, update };
+  function duplicate({ body }: { body: FactoryPipelineStepDuplicateRq }) {
+    return settings.client.POST("/private/factory_pipeline_step/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  function exportSql({ body }: { body: FactoryPipelineStepExportSqlRq }) {
+    return settings.client.POST(
+      "/private/factory_pipeline_step/export/sql/v1",
+      {
+        params: {
+          header: getApiDomainHeaders(settings),
+        },
+        body: body,
+        parseAs: "text",
+      }
+    );
+  }
+
+  return { search, create, getById, update, duplicate, exportSql };
 }
 
 export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

@@ -32,6 +32,9 @@ export type FactoryBranchUpdateRq =
 export type FactoryBranchExportSqlRq =
   components["schemas"]["FactoryBranchExportSqlRqV1"];
 
+export type FactoryBranchDuplicateRq =
+  components["schemas"]["FactoryBranchDuplicateRqV1"];
+
 export type FactoryBranchFilterKeys =
   | "idList"
   | "factoryIdList"

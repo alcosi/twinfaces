@@ -39,3 +39,7 @@ export type PipelineStepFilters = Partial<
 
 export type FactoryPipelineStepRqQuery =
   operations["factoryPipelineStepViewV1"]["parameters"]["query"];
+export type FactoryPipelineStepDuplicateRq =
+  components["schemas"]["FactoryPipelineStepDuplicateRqV1"];
+export type FactoryPipelineStepExportSqlRq =
+  components["schemas"]["FactoryPipelineStepExportSqlRqV1"];

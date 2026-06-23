@@ -2,6 +2,7 @@ import { PaginationState } from "@tanstack/react-table";
 
 import {
   FactoryCreateRq,
+  FactoryDuplicateRq,
   FactoryExportSqlRq,
   FactoryFilters,
   FactoryUpdateRq,
@@ -84,7 +85,14 @@ export function createFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create, exportSql };
+  function duplicate({ body }: { body: FactoryDuplicateRq }) {
+    return settings.client.POST("/private/factory/duplicate/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, getById, update, create, exportSql, duplicate };
 }
 
 export type FactoryApi = ReturnType<typeof createFactoryApi>;

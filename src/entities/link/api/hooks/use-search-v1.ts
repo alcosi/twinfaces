@@ -1,10 +1,10 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
-import { LinkFilters, Link_MANAGED } from "..";
+import { LinkFilters, LinkSortField, Link_MANAGED } from "..";
 import { hydrateLinkFromMap } from "../../libs";
 
 export function useLinkSearch() {
@@ -15,10 +15,12 @@ export function useLinkSearch() {
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
+      sort,
     }: {
       search?: string;
       pagination?: PaginationState;
       filters?: LinkFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Link_MANAGED>> => {
       try {
         const { data, error } = await api.link.search({
@@ -28,10 +30,9 @@ export function useLinkSearch() {
             forwardNameLikeList: isPopulatedString(search)
               ? [wrapWithPercent(search)]
               : filters?.forwardNameLikeList,
-            // backwardNameLikeList: isPopulatedString(search)
-            //   ? [wrapWithPercent(search)]
-            //   : filters?.backwardNameLikeList,
           },
+          sortField: sort?.field as LinkSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {
@@ -47,7 +48,7 @@ export function useLinkSearch() {
           data: links,
           pagination: data.pagination ?? {},
         };
-      } catch (error) {
+      } catch {
         throw new Error("An error occurred while fetching links");
       }
     },

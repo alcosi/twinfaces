@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -32,9 +33,24 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryPipelineStepExportSqlDialog,
+  FactoryPipelineStepExportSqlDialogRef,
+} from "./factiry-pipeline-step-export-sql-dialog";
+import {
+  FactoryPipelineStepDuplicateDialog,
+  FactoryPipelineStepDuplicateDialogRef,
+} from "./factory-pipeline-step-duplicate-dialog";
 import { PipelineStepFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -162,6 +178,10 @@ type Props = {
 
 export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
   const router = useRouter();
+  const duplicateDialogRef =
+    useRef<FactoryPipelineStepDuplicateDialogRef>(null);
+  const exportSqlDialogRef =
+    useRef<FactoryPipelineStepExportSqlDialogRef>(null);
   const { searchPipelineStep } = usePipelineStepSearch();
   const { createPipelineStep } = usePipelineStepCreate();
   const { buildFilterFields, mapFiltersToPayload } = usePipelineStepFilters({
@@ -193,6 +213,54 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
       description: undefined,
     },
   });
+
+  const actionsCol: ColumnDef<PipelineStep_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                exportSqlDialogRef.current?.open(
+                  original as PipelineStep_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <FolderUp className="mr-2 h-4 w-4" />
+              Export sql
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   async function fetchPipelineStep(
     pagination: PaginationState,
@@ -232,43 +300,50 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
   };
 
   return (
-    <CrudDataTable
-      permissionSegment="pipeline-steps"
-      columns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
-        ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionInvert,
-        colDefs.active,
-        colDefs.fillerFeaturer,
-        colDefs.optional,
-        colDefs.description,
-      ]}
-      fetcher={fetchPipelineStep}
-      getRowId={(row) => row.id!}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
-      }
-      defaultVisibleColumns={[
-        colDefs.id,
-        ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
-        ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
-        colDefs.factoryConditionSet,
-        colDefs.factoryConditionInvert,
-        colDefs.fillerFeaturer,
-        colDefs.active,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={pipelineStepForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <PipelineStepFormFields
-          factoryId={factoryId}
-          control={pipelineStepForm.control}
-        />
-      )}
-      title={title}
-    />
+    <>
+      <CrudDataTable
+        permissionSegment="pipeline-steps"
+        columns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
+          ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionInvert,
+          colDefs.active,
+          colDefs.fillerFeaturer,
+          colDefs.optional,
+          colDefs.description,
+          actionsCol,
+        ]}
+        fetcher={fetchPipelineStep}
+        getRowId={(row) => row.id!}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
+        }
+        defaultVisibleColumns={[
+          colDefs.id,
+          ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),
+          ...(isFalsy(pipelineId) ? [colDefs.factoryPipeline] : []),
+          colDefs.factoryConditionSet,
+          colDefs.factoryConditionInvert,
+          colDefs.fillerFeaturer,
+          colDefs.active,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        dialogForm={pipelineStepForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <PipelineStepFormFields
+            factoryId={factoryId}
+            control={pipelineStepForm.control}
+          />
+        )}
+        title={title}
+      />
+
+      <FactoryPipelineStepDuplicateDialog ref={duplicateDialogRef} />
+      <FactoryPipelineStepExportSqlDialog ref={exportSqlDialogRef} />
+    </>
   );
 }

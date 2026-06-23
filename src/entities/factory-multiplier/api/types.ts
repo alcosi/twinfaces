@@ -24,6 +24,8 @@ export type FactoryMultiplierCreateRq =
   components["schemas"]["FactoryMultiplierCreateRqV1"];
 export type FactoryMultiplierExportSqlRq =
   components["schemas"]["FactoryMultiplierExportSqlRqV1"];
+export type FactoryMultiplierDuplicateRq =
+  components["schemas"]["FactoryMultiplierDuplicateRqV1"];
 
 export type FactoryMultiplierFilterKeys =
   | "idList"

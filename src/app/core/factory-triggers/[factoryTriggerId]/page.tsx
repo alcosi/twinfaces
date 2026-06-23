@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useContext, useRef } from "react";
 
 import { FactoryTriggerContext } from "@/features/factory-trigger";
@@ -14,12 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui";
 import {
+  FactoryTriggerDuplicateDialog,
+  FactoryTriggerDuplicateDialogRef,
   FactoryTriggerExportSqlDialog,
   FactoryTriggerExportSqlDialogRef,
 } from "@/widgets/tables";
 
 export default function Page() {
   const { factoryTrigger } = useContext(FactoryTriggerContext);
+  const duplicateDialogRef = useRef<FactoryTriggerDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryTriggerExportSqlDialogRef>(null);
   const { canForCurrentRoute } = usePermissionsAccess();
   const canCreate = canForCurrentRoute("CREATE");
@@ -43,6 +46,15 @@ export default function Page() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onClick={() =>
+                    duplicateDialogRef.current?.open(factoryTrigger)
+                  }
+                  className="cursor-pointer"
+                >
+                  <Copy className="mr-2 h-5 w-5" />
+                  Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
                     exportSqlDialogRef.current?.open(factoryTrigger)
                   }
                   className="cursor-pointer"
@@ -56,6 +68,7 @@ export default function Page() {
         }
       />
 
+      <FactoryTriggerDuplicateDialog ref={duplicateDialogRef} />
       <FactoryTriggerExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );

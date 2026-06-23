@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
+import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -21,9 +22,20 @@ import { UserResourceLink } from "@/features/user/ui";
 import { PrivateApiContext } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  GuidWithCopy,
+} from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
+import {
+  FactoryConditionSetDuplicateDialog,
+  FactoryConditionSetDuplicateDialogRef,
+} from "./factory-condition-set-duplicate-dialog";
 import { ConditionSetFields } from "./form-fields";
 
 const colDefs: Record<
@@ -124,10 +136,48 @@ const colDefs: Record<
 
 export function ConditionSetsScreen() {
   const router = useRouter();
+  const duplicateDialogRef =
+    useRef<FactoryConditionSetDuplicateDialogRef>(null);
   const api = useContext(PrivateApiContext);
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryConditionSetFilters();
+
+  const actionsCol: ColumnDef<FactoryConditionSet_DETAILED> = {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row: { original } }) => (
+      <div
+        className="flex justify-end"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="iconS6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(original);
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    ),
+  };
 
   async function fetchFactoryConditionSet(
     pagination: PaginationState,
@@ -179,45 +229,51 @@ export function ConditionSetsScreen() {
   };
 
   return (
-    <CrudDataTable
-      title="Condition sets"
-      columns={[
-        colDefs.id,
-        colDefs.twinFactoryId,
-        colDefs.name,
-        colDefs.description,
-        colDefs.inFactoryPipelineUsagesCount,
-        colDefs.inFactoryPipelineStepUsagesCount,
-        colDefs.inFactoryMultiplierFilterUsagesCount,
-        colDefs.inFactoryBranchUsagesCount,
-        colDefs.inFactoryEraserUsagesCount,
-        colDefs.createdByUserId,
-        colDefs.createdAt,
-      ]}
-      fetcher={fetchFactoryConditionSet}
-      getRowId={(row) => row.id || ""}
-      onRowClick={(row) =>
-        router.push(`/${PlatformArea.core}/condition-sets/${row.id}`)
-      }
-      defaultVisibleColumns={[
-        colDefs.id,
-        colDefs.twinFactoryId,
-        colDefs.name,
-        colDefs.description,
-        colDefs.inFactoryPipelineUsagesCount,
-        colDefs.inFactoryPipelineStepUsagesCount,
-        colDefs.inFactoryMultiplierFilterUsagesCount,
-        colDefs.inFactoryBranchUsagesCount,
-        colDefs.inFactoryEraserUsagesCount,
-        colDefs.createdByUserId,
-        colDefs.createdAt,
-      ]}
-      filters={{ filtersInfo: buildFilterFields() }}
-      dialogForm={conditionSetForm}
-      onCreateSubmit={handleOnCreateSubmit}
-      renderFormFields={() => (
-        <ConditionSetFields control={conditionSetForm.control} />
-      )}
-    />
+    <>
+      <CrudDataTable
+        title="Condition sets"
+        columns={[
+          colDefs.id,
+          colDefs.twinFactoryId,
+          colDefs.name,
+          colDefs.description,
+          colDefs.inFactoryPipelineUsagesCount,
+          colDefs.inFactoryPipelineStepUsagesCount,
+          colDefs.inFactoryMultiplierFilterUsagesCount,
+          colDefs.inFactoryBranchUsagesCount,
+          colDefs.inFactoryEraserUsagesCount,
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+          actionsCol,
+        ]}
+        fetcher={fetchFactoryConditionSet}
+        getRowId={(row) => row.id || ""}
+        onRowClick={(row) =>
+          router.push(`/${PlatformArea.core}/condition-sets/${row.id}`)
+        }
+        defaultVisibleColumns={[
+          colDefs.id,
+          colDefs.twinFactoryId,
+          colDefs.name,
+          colDefs.description,
+          colDefs.inFactoryPipelineUsagesCount,
+          colDefs.inFactoryPipelineStepUsagesCount,
+          colDefs.inFactoryMultiplierFilterUsagesCount,
+          colDefs.inFactoryBranchUsagesCount,
+          colDefs.inFactoryEraserUsagesCount,
+          colDefs.createdByUserId,
+          colDefs.createdAt,
+          actionsCol,
+        ]}
+        filters={{ filtersInfo: buildFilterFields() }}
+        dialogForm={conditionSetForm}
+        onCreateSubmit={handleOnCreateSubmit}
+        renderFormFields={() => (
+          <ConditionSetFields control={conditionSetForm.control} />
+        )}
+      />
+
+      <FactoryConditionSetDuplicateDialog ref={duplicateDialogRef} />
+    </>
   );
 }

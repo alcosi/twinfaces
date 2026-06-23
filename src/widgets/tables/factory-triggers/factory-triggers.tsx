@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check, EllipsisVertical, FolderUp } from "lucide-react";
+import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -32,6 +32,10 @@ import {
 } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  FactoryTriggerDuplicateDialog,
+  FactoryTriggerDuplicateDialogRef,
+} from "./factory-trigger-duplicate-dialog";
 import {
   FactoryTriggerExportSqlDialog,
   FactoryTriggerExportSqlDialogRef,
@@ -159,6 +163,7 @@ export function FactoryTriggersTable({
       : undefined,
   });
   const { createFactoryTrigger } = useFactoryTriggerCreate();
+  const duplicateDialogRef = useRef<FactoryTriggerDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryTriggerExportSqlDialogRef>(null);
 
   const actionsCol: ColumnDef<FactoryTrigger_DETAILED> = {
@@ -181,6 +186,18 @@ export function FactoryTriggersTable({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                duplicateDialogRef.current?.open(
+                  original as FactoryTrigger_DETAILED
+                );
+              }}
+              className="cursor-pointer"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Duplicate
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(event) => {
                 event.stopPropagation();
@@ -300,6 +317,7 @@ export function FactoryTriggersTable({
         )}
       />
 
+      <FactoryTriggerDuplicateDialog ref={duplicateDialogRef} />
       <FactoryTriggerExportSqlDialog ref={exportSqlDialogRef} />
     </>
   );
