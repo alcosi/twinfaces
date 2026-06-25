@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,14 +13,17 @@ import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
   DataListOptionCreateRqDV1,
+  DataListOptionFilterKeys,
+  DataListOptionFilters,
   DataListOption_DETAILED,
   useCreateDatalistOption,
+  useDatalistOptionCount,
   useDatalistOptionFilters,
   useDatalistOptionSearch,
 } from "@/entities/datalist-option";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { DatalistResourceLink } from "@/features/datalist/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import {
   isPopulatedArray,
@@ -31,9 +35,13 @@ import {
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { DatalistOptionFormFields } from "./form-fields";
 
@@ -41,31 +49,46 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
   const router = useRouter();
   const tableRef = useRef<DataTableHandle>(null);
   const { searchDatalistOptions } = useDatalistOptionSearch();
+  const { countDatalistOption } = useDatalistOptionCount();
   const { createDatalistOption } = useCreateDatalistOption();
   const { buildFilterFields, mapFiltersToPayload } = useDatalistOptionFilters({
     enabledFilters: isTruthy(datalist?.id)
-      ? ["idList", "optionI18nLikeList", "statusIdList"]
+      ? ["idList", "optionI18nLikeList", "statusIdList", "custom"]
       : undefined,
   });
   const [columns, setColumns] = useState<ColumnDef<DataListOption_DETAILED>[]>(
     []
   );
 
+  // Resolves the raw filter form state into the search/count payload, pinning
+  // the datalist scope when the table is embedded under a single datalist.
+  const resolveFilters = useCallback(
+    (
+      rawFilters: Record<DataListOptionFilterKeys, unknown>
+    ): DataListOptionFilters => {
+      const mapped = mapFiltersToPayload(rawFilters);
+      return {
+        ...mapped,
+        dataListIdList: datalist
+          ? toArrayOfString(toArray(datalist?.id), "id")
+          : mapped.dataListIdList,
+      };
+    },
+    [mapFiltersToPayload, datalist]
+  );
+
   async function fetchDatalistOptions(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<DataListOption_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       const response = await searchDatalistOptions({
         pagination,
-        filters: {
-          ..._filters,
-          dataListIdList: datalist
-            ? toArrayOfString(toArray(datalist?.id), "id")
-            : _filters.dataListIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<DataListOptionFilterKeys, unknown>
+        ),
+        sort,
       });
 
       const datalistOption = Object.values(response.data);
@@ -105,7 +128,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
               {
                 id: "dataListId",
                 accessorKey: "dataListId",
-                header: "Datalist",
+                header: () => (
+                  <SortableHeader title="Datalist" sortField="dataListName" />
+                ),
                 cell: ({
                   row,
                 }: {
@@ -126,7 +151,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
         {
           id: "name",
           accessorKey: "name",
-          header: "Name",
+          header: () => <SortableHeader title="Name" sortField="optionName" />,
           cell: ({ row: { original } }) =>
             original.dataListId ? (
               <div className="inline-flex max-w-48">
@@ -138,7 +163,14 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
         {
           id: "status",
           accessorKey: "status",
-          header: "Status",
+          header: () => <SortableHeader title="Status" sortField="status" />,
+        },
+
+        {
+          id: "custom",
+          accessorKey: "custom",
+          header: "Custom",
+          cell: (data) => data.getValue() && <Check className="h-4 w-4" />,
         },
 
         ...dynamicColumns,
@@ -206,6 +238,78 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
     });
   };
 
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/data_list_option/count/v1), bound to the active filters. When the
+  // table is scoped to a single datalist, grouping by datalist would yield a
+  // single slice, so that grouping is omitted in that case.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<DataListOptionFilterKeys, unknown>
+      );
+
+      const groupings: ChartGrouping[] = [
+        {
+          key: "status",
+          label: "Status",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countDatalistOption({
+                filters: resolved,
+                groupField: "status",
+                offset,
+                limit,
+              }),
+            (g) => g.status,
+            (g) => g.status
+          ),
+        },
+        {
+          key: "custom",
+          label: "Custom",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countDatalistOption({
+                filters: resolved,
+                groupField: "custom",
+                offset,
+                limit,
+              }),
+            (g) =>
+              g.custom == null ? undefined : g.custom ? "Custom" : "Not custom",
+            (g) =>
+              g.custom == null ? undefined : g.custom ? "Custom" : "Not custom"
+          ),
+        },
+      ];
+
+      if (!datalist?.id) {
+        groupings.push({
+          key: "dataList",
+          label: "Datalist",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countDatalistOption({
+                filters: resolved,
+                groupField: "dataListId",
+                offset,
+                limit,
+              }),
+            (g) => g.dataListId,
+            (g) => g.dataList?.name,
+            (g) =>
+              g.dataList && (
+                <DatalistResourceLink data={g.dataList} withTooltip />
+              )
+          ),
+        });
+      }
+
+      return groupings;
+    },
+    [countDatalistOption, resolveFilters, datalist?.id]
+  );
+
   return (
     <CrudDataTable
       permissionSegment="datalist-options"
@@ -217,6 +321,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      chartGroupings={buildChartGroupings}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/datalist-options/${row.id}`)
       }
