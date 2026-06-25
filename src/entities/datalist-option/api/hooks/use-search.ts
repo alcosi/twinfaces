@@ -3,10 +3,11 @@ import { useCallback, useContext } from "react";
 
 import {
   DataListOptionFilters,
+  DataListOptionSortField,
   DataListOption_DETAILED,
   hydrateDatalistOptionFromMap,
 } from "@/entities/datalist-option";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 export const useDatalistOptionSearch = () => {
   const api = useContext(PrivateApiContext);
@@ -15,14 +16,18 @@ export const useDatalistOptionSearch = () => {
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
       pagination?: PaginationState;
       filters?: DataListOptionFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<DataListOption_DETAILED>> => {
       try {
         const { data, error } = await api.datalistOption.search({
           pagination,
           filters,
+          sortField: sort?.field as DataListOptionSortField | undefined,
+          sortDirection: sort?.direction,
         });
         if (error) {
           throw new Error("Failed to fetch datalist options due to API error");

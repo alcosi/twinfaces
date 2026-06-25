@@ -15,7 +15,8 @@ export type DataListOptionFilterKeys =
   | "idList"
   | "dataListIdList"
   | "statusIdList"
-  | "optionI18nLikeList";
+  | "optionI18nLikeList"
+  | "custom";
 
 export type DataListOptionFilters = Partial<
   Pick<
@@ -23,3 +24,17 @@ export type DataListOptionFilters = Partial<
     DataListOptionFilterKeys
   >
 >;
+
+export type DataListOptionSortField = NonNullable<
+  components["schemas"]["DataListOptionSearchRqV2"]["sortField"]
+>;
+
+export type DataListOptionCountRq =
+  components["schemas"]["DataListOptionCountRqV1"];
+
+export type DataListOptionCountGroupField = NonNullable<
+  DataListOptionCountRq["groupFields"]
+>[number];
+
+export type DataListOptionCount =
+  components["schemas"]["DataListOptionCountV1"];

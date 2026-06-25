@@ -4000,6 +4000,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/data_list_option/search/v2": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return a list of all data list option for the current domain. V2 with sort enum support. */
+        post: operations["dataListOptionSearchListV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/data_list_option/search/v1": {
         parameters: {
             query?: never;
@@ -4009,7 +4026,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Return a list of all data list option for the current domain */
+        /**
+         * Return a list of all data list option for the current domain
+         * @deprecated
+         */
         post: operations["dataListOptionSearchListV1"];
         delete?: never;
         options?: never;
@@ -4031,6 +4051,23 @@ export interface paths {
          * @deprecated
          */
         post: operations["dataListOptionsMapViewV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/data_list_option/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of data list options grouped by specified fields */
+        post: operations["dataListOptionCountV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -13142,10 +13179,10 @@ export interface components {
             statusDetails?: string;
             /** @description results - related objects, if lazeRelation is false */
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description data list options */
+            options?: components["schemas"]["DataListOptionV1"][];
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
-            /** @description data list */
-            options?: components["schemas"]["DataListOptionV1"][];
         };
         DataListOptionMapRqV1: {
             /**
@@ -22137,6 +22174,76 @@ export interface components {
             };
             /** @description search narrow */
             narrow?: components["schemas"]["DataListOptionSearchV1"];
+        };
+        DataListOptionSearchRqV2: {
+            /** @description search params */
+            search?: components["schemas"]["DataListOptionSearchV1"];
+            /**
+             * @description Sort field. Default: createdAt
+             * @enum {string}
+             */
+            sortField?: "createdAt" | "option" | "externalId" | "optionName" | "dataListKey" | "dataListName" | "status";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        DataListOptionCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DataListOptionSearchV1"];
+            /** @description Group by fields */
+            groupFields?: ("dataListId" | "businessAccountId" | "status" | "custom")[];
+        };
+        DataListOptionCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["DataListOptionCountV1"][];
+        };
+        DataListOptionCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description data list id
+             * @example e844a4e5-1c09-474e-816f-05cdb1f093ed
+             */
+            dataListId?: string;
+            /**
+             * Format: uuid
+             * @description business account id
+             * @example 9a3f6075-f175-41cd-a804-934201ec969c
+             */
+            businessAccountId?: string;
+            /**
+             * @description data list option status
+             * @enum {string}
+             */
+            status?: "active" | "disabled" | "hidden";
+            /** @description flag for custom field */
+            custom?: boolean;
         };
         DataListCreateRqV1: {
             /**
@@ -40691,6 +40798,8 @@ export interface operations {
                 showSpaceRole2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showSpaceRoleUser2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
                 showSpaceRoleUserGroup2SpaceRoleMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSpaceRoleUserGroup2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showSpaceRoleUserGroup2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showSpaceRoleUserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showSpaceRoleUserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
@@ -51146,6 +51255,54 @@ export interface operations {
             };
         };
     };
+    dataListOptionSearchListV2: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListOptionSearchRqV2"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListOptionSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     dataListOptionSearchListV1: {
         parameters: {
             query?: {
@@ -51225,6 +51382,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataListOptionMapRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    dataListOptionCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListOptionCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListOptionCountRsV1"];
                 };
             };
             /** @description Access is denied */

@@ -16,6 +16,7 @@ import {
   createFixedSelectAdapter,
   extractEnabledFilters,
   isPopulatedArray,
+  mapToChoice,
   toArray,
   toArrayOfString,
   wrapWithPercent,
@@ -63,6 +64,13 @@ export function useDatalistOptionFilters({
       ...createFixedSelectAdapter(DATALIST_OPTION_STATUS_TYPES),
       multi: true,
     },
+
+    custom: {
+      type: AutoFormValueType.boolean,
+      label: "Custom",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
   };
 
   function buildFilterFields(): Record<
@@ -86,6 +94,7 @@ export function useDatalistOptionFilters({
       statusIdList: toArray(
         filters.statusIdList as DataListOptionFilters["statusIdList"]
       ),
+      custom: mapToChoice(filters.custom),
     };
 
     return result;
