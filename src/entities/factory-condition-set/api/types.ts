@@ -23,7 +23,10 @@ export type FactoryConditionSetFilterKeys =
   | "descriptionLikeList";
 
 export type FactoryConditionSetFilters = Partial<
-  Pick<FactoryConditionSetSearchRq, FactoryConditionSetFilterKeys>
+  Pick<
+    components["schemas"]["FactoryConditionSetSearchDTOv1"],
+    FactoryConditionSetFilterKeys
+  >
 >;
 
 export type FactoryConditionSetCreateRq =

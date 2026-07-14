@@ -35,6 +35,10 @@ export const useTwinFlowSchemaSearchV1 = () => {
           throw new Error("Failed to fetch twin flows due to API error", error);
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const twinFlowSchemas =
           data.twinflowSchemas?.map((dto) =>
             hydrateTwinFlowSchemaFromMap(dto, data.relatedObjects)

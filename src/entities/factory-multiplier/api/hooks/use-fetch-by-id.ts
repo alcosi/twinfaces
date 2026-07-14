@@ -34,11 +34,14 @@ export const useFetchFactoryMultiplierById = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.multiplier)) {
-          throw new Error(
-            "Response does not have factory mulriplier data",
-            error
-          );
+          throw new Error("Response does not have factory mulriplier data", {
+            cause: error,
+          });
         }
 
         if (data.relatedObjects) {

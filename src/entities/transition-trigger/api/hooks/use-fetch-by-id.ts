@@ -24,6 +24,10 @@ export function useFetchTransitionTriggerById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no transition trigger data");
+        }
+
         if (isUndefined(data.triggers) || isEmptyArray(data.triggers)) {
           throw new Error(`Transition trigger with ID ${id} not found.`);
         }

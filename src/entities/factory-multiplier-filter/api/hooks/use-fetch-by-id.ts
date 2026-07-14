@@ -36,10 +36,14 @@ export const useFetchFactoryMultiplierFilterById = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Factory multiplier filter response has no data");
+        }
+
         if (isUndefined(data.multiplierFilter)) {
           throw new Error(
             "Response does not have factory multiplier filter data",
-            error
+            { cause: error }
           );
         }
 

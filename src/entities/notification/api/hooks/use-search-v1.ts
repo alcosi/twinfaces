@@ -27,6 +27,10 @@ export function useRecipientSearch() {
           throw new Error("Failed to fetch recipients due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const recipients = data.recipients?.map((dto) =>
           hydrateRecipientFromMap(dto, data.relatedObjects)
         );

@@ -29,6 +29,10 @@ export function useFetchProjectionById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no projection data");
+        }
+
         if (isUndefined(data.projections) || isEmptyArray(data.projections)) {
           throw new Error(`Projection with ID ${id} not found.`);
         }

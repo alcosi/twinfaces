@@ -35,6 +35,10 @@ export const useUserGroupSearchV1 = () => {
           throw new Error("Failed to fetch twins due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const twinList =
           data.userGroupList?.map((dto) =>
             hydrateUserGroupFromMap(dto, data.relatedObjects)

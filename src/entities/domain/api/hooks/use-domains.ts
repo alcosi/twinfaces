@@ -25,6 +25,10 @@ export const useDomains = () => {
           throw new Error("Failed to fetch domains due to API error");
         }
 
+        if (!data) {
+          throw new Error("Domains response has no data");
+        }
+
         const response = {
           data: data.domains?.map((dto) => hydrateDomainView(dto)) ?? [],
           pagination: data.pagination ?? {},

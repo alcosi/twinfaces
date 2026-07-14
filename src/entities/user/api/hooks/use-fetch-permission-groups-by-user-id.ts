@@ -29,11 +29,14 @@ export const useFetchPermissionGroupsByUserId = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.permissionGroups)) {
-          throw new Error(
-            "Response does not have permission groups data",
-            error
-          );
+          throw new Error("Response does not have permission groups data", {
+            cause: error,
+          });
         }
 
         return data.permissionGroups;

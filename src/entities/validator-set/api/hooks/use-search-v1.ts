@@ -26,6 +26,10 @@ export function useValidatorSetSearch() {
           throw new Error("Failed to fetch validator sets due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const validatorSets =
           (data.validatorSets as ValidatorSet_DETAILED[]) ?? [];
 

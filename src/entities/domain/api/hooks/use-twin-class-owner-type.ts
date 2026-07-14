@@ -18,6 +18,10 @@ export const useTwinClassOwnerType = () => {
         );
       }
 
+      if (!data) {
+        throw new Error("Class owner type response has no data");
+      }
+
       if (isUndefined(data.twinClassOwnerTypes)) {
         throw new Error(
           "Failed to fetch class owner type list due to API error"

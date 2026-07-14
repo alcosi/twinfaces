@@ -36,10 +36,9 @@ export const useFetchPermissionSchemaById = () => {
         }
 
         if (isUndefined(data?.permissionSchema)) {
-          throw new Error(
-            "Response does not have permission schema data",
-            error
-          );
+          throw new Error("Response does not have permission schema data", {
+            cause: error,
+          });
         }
 
         const permissionSchema = hydratePermissionSchemaFromMap(

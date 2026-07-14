@@ -31,6 +31,10 @@ export const useFactoryEraserById = () => {
           throw new Error("Failed to fetch factory eraser due to API error");
         }
 
+        if (!data) {
+          throw new Error("Factory eraser response has no data");
+        }
+
         if (isUndefined(data.eraser)) {
           throw new Error(
             "Invalid response data while fetching factory eraser"

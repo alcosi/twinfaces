@@ -34,6 +34,10 @@ export const useTransitionAliasSearch = () => {
           throw new Error("Failed to fetch transition alias due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         return {
           data: data.aliasList ?? [],
           pagination: data.pagination ?? {},

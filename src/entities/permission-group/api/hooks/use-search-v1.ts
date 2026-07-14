@@ -34,6 +34,10 @@ export const usePermissionGroupSearchV1 = () => {
           throw new Error("Failed to fetch permission groups due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const permissionGroups =
           data.permissionGroups?.map((dto) =>
             hydratePermissionGroupFromMap(dto, data.relatedObjects)

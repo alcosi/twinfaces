@@ -26,7 +26,6 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
           showFactoryPipelineMode: "DETAILED",
           showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
           showFactoryPipelineNextTwinFactory2FactoryMode: "DETAILED",
-          showFactoryPipelineTwinFactory2FactoryMode: "DETAILED",
           showFactoryPipeline2TwinClassMode: "DETAILED",
           showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
           showFactoryPipeline2FactoryMode: "DETAILED",
@@ -35,7 +34,7 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

@@ -25,6 +25,10 @@ export const useRecipientFetchByIdV1 = () => {
           throw new Error("Failed to fetch recipient due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const recipients = data.recipients ?? [];
         if (isUndefined(recipients[0])) {
           throw new Error("Invalid response data while fetching recipient");

@@ -67,7 +67,7 @@ export const useTwinClassFieldSearch = () => {
 
         if (error) throw error;
 
-        return { data: mapAndHydrate(data), pagination: data.pagination };
+        return { data: mapAndHydrate(data), pagination: data?.pagination };
       } finally {
         setLoading(false);
       }
@@ -78,8 +78,8 @@ export const useTwinClassFieldSearch = () => {
   return { loading, searchBySearchId, searchByFilters };
 };
 
-function mapAndHydrate(res: TwinClassFieldSearchRsV1) {
-  return (res.fields ?? []).map((dto) =>
-    hydrateTwinClassFieldFromMap(dto, res.relatedObjects)
+function mapAndHydrate(res: TwinClassFieldSearchRsV1 | undefined) {
+  return (res?.fields ?? []).map((dto) =>
+    hydrateTwinClassFieldFromMap(dto, res?.relatedObjects)
   );
 }

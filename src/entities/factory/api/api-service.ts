@@ -29,13 +29,13 @@ export function createFactoryApi(settings: ApiSettings) {
           showFactoryBranchesCountMode: "SHOW",
           showFactoryErasersCountMode: "SHOW",
           showFactoryMultipliersCountMode: "SHOW",
-          showFactoryPipelinesCountMode: "SHOW",
+          showFactoryPipelineCountMode: "SHOW",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

@@ -32,4 +32,6 @@ export type FactoryFilterKeys =
   | "descriptionLikeList"
   | "keyLikeList";
 
-export type FactoryFilters = Partial<Pick<FactorySearchRq, FactoryFilterKeys>>;
+export type FactoryFilters = Partial<
+  Pick<components["schemas"]["FactorySearchDTOv1"], FactoryFilterKeys>
+>;

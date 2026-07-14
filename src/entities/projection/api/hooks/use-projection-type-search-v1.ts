@@ -26,6 +26,10 @@ export function useProjectionTypesSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no projection type data");
+        }
+
         return {
           data: data.projectionTypes ?? [],
           pagination: data.pagination ?? {},

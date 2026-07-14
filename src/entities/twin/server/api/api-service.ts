@@ -34,8 +34,14 @@ export async function fetchTwinById<T extends Twin_HYDRATED>(
     throw new Error("Failed to fetch twin due to API error", error);
   }
 
+  if (!data) {
+    throw new Error("Response has no data");
+  }
+
   if (isUndefined(data.twin)) {
-    throw new Error("Invalid response data while fetching twin", error);
+    throw new Error("Invalid response data while fetching twin", {
+      cause: error,
+    });
   }
 
   const relatedObjects = data.relatedObjects ?? {};

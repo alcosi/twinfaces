@@ -37,11 +37,14 @@ export function useFetchFactoryConditionSetById() {
           );
         }
 
+        if (!data) {
+          throw new Error("Factory condition set response has no data");
+        }
+
         if (isUndefined(data.conditionSet)) {
-          throw new Error(
-            "Response does not have factory condition set data",
-            error
-          );
+          throw new Error("Response does not have factory condition set data", {
+            cause: error,
+          });
         }
 
         if (data.conditionSet && data.relatedObjects) {

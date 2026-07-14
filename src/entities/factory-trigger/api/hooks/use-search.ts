@@ -28,6 +28,11 @@ export function useFactoryTriggerSearch() {
         if (error) {
           throw error;
         }
+
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const factoryTrigger = (data.twinFactoryTriggers || []).map((dto) =>
           hydrateFactoryTriggerFromMap(dto, data.relatedObjects)
         );

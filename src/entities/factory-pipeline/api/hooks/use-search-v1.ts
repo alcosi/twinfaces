@@ -28,6 +28,10 @@ export function useFactoryPipelineSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const pipelines =
           data.pipelines?.map((dto) =>
             hydrateFactoryPipelineFromMap(dto, data.relatedObjects)

@@ -3,8 +3,8 @@ import { PaginationState } from "@tanstack/react-table";
 import {
   FactoryEraserDuplicateRq,
   FactoryEraserExportSqlRq,
+  FactoryEraserFilters,
   FactoryEraserRqQuery,
-  FactoryEraserSearchRq,
   FactoryEraserUpdate,
 } from "@/entities/factory-eraser";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -15,7 +15,7 @@ export function createFactoryEraserApi(settings: ApiSettings) {
     filters,
   }: {
     pagination: PaginationState;
-    filters: FactoryEraserSearchRq;
+    filters: FactoryEraserFilters;
   }) {
     return settings.client.POST("/private/factory_eraser/search/v1", {
       params: {
@@ -31,7 +31,7 @@ export function createFactoryEraserApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

@@ -32,6 +32,10 @@ export const useFetchHistoryById = () => {
           throw new Error("Failed to fetch history due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const historyList = data.historyList?.map((dto) =>
           hydrateHistoryFromMap(dto, data.relatedObjects)
         );

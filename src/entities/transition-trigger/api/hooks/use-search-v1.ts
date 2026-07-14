@@ -27,6 +27,10 @@ export function useTransitionTriggerSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no transition trigger data");
+        }
+
         const triggers =
           data.triggers?.map((dto) =>
             hydrateTransitionTriggerFromMap(dto, data.relatedObjects)

@@ -30,7 +30,7 @@ export const useTwinClassSearch = () => {
 
         return {
           data: mapAndHydrate(data),
-          pagination: data.pagination ?? {},
+          pagination: data?.pagination ?? {},
         };
       } finally {
         setLoading(false);
@@ -66,7 +66,7 @@ export const useTwinClassSearch = () => {
 
         return {
           data: mapAndHydrate(data),
-          pagination: data.pagination ?? {},
+          pagination: data?.pagination ?? {},
         };
       } finally {
         setLoading(false);
@@ -98,7 +98,7 @@ export const useTwinClassSearch = () => {
 
         return {
           data: mapAndHydrate(data),
-          pagination: data.pagination ?? {},
+          pagination: data?.pagination ?? {},
         };
       } finally {
         setLoading(false);
@@ -115,8 +115,8 @@ export const useTwinClassSearch = () => {
   };
 };
 
-function mapAndHydrate(res: TwinClassListRs) {
-  return (res.twinClassList ?? []).map((dto) =>
-    hydrateTwinClassFromMap(dto, res.relatedObjects)
+function mapAndHydrate(res: TwinClassListRs | undefined) {
+  return (res?.twinClassList ?? []).map((dto) =>
+    hydrateTwinClassFromMap(dto, res?.relatedObjects)
   );
 }

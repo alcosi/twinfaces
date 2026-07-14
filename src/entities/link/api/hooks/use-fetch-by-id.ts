@@ -27,6 +27,10 @@ export const useLinkFetchById = () => {
           throw new Error("Failed to fetch link due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.link)) {
           throw new Error("Invalid response data while fetching link");
         }

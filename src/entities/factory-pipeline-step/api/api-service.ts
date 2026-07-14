@@ -37,7 +37,7 @@ export function createPipelineStepApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

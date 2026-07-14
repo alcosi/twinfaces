@@ -25,6 +25,10 @@ export const useFetchFeaturerById = () => {
           throw new Error("Failed to fetch featurer due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const featurers = data.featurerList ?? [];
         if (isUndefined(featurers[0])) {
           throw new Error("Invalid response data while fetching featurer");

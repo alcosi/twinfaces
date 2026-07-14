@@ -44,6 +44,10 @@ export function useCommentCount() {
           throw new Error("Failed to count comments due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const related = data.relatedObjects;
         const counts = data.counts ?? [];
 

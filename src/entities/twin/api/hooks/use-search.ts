@@ -32,6 +32,10 @@ export const useTwinSearch = () => {
         if (error) {
           throw new Error("Failed to fetch twins due to API error");
         }
+
+        if (!data) {
+          throw new Error("Response has no data");
+        }
         const twinList =
           data?.twinList?.map((dto) =>
             hydrateTwinFromMap<Twin_DETAILED>(dto, data.relatedObjects)
@@ -76,6 +80,10 @@ export const useTwinSearch = () => {
           throw new Error(
             "Failed to fetch twins by search id due to API error"
           );
+        }
+
+        if (!data) {
+          throw new Error("Response has no data");
         }
         const twinList =
           data?.twinList?.map((dto) =>

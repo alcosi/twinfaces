@@ -27,6 +27,10 @@ export const useDomainUserSearchV1 = () => {
           throw new Error("Failed to fetch users due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const users =
           data.users?.map((dto) =>
             hydrateDomainUserFromMap(dto, data.relatedObjects)

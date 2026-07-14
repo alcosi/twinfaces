@@ -23,6 +23,10 @@ export const useFetchTwinFlowTransitionById = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.transition)) {
           throw new Error(`Twin-flow-transition with ID ${id} not found`);
         }

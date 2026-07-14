@@ -34,7 +34,10 @@ export type PipelineStepFilterKeys =
   | "factoryConditionSetIdList";
 
 export type PipelineStepFilters = Partial<
-  Pick<PipelineStepSearchRq, PipelineStepFilterKeys>
+  Pick<
+    components["schemas"]["FactoryPipelineStepSearchDTOv1"],
+    PipelineStepFilterKeys
+  >
 >;
 
 export type FactoryPipelineStepRqQuery =

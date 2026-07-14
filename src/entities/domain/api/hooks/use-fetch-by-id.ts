@@ -35,7 +35,9 @@ export const useFetchDomainById = () => {
         }
 
         if (isUndefined(data?.domain)) {
-          throw new Error("Response does not have domain data", error);
+          throw new Error("Response does not have domain data", {
+            cause: error,
+          });
         }
 
         const domain = hydrateDomainView(data.domain, data.relatedObjects);

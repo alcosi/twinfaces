@@ -32,7 +32,7 @@ export function createFactoryBranchApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

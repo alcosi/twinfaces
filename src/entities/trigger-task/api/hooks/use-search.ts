@@ -28,6 +28,9 @@ export function useTriggerTaskSearch() {
         if (error) {
           throw error;
         }
+        if (!data) {
+          throw new Error("Response has no data");
+        }
         const tasks =
           data.twinTriggerTasks?.map((dto) =>
             hydrateTriggerTaskFromMap(dto, data.relatedObjects)

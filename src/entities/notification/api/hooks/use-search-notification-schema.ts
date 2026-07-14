@@ -30,6 +30,10 @@ export function useNotificationSchemaSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         return {
           data: data.notificationSchemas ?? [],
           pagination: data.pagination ?? {},

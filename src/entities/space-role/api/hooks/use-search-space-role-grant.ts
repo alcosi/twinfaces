@@ -31,6 +31,11 @@ export const usePermissionSpaceRoleSearchV1 = () => {
             "Failed to fetch permission space role due to API error"
           );
         }
+
+        if (!data) {
+          throw new Error("Response has no permission space role data");
+        }
+
         const PermissionGrantSpaceRoles =
           data.permissionGrantSpaceRoles?.map((dto) =>
             hydratePermissionGrantSpaceRoleFromMap(dto, data.relatedObjects)

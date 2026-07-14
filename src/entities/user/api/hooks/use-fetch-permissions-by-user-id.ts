@@ -29,8 +29,14 @@ export const useFetchPermissionsByUserId = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.permissions)) {
-          throw new Error("Response does not have permissions data", error);
+          throw new Error("Response does not have permissions data", {
+            cause: error,
+          });
         }
 
         return data.permissions;

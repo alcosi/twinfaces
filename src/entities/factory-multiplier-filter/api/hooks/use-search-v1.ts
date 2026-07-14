@@ -32,6 +32,10 @@ export function useFactoryMultiplierFilterSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const factoryMultiplierFilters = data.multiplierFilters?.map((dto) =>
           hydrateFactoryMultiplierFilterFromMap(dto, data.relatedObjects)
         );

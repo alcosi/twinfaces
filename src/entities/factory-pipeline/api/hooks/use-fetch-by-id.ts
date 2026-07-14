@@ -35,11 +35,14 @@ export function useFetchFactoryPipelineById() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.pipeline)) {
-          throw new Error(
-            "Response does not have factory pipeline data",
-            error
-          );
+          throw new Error("Response does not have factory pipeline data", {
+            cause: error,
+          });
         }
 
         if (data.pipeline && data.relatedObjects) {

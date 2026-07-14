@@ -24,6 +24,10 @@ export function useFetchStatusTriggerById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no status trigger data");
+        }
+
         if (
           isUndefined(data.twinStatusTriggers) ||
           isEmptyArray(data.twinStatusTriggers)

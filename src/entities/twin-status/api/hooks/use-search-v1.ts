@@ -29,6 +29,10 @@ export const useTwinStatusSearchV1 = () => {
         throw new Error("Failed to fetch statuses due to API error");
       }
 
+      if (!data) {
+        throw new Error("Response has no data");
+      }
+
       const statuses =
         data.statuses?.map((dto) =>
           hydrateTwinStatusFromMap(dto, data.relatedObjects)

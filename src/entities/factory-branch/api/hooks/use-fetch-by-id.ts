@@ -32,8 +32,14 @@ export const useFetchFactoryBranchById = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Factory branch response has no data");
+        }
+
         if (isUndefined(data.branch)) {
-          throw new Error("Response does not have factory branch data", error);
+          throw new Error("Response does not have factory branch data", {
+            cause: error,
+          });
         }
 
         if (data.relatedObjects) {

@@ -37,6 +37,10 @@ export const useFetchValidHeadTwins = () => {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         return {
           data: data.twinList ?? [],
           pagination: {},

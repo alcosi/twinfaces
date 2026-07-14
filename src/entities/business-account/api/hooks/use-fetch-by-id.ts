@@ -29,6 +29,10 @@ export function useFetchBusinessAccountById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (
           isUndefined(data.businessAccounts) ||
           isEmptyArray(data.businessAccounts)

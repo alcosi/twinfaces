@@ -27,6 +27,10 @@ export function useStatusTriggerSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no status trigger data");
+        }
+
         const statusTriggers =
           data.twinStatusTriggers?.map((dto) =>
             hydrateStatusTriggerFromMap(dto, data.relatedObjects)

@@ -29,7 +29,9 @@ export const useFetchDatalistById = () => {
         }
 
         if (isUndefined(data?.dataList)) {
-          throw new Error("Response does not have datalist data", error);
+          throw new Error("Response does not have datalist data", {
+            cause: error,
+          });
         }
 
         return data.dataList;

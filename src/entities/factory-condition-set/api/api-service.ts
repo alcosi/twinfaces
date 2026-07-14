@@ -36,7 +36,7 @@ export function createFactoryConditionSetApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

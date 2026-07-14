@@ -24,7 +24,10 @@ export type FactoryConditionFilterKeys =
   | "active";
 
 export type FactoryConditionFilters = Partial<
-  Pick<FactoryConditionSearchRq, FactoryConditionFilterKeys>
+  Pick<
+    components["schemas"]["FactoryConditionSearchDTOv1"],
+    FactoryConditionFilterKeys
+  >
 >;
 
 export type FactoryConditionCreateRq =

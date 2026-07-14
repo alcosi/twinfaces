@@ -33,6 +33,10 @@ export const useDatalistOptionSearch = () => {
           throw new Error("Failed to fetch datalist options due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const options =
           data?.options?.map((dto) =>
             hydrateDatalistOptionFromMap(dto, data.relatedObjects)

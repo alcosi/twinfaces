@@ -27,6 +27,10 @@ export function useTwinFlowFactorySearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const twinflowFactories =
           data.twinflowFactories?.map((dto) =>
             hydrateTwinFlowFactoryFromMap(dto, data.relatedObjects)

@@ -29,6 +29,10 @@ export function useFetchTierById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no tier data");
+        }
+
         if (isUndefined(data.tiers) || isEmptyArray(data.tiers)) {
           throw new Error(`Tier with ID ${id} not found.`);
         }

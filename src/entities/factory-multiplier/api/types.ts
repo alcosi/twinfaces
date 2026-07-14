@@ -36,5 +36,8 @@ export type FactoryMultiplierFilterKeys =
   | "descriptionLikeList";
 
 export type FactoryMultiplierFilters = Partial<
-  Pick<FactoryMultiplierSearchRq, FactoryMultiplierFilterKeys>
+  Pick<
+    components["schemas"]["FactoryMultiplierSearchDTOv1"],
+    FactoryMultiplierFilterKeys
+  >
 >;

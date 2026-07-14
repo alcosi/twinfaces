@@ -63,6 +63,10 @@ export function useTwinCount() {
           throw new Error("Failed to count twins due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const related = data.relatedObjects;
         const counts = (data.counts ?? []) as RawTwinCount[];
 

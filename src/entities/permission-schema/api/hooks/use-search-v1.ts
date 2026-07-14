@@ -37,6 +37,10 @@ export const usePermissionSchemaSearchV1 = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const permissionSchemas =
           data.permissionSchemas?.map((dto) =>
             hydratePermissionSchemaFromMap(dto, data.relatedObjects)

@@ -33,7 +33,10 @@ export type FactoryEraserFilterKeys =
   | "descriptionLikeList";
 
 export type FactoryEraserFilters = Partial<
-  Pick<FactoryEraserSearchRq, FactoryEraserFilterKeys>
+  Pick<
+    components["schemas"]["FactoryEraserSearchDTOv1"],
+    FactoryEraserFilterKeys
+  >
 >;
 export type FactoryEraserDuplicateRq =
   components["schemas"]["FactoryEraserDuplicateRqV1"];

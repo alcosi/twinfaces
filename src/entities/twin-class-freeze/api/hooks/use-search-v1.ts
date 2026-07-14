@@ -36,6 +36,10 @@ export function useTwinClassFreezeSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         return {
           data: data?.twinClassFreezes ?? [],
           pagination: data.pagination ?? {},

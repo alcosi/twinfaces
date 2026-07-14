@@ -36,6 +36,10 @@ export const usePermissionSearchV1 = () => {
           throw new Error("Failed to fetch permissions due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no permission data");
+        }
+
         const permissions =
           data.permissions?.map((dto) =>
             hydratePermissionFromMap(dto, data.relatedObjects)

@@ -51,6 +51,10 @@ export function useBusinessAccountUserCount() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const userMap = data.relatedObjects?.userMap;
         const businessAccountMap = data.relatedObjects?.businessAccountMap;
 

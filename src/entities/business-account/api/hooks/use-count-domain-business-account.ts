@@ -74,6 +74,10 @@ export function useBusinessAccountCount() {
           throw new Error("Failed to count business accounts due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const related = data.relatedObjects;
         const counts =
           (data as unknown as { counts?: RawCount[] }).counts ?? [];

@@ -45,5 +45,8 @@ export type FactoryBranchFilterKeys =
   | "conditionInvert";
 
 export type FactoryBranchFilters = Partial<
-  Pick<FactoryBranchSearchRq, FactoryBranchFilterKeys>
+  Pick<
+    components["schemas"]["FactoryBranchSearchDTOv1"],
+    FactoryBranchFilterKeys
+  >
 >;

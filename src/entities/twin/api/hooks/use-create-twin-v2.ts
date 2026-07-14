@@ -13,6 +13,9 @@ export const useCreateTwin = () => {
         if (error) {
           throw new Error("Failed to create twin");
         }
+        if (!data) {
+          throw new Error("Response does not have twin data");
+        }
         return data;
       } catch (error) {
         throw new Error("An error occurred while creating twin");
