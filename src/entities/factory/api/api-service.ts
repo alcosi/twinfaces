@@ -1,10 +1,12 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryCountGroupField,
   FactoryCreateRq,
   FactoryDuplicateRq,
   FactoryExportSqlRq,
   FactoryFilters,
+  FactorySortField,
   FactoryUpdateRq,
   FactoryViewhQuery,
 } from "@/entities/factory";
@@ -14,9 +16,13 @@ export function createFactoryApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: FactoryFilters;
+    sortField?: FactorySortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/factory/search/v1", {
       params: {
@@ -36,6 +42,40 @@ export function createFactoryApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: FactoryFilters;
+    groupFields: FactoryCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/factory/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactory2UserMode: "DETAILED",
+          showUserMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -92,7 +132,7 @@ export function createFactoryApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create, exportSql, duplicate };
+  return { search, count, getById, update, create, exportSql, duplicate };
 }
 
 export type FactoryApi = ReturnType<typeof createFactoryApi>;

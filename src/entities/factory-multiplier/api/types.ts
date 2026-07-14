@@ -41,3 +41,11 @@ export type FactoryMultiplierFilters = Partial<
     FactoryMultiplierFilterKeys
   >
 >;
+
+export type FactoryMultiplierSortField = NonNullable<
+  components["schemas"]["FactoryMultiplierSearchRqV1"]["sortField"]
+>;
+
+export type FactoryMultiplierCountGroupField = NonNullable<
+  components["schemas"]["FactoryMultiplierCountRqV1"]["groupFields"]
+>[number];

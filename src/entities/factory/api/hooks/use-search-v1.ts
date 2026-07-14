@@ -4,9 +4,10 @@ import { useCallback, useContext } from "react";
 import {
   Factory,
   FactoryFilters,
+  FactorySortField,
   hydrateFactoryFromMap,
 } from "@/entities/factory";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 export function useFactorySearch() {
   const api = useContext(PrivateApiContext);
@@ -15,14 +16,18 @@ export function useFactorySearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: FactoryFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Factory>> => {
       try {
         const { data, error } = await api.factory.search({
           pagination,
           filters,
+          sortField: sort?.field as FactorySortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

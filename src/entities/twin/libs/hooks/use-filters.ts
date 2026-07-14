@@ -239,9 +239,14 @@ export function useTwinFilters({
         to: createdAt?.to ? `${createdAt.to}T23:59:59` : "",
       },
       // `fields` was unified to a JSON-encoded string in the schema (deprecated
-      // in favour of `fieldsFilter`). We keep sending the same field-search map,
-      // now serialized, to preserve the existing filtering behaviour.
-      fields: JSON.stringify(fields),
+      // in favour of `fieldsFilter`). Only serialize it when a dynamic-field
+      // filter is actually set — sending the always-present "{}" for "no
+      // filter" broke /private/twin/search/v4 (an empty-but-non-null `fields`
+      // is treated differently from an absent one). `undefined` is dropped
+      // when the request body is JSON-serialized, so this omits the key
+      // entirely instead of sending an empty filter.
+      fields:
+        Object.keys(fields).length > 0 ? JSON.stringify(fields) : undefined,
     };
 
     return result;

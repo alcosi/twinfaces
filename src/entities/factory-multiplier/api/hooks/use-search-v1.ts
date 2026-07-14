@@ -1,10 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { hydrateFactoryMultiplierFromMap } from "../../libs";
-import { FactoryMultiplierFilters, FactoryMultiplier_DETAILED } from "../types";
+import {
+  FactoryMultiplierFilters,
+  FactoryMultiplierSortField,
+  FactoryMultiplier_DETAILED,
+} from "../types";
 
 export function useFactoryMultipliersSearch() {
   const api = useContext(PrivateApiContext);
@@ -13,14 +17,18 @@ export function useFactoryMultipliersSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: FactoryMultiplierFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<FactoryMultiplier_DETAILED>> => {
       try {
         const { data, error } = await api.factoryMultiplier.search({
           pagination,
           filters,
+          sortField: sort?.field as FactoryMultiplierSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

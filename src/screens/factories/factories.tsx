@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,12 +12,14 @@ import {
   FACTORY_SCHEMA,
   Factory,
   FactoryCreateRq,
+  FactoryFilterKeys,
   useCreateFactory,
+  useFactoryCount,
   useFactoryFilters,
   useFactorySearch,
 } from "@/entities/factory";
 import { UserResourceLink } from "@/features/user/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
 import {
   Button,
@@ -28,9 +30,13 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
 
 import {
@@ -56,12 +62,14 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -72,12 +80,12 @@ const colDefs: Record<
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Created At",
+    header: () => <SortableHeader title="Created At" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -85,7 +93,9 @@ const colDefs: Record<
   createdByUser: {
     id: "createdByUser",
     accessorKey: "createdByUser",
-    header: "Created By",
+    header: () => (
+      <SortableHeader title="Created By" sortField="createdByUserName" />
+    ),
     cell: ({ row: { original } }) =>
       original.createdByUser && (
         <UserResourceLink data={original.createdByUser} />
@@ -123,6 +133,7 @@ export function Factories() {
   const duplicateDialogRef = useRef<FactoryDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryExportSqlDialogRef>(null);
   const { searchFactories } = useFactorySearch();
+  const { countFactories } = useFactoryCount();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryFilters();
   const { createFactory } = useCreateFactory();
 
@@ -183,7 +194,8 @@ export function Factories() {
 
   async function fetchFactories(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<Factory>> {
     const _filters = mapFiltersToPayload(filters.filters);
 
@@ -191,12 +203,47 @@ export function Factories() {
       return await searchFactories({
         pagination,
         filters: _filters,
+        sort,
       });
     } catch (error) {
       toast.error("An error occurred while fetching factories: " + error);
       throw error;
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/factory/count/v1), bound to the active filters. The count
+  // endpoint only supports grouping by createdByUserId.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<FactoryFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "createdByUser",
+          label: "Created By",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactories({
+                filters: resolved,
+                groupField: "createdByUserId",
+                offset,
+                limit,
+              }),
+            (g) => g.createdByUserId,
+            (g) => g.createdByUser?.fullName,
+            (g) =>
+              g.createdByUser && (
+                <UserResourceLink data={g.createdByUser} withTooltip />
+              )
+          ),
+        },
+      ];
+    },
+    [mapFiltersToPayload, countFactories]
+  );
 
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_SCHEMA>
@@ -240,6 +287,7 @@ export function Factories() {
         filters={{
           filtersInfo: buildFilterFields(),
         }}
+        chartGroupings={buildChartGroupings}
         dialogForm={factoryForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
