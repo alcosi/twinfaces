@@ -5,7 +5,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -13,6 +13,7 @@ import { z } from "zod";
 import {
   FactoryPipelineFilterKeys,
   FactoryPipeline_DETAILED,
+  useFactoryPipelineCount,
   useFactoryPipelineCreate,
   useFactoryPipelineFilters,
   useFactoryPipelineSearch,
@@ -23,6 +24,7 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import {
@@ -34,7 +36,14 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import {
   FactoryPipelineDuplicateDialog,
   FactoryPipelineDuplicateDialogRef,
@@ -66,7 +75,7 @@ const colDefs: Record<
   factory: {
     id: "factory",
     accessorKey: "factory",
-    header: "Factory",
+    header: () => <SortableHeader title="Factory" sortField="factoryName" />,
     cell: ({ row: { original } }) =>
       original.factory && (
         <div className="inline-flex max-w-48">
@@ -78,7 +87,9 @@ const colDefs: Record<
   inputTwinClassId: {
     id: "inputTwinClassId",
     accessorKey: "inputTwinClassId",
-    header: "Input Class",
+    header: () => (
+      <SortableHeader title="Input Class" sortField="inputTwinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
         <div className="inline-flex max-w-48">
@@ -93,7 +104,12 @@ const colDefs: Record<
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Condition Set",
+    header: () => (
+      <SortableHeader
+        title="Condition Set"
+        sortField="factoryConditionSetName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="inline-flex max-w-48">
@@ -108,21 +124,28 @@ const colDefs: Record<
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
-    header: "Condition Invert",
+    header: () => (
+      <SortableHeader
+        title="Condition Invert"
+        sortField="factoryConditionSetInvert"
+      />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
 
   active: {
     id: "active",
     accessorKey: "active",
-    header: "Active",
+    header: () => <SortableHeader title="Active" sortField="active" />,
     cell: (data) => data.getValue() && <Check />,
   },
 
   outputTwinStatus: {
     id: "outputTwinStatus",
     accessorKey: "outputTwinStatus",
-    header: "Output Status",
+    header: () => (
+      <SortableHeader title="Output Status" sortField="outputTwinStatusName" />
+    ),
     cell: ({ row: { original } }) =>
       original.outputTwinStatus && (
         <div className="inline-flex max-w-48">
@@ -138,7 +161,9 @@ const colDefs: Record<
   nextFactory: {
     id: "nextFactory",
     accessorKey: "nextFactory",
-    header: "Next Factory",
+    header: () => (
+      <SortableHeader title="Next Factory" sortField="nextFactoryName" />
+    ),
     cell: ({ row: { original } }) =>
       original.nextFactory && (
         <div className="inline-flex max-w-48">
@@ -150,7 +175,9 @@ const colDefs: Record<
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -162,7 +189,12 @@ const colDefs: Record<
   nextFactoryLimitScope: {
     id: "nextFactoryLimitScope",
     accessorKey: "nextFactoryLimitScope",
-    header: "Next Factory Limit Scope",
+    header: () => (
+      <SortableHeader
+        title="Next Factory Limit Scope"
+        sortField="nextFactoryLimitScope"
+      />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
 
@@ -184,6 +216,7 @@ export function FactoryPipelinesTable({
 }) {
   const router = useRouter();
   const { searchFactoryPipelines } = useFactoryPipelineSearch();
+  const { countFactoryPipelines } = useFactoryPipelineCount();
   const { createFactoryPipeline } = useFactoryPipelineCreate();
   const duplicateDialogRef = useRef<FactoryPipelineDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryPipelineExportSqlDialogRef>(null);
@@ -285,24 +318,38 @@ export function FactoryPipelinesTable({
     }
   );
 
+  // Maps the table filter values to the API payload and injects the
+  // contextual factory / output-status constraints. Shared by the table
+  // fetcher and the pie-chart count requests so both honour the active
+  // filters.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<FactoryPipelineFilterKeys, unknown>) => {
+      const mapped = mapFiltersToPayload(rawFilters);
+      return {
+        ...mapped,
+        factoryIdList: factoryId
+          ? toArrayOfString(toArray(factoryId), "id")
+          : mapped.factoryIdList,
+        outputTwinStatusIdList: outputTwinStatusId
+          ? toArrayOfString(toArray(outputTwinStatusId), "id")
+          : mapped.outputTwinStatusIdList,
+      };
+    },
+    [mapFiltersToPayload, factoryId, outputTwinStatusId]
+  );
+
   async function fetchFactoryPipelines(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ) {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       return await searchFactoryPipelines({
         pagination,
-        filters: {
-          ..._filters,
-          factoryIdList: factoryId
-            ? toArrayOfString(toArray(factoryId), "id")
-            : _filters.factoryIdList,
-          outputTwinStatusIdList: outputTwinStatusId
-            ? toArrayOfString(toArray(outputTwinStatusId), "id")
-            : _filters.outputTwinStatusIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<FactoryPipelineFilterKeys, unknown>
+        ),
+        sort,
       });
     } catch (error) {
       toast.error(
@@ -313,6 +360,208 @@ export function FactoryPipelinesTable({
       );
     }
   }
+
+  const showFactoryColumn = isFalsy(factoryId);
+  const showOutputTwinStatusColumn = isFalsy(outputTwinStatusId);
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/factory_pipeline/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<FactoryPipelineFilterKeys, unknown>
+      );
+      const groupings: ChartGrouping[] = [];
+
+      if (showFactoryColumn) {
+        groupings.push({
+          key: "factory",
+          label: "Factory",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryPipelines({
+                filters: resolved,
+                groupField: "factoryId",
+                offset,
+                limit,
+              }),
+            (g) => g.factoryId,
+            (g) => g.factory?.name ?? g.factory?.key,
+            (g) =>
+              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
+          ),
+        });
+      }
+
+      groupings.push({
+        key: "inputTwinClass",
+        label: "Input Class",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "inputTwinClassId",
+              offset,
+              limit,
+            }),
+          (g) => g.inputTwinClassId,
+          (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+          (g) =>
+            g.inputTwinClass && (
+              <TwinClassResourceLink
+                data={g.inputTwinClass as TwinClass_DETAILED}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      groupings.push({
+        key: "factoryConditionSet",
+        label: "Condition Set",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "factoryConditionSetId",
+              offset,
+              limit,
+            }),
+          (g) => g.factoryConditionSetId,
+          (g) => g.factoryConditionSet?.name,
+          (g) =>
+            g.factoryConditionSet && (
+              <FactoryConditionSetResourceLink
+                data={g.factoryConditionSet}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      if (showOutputTwinStatusColumn) {
+        groupings.push({
+          key: "outputTwinStatus",
+          label: "Output Status",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryPipelines({
+                filters: resolved,
+                groupField: "outputTwinStatusId",
+                offset,
+                limit,
+              }),
+            (g) => g.outputTwinStatusId,
+            (g) => g.outputTwinStatus?.name,
+            (g) =>
+              g.outputTwinStatus && (
+                <TwinClassStatusResourceLink
+                  data={g.outputTwinStatus}
+                  withTooltip
+                />
+              )
+          ),
+        });
+      }
+
+      groupings.push({
+        key: "nextFactory",
+        label: "Next Factory",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "nextFactoryId",
+              offset,
+              limit,
+            }),
+          (g) => g.nextFactoryId,
+          (g) => g.nextFactory?.name ?? g.nextFactory?.key,
+          (g) =>
+            g.nextFactory && (
+              <FactoryResourceLink data={g.nextFactory} withTooltip />
+            )
+        ),
+      });
+
+      groupings.push({
+        key: "active",
+        label: "Active",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "active",
+              offset,
+              limit,
+            }),
+          (g) => (g.active === undefined ? undefined : String(g.active)),
+          (g) =>
+            g.active === undefined
+              ? undefined
+              : g.active
+                ? "Active"
+                : "Inactive"
+        ),
+      });
+
+      groupings.push({
+        key: "factoryConditionSetInvert",
+        label: "Condition Invert",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "factoryConditionSetInvert",
+              offset,
+              limit,
+            }),
+          (g) =>
+            g.factoryConditionSetInvert === undefined
+              ? undefined
+              : String(g.factoryConditionSetInvert),
+          (g) =>
+            g.factoryConditionSetInvert === undefined
+              ? undefined
+              : g.factoryConditionSetInvert
+                ? "Inverted"
+                : "Not inverted"
+        ),
+      });
+
+      groupings.push({
+        key: "nextFactoryLimitScope",
+        label: "Next Factory Limit Scope",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryPipelines({
+              filters: resolved,
+              groupField: "nextFactoryLimitScope",
+              offset,
+              limit,
+            }),
+          (g) =>
+            g.nextFactoryLimitScope === undefined
+              ? undefined
+              : String(g.nextFactoryLimitScope),
+          (g) =>
+            g.nextFactoryLimitScope === undefined
+              ? undefined
+              : g.nextFactoryLimitScope
+                ? "Scoped"
+                : "Not scoped"
+        ),
+      });
+
+      return groupings;
+    },
+    [
+      resolveFilters,
+      countFactoryPipelines,
+      showFactoryColumn,
+      showOutputTwinStatusColumn,
+    ]
+  );
 
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_PIPELINE_SCHEMA>
@@ -334,12 +583,12 @@ export function FactoryPipelinesTable({
         title={title}
         columns={[
           colDefs.id,
-          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          ...(showFactoryColumn ? [colDefs.factory] : []),
           colDefs.inputTwinClassId,
           colDefs.factoryConditionSet,
           colDefs.factoryConditionSetInvert,
           colDefs.active,
-          ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
+          ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
           colDefs.description,
           actionsCol,
@@ -351,17 +600,18 @@ export function FactoryPipelinesTable({
         }
         defaultVisibleColumns={[
           colDefs.id,
-          ...(isFalsy(factoryId) ? [colDefs.factory] : []),
+          ...(showFactoryColumn ? [colDefs.factory] : []),
           colDefs.inputTwinClassId,
           colDefs.factoryConditionSet,
           colDefs.factoryConditionSetInvert,
           colDefs.active,
-          ...(isFalsy(outputTwinStatusId) ? [colDefs.outputTwinStatus] : []),
+          ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
           colDefs.description,
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
+        chartGroupings={buildChartGroupings}
         dialogForm={factoryPipelinesForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

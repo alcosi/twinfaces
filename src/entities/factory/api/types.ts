@@ -35,3 +35,11 @@ export type FactoryFilterKeys =
 export type FactoryFilters = Partial<
   Pick<components["schemas"]["FactorySearchDTOv1"], FactoryFilterKeys>
 >;
+
+export type FactorySortField = NonNullable<
+  components["schemas"]["FactorySearchRqV1"]["sortField"]
+>;
+
+export type FactoryCountGroupField = NonNullable<
+  components["schemas"]["FactoryCountRqV1"]["groupFields"]
+>[number];

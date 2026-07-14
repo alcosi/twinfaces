@@ -3,10 +3,12 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  FactoryMultiplierCountGroupField,
   FactoryMultiplierCreateRq,
   FactoryMultiplierDuplicateRq,
   FactoryMultiplierExportSqlRq,
   FactoryMultiplierFilters,
+  FactoryMultiplierSortField,
   FactoryMultiplierUpdateRq,
   FactoryMultiplierViewQuery,
 } from "./types";
@@ -15,9 +17,13 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: FactoryMultiplierFilters;
+    sortField?: FactoryMultiplierSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/factory_multiplier/search/v1", {
       params: {
@@ -36,6 +42,41 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: FactoryMultiplierFilters;
+    groupFields: FactoryMultiplierCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/factory_multiplier/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactoryMultiplier2FactoryMode: "DETAILED",
+          showFactoryMultiplier2TwinClassMode: "DETAILED",
+          showFactoryMultiplier2FeaturerMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -114,7 +155,7 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create, exportSql, duplicate };
+  return { search, count, getById, update, create, exportSql, duplicate };
 }
 
 export type FactoryMultiplierApi = ReturnType<

@@ -1,10 +1,12 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryPipelineCountGroupField,
   FactoryPipelineCreateRq,
   FactoryPipelineDuplicateRq,
   FactoryPipelineExportSqlRq,
   FactoryPipelineFilters,
+  FactoryPipelineSortField,
   FactoryPipelineUpdateRq,
   FactoryPipelineViewQuery,
 } from "@/entities/factory-pipeline";
@@ -14,9 +16,13 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: FactoryPipelineFilters;
+    sortField?: FactoryPipelineSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/factory_pipeline/search/v1", {
       params: {
@@ -35,6 +41,42 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: FactoryPipelineFilters;
+    groupFields: FactoryPipelineCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/factory_pipeline/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
+          showFactoryPipeline2TwinClassMode: "DETAILED",
+          showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
+          showFactoryPipeline2FactoryMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -98,7 +140,7 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, update, create, exportSql, duplicate };
+  return { search, count, getById, update, create, exportSql, duplicate };
 }
 
 export type FactoryPipelineApi = ReturnType<typeof createFactoryPipelineApi>;

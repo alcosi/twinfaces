@@ -2,12 +2,18 @@
 
 import { cookies } from "next/headers";
 
+import { clearAuthPermissionCache } from "@/entities/user/server";
+
 import { AuthUser } from "./types";
 
 export async function setAuthUser(user?: AuthUser) {
   const store = await cookies();
 
   if (!user) return;
+
+  // Auth state is changing — drop any permission snapshot cached for the
+  // previous session so the next lookup fetches fresh permissions.
+  clearAuthPermissionCache();
 
   const cookieOpts = { path: "/" };
 
@@ -30,6 +36,8 @@ export async function setAuthUser(user?: AuthUser) {
 
 export async function clearAuthUser() {
   const store = await cookies();
+
+  clearAuthPermissionCache();
 
   const authKeys = [
     "userId",

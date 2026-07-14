@@ -42,3 +42,11 @@ export type FactoryPipelineFilters = Partial<
     FactoryPipelineFilterKeys
   >
 >;
+
+export type FactoryPipelineSortField = NonNullable<
+  components["schemas"]["FactoryPipelineSearchRqV1"]["sortField"]
+>;
+
+export type FactoryPipelineCountGroupField = NonNullable<
+  components["schemas"]["FactoryPipelineCountRqV1"]["groupFields"]
+>[number];
