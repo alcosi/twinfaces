@@ -34,6 +34,10 @@ export const useDatalistSearchV1 = () => {
           throw new Error("Failed to fetch datalist due to API error");
         }
 
+        if (!data) {
+          throw new Error("Datalist response has no data");
+        }
+
         return {
           data: data?.dataListList ?? [],
           pagination: data.pagination ?? {},

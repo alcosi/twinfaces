@@ -30,6 +30,10 @@ export function useHistoryNotificationSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const notifications = data.historyNotifications?.map((dto) =>
           hydrateNotificationsFromMap(dto, data.relatedObjects)
         );

@@ -33,7 +33,9 @@ export const useFetchFactoryPipelineStepById = () => {
         }
 
         if (isUndefined(data?.step)) {
-          throw new Error("Response does not have pipeline step data", error);
+          throw new Error("Response does not have pipeline step data", {
+            cause: error,
+          });
         }
 
         const step = hydratePipelineStepFromMap(data.step, data.relatedObjects);

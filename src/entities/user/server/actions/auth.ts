@@ -97,7 +97,7 @@ export async function fetchAuthConfig(domainId: string): Promise<AuthConfig> {
     throw result.error;
   }
 
-  if (isUndefined(result.data.config)) {
+  if (isUndefined(result.data) || isUndefined(result.data.config)) {
     throw new Error("Config is not returned");
   }
 
@@ -173,6 +173,10 @@ export async function getAuthenticatedUser({
     throw error;
   }
 
+  if (isUndefined(data)) {
+    throw new Error("Domain user is not returned");
+  }
+
   return hydrateDomainUserFromMap(
     data.user as DomainUser_DETAILED,
     data.relatedObjects
@@ -233,6 +237,10 @@ export async function loginAuthAction(
       return errorToResult(error);
     }
 
+    if (isUndefined(data)) {
+      return errorToResult(new Error("Empty response"));
+    }
+
     return { ok: true, data };
   } catch (error) {
     return errorToResult(error);
@@ -265,6 +273,10 @@ export async function signUpAuthAction(
 
     if (error) {
       return errorToResult(error);
+    }
+
+    if (isUndefined(data)) {
+      return errorToResult(new Error("Empty response"));
     }
 
     return { ok: true, data };

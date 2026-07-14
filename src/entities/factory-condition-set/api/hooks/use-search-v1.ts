@@ -28,6 +28,10 @@ export function useFactoryConditionSetSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Factory condition set response has no data");
+        }
+
         const factoryConditionSets = data.conditionSets?.map((dto) =>
           hydrateFactoryConditionSetFromMap(dto, data.relatedObjects)
         );

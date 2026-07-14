@@ -35,6 +35,10 @@ export const useTierSearch = () => {
           throw new Error("Failed to fetch tiers due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no tier data");
+        }
+
         const tiers =
           data?.tiers?.map((dto) =>
             hydrateTierFromMap(dto, data.relatedObjects)

@@ -27,6 +27,10 @@ export const useSpaceRoleSearch = () => {
           throw new Error("Failed to fetch space role due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no space role data");
+        }
+
         const SpaceRoles =
           data.spaceRoles?.map((dto) =>
             hydrateSpaceRoleFromMap(dto, data.relatedObjects)

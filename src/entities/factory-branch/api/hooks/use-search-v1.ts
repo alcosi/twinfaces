@@ -26,6 +26,10 @@ export function useFactoryBranchesSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Factory branches response has no data");
+        }
+
         const factoryBranch =
           data.branches?.map((dto) =>
             hydrateFactoryBranchFromMap(dto, data.relatedObjects)

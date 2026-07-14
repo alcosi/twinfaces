@@ -24,6 +24,10 @@ export function useFetchTwinTriggerById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.triggers) || isEmptyArray(data.triggers)) {
           throw new Error(`Twin trigger with ID ${id} not found.`);
         }

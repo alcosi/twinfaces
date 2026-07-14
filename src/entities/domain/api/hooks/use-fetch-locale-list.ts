@@ -14,6 +14,10 @@ export const useFetchLocaleList = () => {
         throw new Error("Failed to fetch locale list due to API error");
       }
 
+      if (!data) {
+        throw new Error("Locale list response has no data");
+      }
+
       if (isUndefined(data.localeList)) {
         throw new Error("Failed to fetch locale list due to API error");
       }

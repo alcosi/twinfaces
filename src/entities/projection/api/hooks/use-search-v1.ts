@@ -27,6 +27,10 @@ export function useProjectionsSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no projection data");
+        }
+
         const projections =
           data.projections?.map((dto) =>
             hydrateProjectionFromMap(dto, data.relatedObjects)

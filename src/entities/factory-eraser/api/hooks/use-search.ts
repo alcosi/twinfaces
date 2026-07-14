@@ -2,7 +2,7 @@ import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
 import {
-  FactoryEraserSearchRq,
+  FactoryEraserFilters,
   FactoryEraser_DETAILED,
   hydrateFactoryEraserFromMap,
 } from "@/entities/factory-eraser";
@@ -16,7 +16,7 @@ export function useFactoryEraserSearch() {
       filters = {},
     }: {
       pagination: PaginationState;
-      filters?: FactoryEraserSearchRq;
+      filters?: FactoryEraserFilters;
     }): Promise<PagedResponse<FactoryEraser_DETAILED>> => {
       try {
         const { data, error } = await api.factoryEraser.search({
@@ -26,6 +26,10 @@ export function useFactoryEraserSearch() {
 
         if (error) {
           throw error;
+        }
+
+        if (!data) {
+          throw new Error("Factory erasers response has no data");
         }
 
         const erasers =

@@ -27,8 +27,14 @@ export async function fetchTwinClassStatusById(id: string) {
     throw error;
   }
 
+  if (!data) {
+    throw new Error("Response has no data");
+  }
+
   if (isUndefined(data.twinStatus)) {
-    throw new Error("Response does not have twin-class-status data", error);
+    throw new Error("Response does not have twin-class-status data", {
+      cause: error,
+    });
   }
 
   const status = hydrateTwinStatusFromMap(data.twinStatus, data.relatedObjects);

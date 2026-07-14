@@ -32,6 +32,10 @@ export const useAttachmentFetchById = () => {
           throw new Error("Failed to fetch attachment due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.attachment)) {
           throw new Error("Invalid response data while fetching attachment");
         }

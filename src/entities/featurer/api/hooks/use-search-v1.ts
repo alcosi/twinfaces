@@ -25,6 +25,10 @@ export const useFeaturerSearch = () => {
         throw new Error("Failed to fetch statuses due to API error");
       }
 
+      if (!data) {
+        throw new Error("Response has no data");
+      }
+
       const featurers = data.featurerList ?? [];
 
       return { data: featurers, pagination: data.pagination ?? {} };

@@ -39,6 +39,10 @@ export const useTwinFlowTransitionSearchV1 = () => {
           throw new Error("Failed to fetch transitions due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const transitions =
           data.transition?.map((dto) =>
             hydrateTwinFlowTransitionFromMap(dto, data.relatedObjects)

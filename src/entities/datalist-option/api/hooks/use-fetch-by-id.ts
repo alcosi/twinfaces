@@ -23,6 +23,10 @@ export const useDatalistOption = () => {
           throw new Error("Failed to fetch datalist options due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.option)) {
           throw new Error(
             "Invalid response data while fetching datalist options"

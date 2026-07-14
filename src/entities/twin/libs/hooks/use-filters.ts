@@ -238,7 +238,10 @@ export function useTwinFilters({
         from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
         to: createdAt?.to ? `${createdAt.to}T23:59:59` : "",
       },
-      fields: fields,
+      // `fields` was unified to a JSON-encoded string in the schema (deprecated
+      // in favour of `fieldsFilter`). We keep sending the same field-search map,
+      // now serialized, to preserve the existing filtering behaviour.
+      fields: JSON.stringify(fields),
     };
 
     return result;
@@ -250,8 +253,8 @@ export function useTwinFilters({
 function mapInheritedFieldFiltersToPayload(
   filterFields: Record<string, string | undefined>,
   twinClassFields: NonNullable<TwinClass_DETAILED["fields"]>
-): NonNullable<TwinFilters["fields"]> {
-  return twinClassFields.reduce<NonNullable<TwinFilters["fields"]>>(
+): Record<string, { type: string }> {
+  return twinClassFields.reduce<Record<string, { type: string }>>(
     (acc, { id: fieldId, key: fieldKey, descriptor }) => {
       if (
         isUndefined(fieldId) ||

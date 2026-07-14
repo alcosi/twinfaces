@@ -34,6 +34,10 @@ export const useCommentSearchV2 = () => {
           throw new Error("Failed to fetch comments due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const comments =
           data.comments?.map((dto) =>
             hydrateCommentFromMap(dto, data.relatedObjects)

@@ -30,6 +30,10 @@ export function useTwinClassDynamicMarkerSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const twinClassDynamicMarkers =
           data.dynamicMarkers?.map((dto) =>
             hydrateTwinClassDynamicMarkerFromMap(dto, data.relatedObjects)

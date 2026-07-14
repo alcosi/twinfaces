@@ -35,6 +35,10 @@ export const useAttachmentSearchV2 = () => {
           throw new Error("Failed to fetch attachment due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const attachments = data.attachments?.map((dto) =>
           hydrateAttachmentFromMap(dto, data.relatedObjects)
         );

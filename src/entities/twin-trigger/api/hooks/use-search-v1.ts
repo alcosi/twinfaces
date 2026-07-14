@@ -27,6 +27,10 @@ export function useTwinTriggerSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const triggers =
           data.triggers?.map((dto) =>
             hydrateTwinTriggerFromMap(dto, data.relatedObjects)

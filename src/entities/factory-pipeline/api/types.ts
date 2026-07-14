@@ -37,5 +37,8 @@ export type FactoryPipelineFilterKeys =
   | "descriptionLikeList";
 
 export type FactoryPipelineFilters = Partial<
-  Pick<FactoryPipelineSearchRq, FactoryPipelineFilterKeys>
+  Pick<
+    components["schemas"]["FactoryPipelineSearchDTOv1"],
+    FactoryPipelineFilterKeys
+  >
 >;

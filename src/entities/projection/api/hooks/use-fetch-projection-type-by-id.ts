@@ -28,6 +28,10 @@ export function useFetchProjectionTypeById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no projection type data");
+        }
+
         if (
           isUndefined(data.projectionTypes) ||
           isEmptyArray(data.projectionTypes)

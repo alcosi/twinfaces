@@ -22,6 +22,10 @@ export const useTwinFlowFactoryFetchByIdV1 = () => {
           throw new Error("Failed to fetch twinflow factory due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.twinflowFactory)) {
           throw new Error(
             "Invalid response data while fetching twinflow factory"

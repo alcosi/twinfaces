@@ -20,6 +20,10 @@ export const useUpsertField = () => {
         throw new Error("Failed to update twin field due to API error");
       }
 
+      if (!data) {
+        throw new Error("Response has no data");
+      }
+
       if (isUndefined(data.field)) {
         throw new Error("Field value is undefined.");
       }

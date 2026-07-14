@@ -30,6 +30,11 @@ export function useOptionProjectionSearch() {
             "Failed to fetch option projections due to API error"
           );
         }
+
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const optionProjections = data.dataListOptionProjections?.map((dto) =>
           hydrateOptionProjectionFromMap(dto, data.relatedObjects)
         );

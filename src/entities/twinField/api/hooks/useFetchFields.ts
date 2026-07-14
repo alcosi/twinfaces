@@ -23,6 +23,10 @@ export const useFetchFields = () => {
         throw new Error("Failed to fetch twin due to API error");
       }
 
+      if (!data) {
+        throw new Error("Response has no data");
+      }
+
       if (isUndefined(data.twin)) {
         throw new Error("Invalid response data while fetching twin");
       }

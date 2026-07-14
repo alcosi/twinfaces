@@ -27,7 +27,9 @@ export const useFetchTwinStatusById = () => {
         }
 
         if (isUndefined(data?.twinStatus)) {
-          throw new Error("Response does not have twin-status data", error);
+          throw new Error("Response does not have twin-status data", {
+            cause: error,
+          });
         }
 
         return hydrateTwinStatusFromMap(data.twinStatus, data.relatedObjects);

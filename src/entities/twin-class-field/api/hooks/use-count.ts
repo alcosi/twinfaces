@@ -52,6 +52,10 @@ export function useTwinClassFieldCount() {
           throw new Error("Failed to count twin class fields due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const related = data.relatedObjects;
         const counts = data.counts ?? [];
         const featurerMap = related?.featurerMap;

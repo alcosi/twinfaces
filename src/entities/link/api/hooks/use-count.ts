@@ -50,6 +50,10 @@ export function useLinkCount() {
           throw new Error("Failed to count links due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const related = data.relatedObjects;
         const counts =
           (data as unknown as { counts?: LinkCountItem[] }).counts ?? [];

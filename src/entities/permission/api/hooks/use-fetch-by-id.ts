@@ -30,7 +30,9 @@ export const useFetchPermissionById = () => {
         }
 
         if (isUndefined(data?.permission)) {
-          throw new Error("Response does not have permission data", error);
+          throw new Error("Response does not have permission data", {
+            cause: error,
+          });
         }
 
         const permission = hydratePermissionFromMap(

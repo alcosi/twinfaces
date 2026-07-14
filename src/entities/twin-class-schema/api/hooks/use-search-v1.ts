@@ -38,6 +38,10 @@ export const useTwinClassSchemaSearchV1 = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const twinClassSchemas =
           data.twinClassSchemas?.map((dto) =>
             hydrateTwinClassSchemaFromMap(dto, data.relatedObjects)

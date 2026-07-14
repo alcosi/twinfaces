@@ -39,6 +39,10 @@ export function useLinkSearch() {
           throw new Error("Failed to fetch links due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const links =
           data?.links?.map((dto) =>
             hydrateLinkFromMap(dto, data.relatedObjects)

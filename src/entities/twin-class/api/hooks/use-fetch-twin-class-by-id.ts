@@ -36,7 +36,9 @@ export const useFetchTwinClassById = () => {
         }
 
         if (isUndefined(data?.twinClass)) {
-          throw new Error("Response does not have twin-class data", error);
+          throw new Error("Response does not have twin-class data", {
+            cause: error,
+          });
         }
 
         return hydrateTwinClassFromMap(data.twinClass, data.relatedObjects);

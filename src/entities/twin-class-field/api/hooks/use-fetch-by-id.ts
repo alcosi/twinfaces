@@ -25,10 +25,9 @@ export const useFetchTwinClassFieldById = () => {
         }
 
         if (isUndefined(data?.field)) {
-          throw new Error(
-            "Response does not have twin-class-field data",
-            error
-          );
+          throw new Error("Response does not have twin-class-field data", {
+            cause: error,
+          });
         }
 
         const field = hydrateTwinClassFieldFromMap(

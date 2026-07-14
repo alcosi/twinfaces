@@ -32,7 +32,9 @@ export async function fetchTwinClassFieldById(id: string) {
   }
 
   if (isUndefined(data?.field)) {
-    throw new Error("Response does not have twin-class-field data", error);
+    throw new Error("Response does not have twin-class-field data", {
+      cause: error,
+    });
   }
 
   const field = hydrateTwinClassFieldFromMap(data.field, data.relatedObjects);

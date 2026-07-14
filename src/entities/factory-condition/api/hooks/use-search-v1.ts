@@ -27,6 +27,10 @@ export function useFactoryConditionSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Factory conditions response has no data");
+        }
+
         const factoryConditions =
           data.conditions?.map((dto) =>
             hydrateFactoryConditionFromMap(dto, data.relatedObjects)

@@ -27,6 +27,10 @@ export function useFactoryMultipliersSearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const factoryMultiplier =
           data.multipliers?.map((dto) =>
             hydrateFactoryMultiplierFromMap(dto, data.relatedObjects)

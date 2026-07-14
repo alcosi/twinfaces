@@ -44,6 +44,10 @@ export function useBusinessAccountSearch() {
           throw new Error("Failed to fetch business accounts due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const businessAccount = data.businessAccounts?.map((dto) =>
           hydrateBusinessAccountFromMap(dto, data.relatedObjects)
         );

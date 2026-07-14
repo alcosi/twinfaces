@@ -27,8 +27,14 @@ export const useFetchFactoryById = () => {
           throw new Error("Failed to fetch factory due to API error", error);
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.factory)) {
-          throw new Error("Response does not have factory data", error);
+          throw new Error("Response does not have factory data", {
+            cause: error,
+          });
         }
 
         if (data.factory && data.relatedObjects) {

@@ -27,6 +27,10 @@ export function useRuleSearch() {
           throw new Error("Failed to fetch rules due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const rules = data.fieldRules?.map((dto) =>
           hydrateRuleFromMap(dto, data.relatedObjects)
         );

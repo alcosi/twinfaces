@@ -34,7 +34,7 @@ export function createFactoryMultiplierFilterApi(settings: ApiSettings) {
           },
         },
         body: {
-          ...filters,
+          search: { ...filters },
         },
       }
     );

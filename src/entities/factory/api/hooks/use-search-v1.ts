@@ -29,6 +29,10 @@ export function useFactorySearch() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const factory =
           data.factories?.map((dto) =>
             hydrateFactoryFromMap(dto, data.relatedObjects)

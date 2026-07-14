@@ -27,6 +27,10 @@ export const useTwinClassDynamicMarkerFetchByIdV1 = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const markers = data.dynamicMarkers ?? [];
         if (isUndefined(markers[0])) {
           throw new Error(

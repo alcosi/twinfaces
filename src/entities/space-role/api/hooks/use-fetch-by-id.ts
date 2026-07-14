@@ -24,6 +24,10 @@ export function useFetchSpaceRoleById() {
           throw error;
         }
 
+        if (!data) {
+          throw new Error("Response has no space role data");
+        }
+
         if (isUndefined(data.spaceRoles) || isEmptyArray(data.spaceRoles)) {
           throw new Error(`Space roles with ID ${id} not found.`);
         }

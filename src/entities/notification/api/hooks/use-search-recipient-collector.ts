@@ -34,6 +34,10 @@ export function useRecipientCollectorSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const historyNotificationRecipientCollectors =
           data.recipientCollectors?.map((dto) =>
             hydrateHistoryNotificationRecipientCollectorFromMap(

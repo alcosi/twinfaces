@@ -35,6 +35,10 @@ export const useTagSearch = (twinClassId?: string) => {
           throw new Error("Failed to fetch tags due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const options =
           data?.options?.map((dto) =>
             hydrateDatalistOptionFromMap(dto, data.relatedObjects)

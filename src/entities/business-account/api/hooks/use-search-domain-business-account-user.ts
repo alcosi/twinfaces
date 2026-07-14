@@ -42,6 +42,10 @@ export function useBusinessAccountUserSearch() {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const businessAccountUser = data.domainBusinessAccountUsers?.map(
           (dto) => hydrateBusinessAccountUserFromMap(dto, data.relatedObjects)
         );

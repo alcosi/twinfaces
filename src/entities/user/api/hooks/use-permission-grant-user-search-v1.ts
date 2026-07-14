@@ -30,6 +30,10 @@ export const usePermissionGrantUserSearchV1 = () => {
           throw new Error("Failed to fetch permission grant due to API error");
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const permissionGrantUsers =
           data.permissionGrantUsers?.map((dto) =>
             hydratePermissionGrantUserFromMap(dto, data.relatedObjects)

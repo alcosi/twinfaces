@@ -32,6 +32,10 @@ export const usePermissionGrantTwinRolesSearchV1 = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const permissionGrantTwinRoles =
           data.permissionGrantTwinRoles?.map((dto) =>
             hydratePermissionGrantTwinRolesFromMap(dto, data.relatedObjects)

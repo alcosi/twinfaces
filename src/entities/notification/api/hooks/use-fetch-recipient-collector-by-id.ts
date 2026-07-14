@@ -29,6 +29,10 @@ export const useRecipientCollectorFetchById = () => {
           );
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         const recipientCollectors = data.recipientCollectors ?? [];
         if (isUndefined(recipientCollectors[0])) {
           throw new Error(

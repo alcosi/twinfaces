@@ -28,7 +28,10 @@ export type FactoryMultiplierFilterFilterKeys =
   | "factoryConditionInvert";
 
 export type FactoryMultiplierFilterFilters = Partial<
-  Pick<FactoryMultiplierFilterSearchRq, FactoryMultiplierFilterFilterKeys>
+  Pick<
+    components["schemas"]["FactoryMultiplierFilterSearchDTOv1"],
+    FactoryMultiplierFilterFilterKeys
+  >
 >;
 export type FactoryMultiplierFilterDuplicateRq =
   components["schemas"]["FactoryMultiplierFilterDuplicateRqV1"];

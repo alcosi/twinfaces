@@ -27,12 +27,10 @@ export async function fetchFaceById<T extends Face>(
   });
 
   if (error) {
-    throw new Error(
-      `Failed to fetch face with id ${faceId}: ${error.message ?? "Unknown error"}`
-    );
+    throw new Error(`Failed to fetch face with id ${faceId}`, { cause: error });
   }
 
-  if (isUndefined(data.face)) {
+  if (isUndefined(data) || isUndefined(data.face)) {
     throw new Error(`Face with id ${faceId} not found in response.`);
   }
 

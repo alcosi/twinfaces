@@ -37,8 +37,14 @@ export const useFetchDomainById = () => {
           throw new Error("Failed to fetch domain due to API error", error);
         }
 
+        if (!data) {
+          throw new Error("Domain response has no data");
+        }
+
         if (isUndefined(data.domain)) {
-          throw new Error("Response does not have domain data", error);
+          throw new Error("Response does not have domain data", {
+            cause: error,
+          });
         }
 
         return data.domain;

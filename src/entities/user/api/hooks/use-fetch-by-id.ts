@@ -28,8 +28,12 @@ export const useFetchUserById = () => {
           throw new Error("Failed to fetch user due to API error", error);
         }
 
+        if (!data) {
+          throw new Error("Response has no data");
+        }
+
         if (isUndefined(data.user)) {
-          throw new Error("Response does not have user data", error);
+          throw new Error("Response does not have user data", { cause: error });
         }
 
         if (data.relatedObjects) {
