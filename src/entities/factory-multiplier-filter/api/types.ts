@@ -35,3 +35,11 @@ export type FactoryMultiplierFilterFilters = Partial<
 >;
 export type FactoryMultiplierFilterDuplicateRq =
   components["schemas"]["FactoryMultiplierFilterDuplicateRqV1"];
+
+export type FactoryMultiplierFilterSortField = NonNullable<
+  components["schemas"]["FactoryMultiplierFilterSearchRqV1"]["sortField"]
+>;
+
+export type FactoryMultiplierFilterCountGroupField = NonNullable<
+  components["schemas"]["FactoryMultiplierFilterCountRqV1"]["groupFields"]
+>[number];

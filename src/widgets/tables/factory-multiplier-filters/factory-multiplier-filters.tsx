@@ -3,12 +3,14 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
 import {
+  FactoryMultiplierFilterFilterKeys,
   FactoryMultiplierFilter_DETAILED,
+  useFactoryMultiplierFilterCount,
   useFactoryMultiplierFilterFilters,
   useFactoryMultiplierFilterSearch,
 } from "@/entities/factory-multiplier-filter";
@@ -17,7 +19,7 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryMultiplierResourceLink } from "@/features/factory-multiplier/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, toArray, toArrayOfString } from "@/shared/libs";
 import {
@@ -29,7 +31,14 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import {
   FactoryMultiplierFilterDuplicateDialog,
   FactoryMultiplierFilterDuplicateDialogRef,
@@ -55,7 +64,9 @@ const colDefs: Record<
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -66,7 +77,9 @@ const colDefs: Record<
   inputTwinClass: {
     id: "inputTwinClass",
     accessorKey: "inputTwinClass",
-    header: "Input class",
+    header: () => (
+      <SortableHeader title="Input class" sortField="inputTwinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
         <div className="inline-flex max-w-48">
@@ -105,7 +118,12 @@ const colDefs: Record<
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Condition set",
+    header: () => (
+      <SortableHeader
+        title="Condition set"
+        sortField="factoryConditionSetName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="inline-flex max-w-48">
@@ -119,13 +137,18 @@ const colDefs: Record<
   factoryConditionSetInvert: {
     id: "factoryConditionSetInvert",
     accessorKey: "factoryConditionSetInvert",
-    header: "Condition invert",
+    header: () => (
+      <SortableHeader
+        title="Condition invert"
+        sortField="factoryConditionSetInvert"
+      />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
   active: {
     id: "active",
     accessorKey: "active",
-    header: "Active",
+    header: () => <SortableHeader title="Active" sortField="active" />,
     cell: (data) => data.getValue() && <Check />,
   },
 };
@@ -139,6 +162,7 @@ export function FactoryMultiplierFiltersTable({
   const duplicateDialogRef =
     useRef<FactoryMultiplierFilterDuplicateDialogRef>(null);
   const { searchFactoryMultiplierFilters } = useFactoryMultiplierFilterSearch();
+  const { countFactoryMultiplierFilters } = useFactoryMultiplierFilterCount();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryMultiplierFilterFilters({
       enabledFilters: factoryMultiplierId
@@ -190,21 +214,36 @@ export function FactoryMultiplierFiltersTable({
     ),
   };
 
+  const showMultiplierColumn = isFalsy(factoryMultiplierId);
+
+  // Maps the table filter values to the API payload and injects the
+  // contextual multiplier constraint. Shared by the table fetcher and the
+  // pie-chart count requests so both honour the active filters.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<FactoryMultiplierFilterFilterKeys, unknown>) => {
+      const mapped = mapFiltersToPayload(rawFilters);
+      return {
+        ...mapped,
+        factoryMultiplierIdList: factoryMultiplierId
+          ? toArrayOfString(toArray(factoryMultiplierId), "id")
+          : mapped.factoryMultiplierIdList,
+      };
+    },
+    [mapFiltersToPayload, factoryMultiplierId]
+  );
+
   async function fetchFactoryMultiplierFilter(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<FactoryMultiplierFilter_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       return await searchFactoryMultiplierFilters({
         pagination,
-        filters: {
-          ..._filters,
-          factoryMultiplierIdList: factoryMultiplierId
-            ? toArrayOfString(toArray(factoryMultiplierId), "id")
-            : _filters.factoryMultiplierIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<FactoryMultiplierFilterFilterKeys, unknown>
+        ),
+        sort,
       });
     } catch (error) {
       toast.error(
@@ -216,6 +255,136 @@ export function FactoryMultiplierFiltersTable({
     }
   }
 
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/factory_multiplier_filter/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<FactoryMultiplierFilterFilterKeys, unknown>
+      );
+      const groupings: ChartGrouping[] = [];
+
+      if (showMultiplierColumn) {
+        groupings.push({
+          key: "multiplier",
+          label: "Multiplier",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryMultiplierFilters({
+                filters: resolved,
+                groupField: "factoryMultiplierId",
+                offset,
+                limit,
+              }),
+            (g) => g.factoryMultiplierId,
+            (g) => g.multiplier?.description,
+            (g) =>
+              g.multiplier && (
+                <FactoryMultiplierResourceLink
+                  data={g.multiplier as FactoryMultiplier_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
+        });
+      }
+
+      groupings.push({
+        key: "inputTwinClass",
+        label: "Input class",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryMultiplierFilters({
+              filters: resolved,
+              groupField: "inputTwinClassId",
+              offset,
+              limit,
+            }),
+          (g) => g.inputTwinClassId,
+          (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+          (g) =>
+            g.inputTwinClass && (
+              <TwinClassResourceLink
+                data={g.inputTwinClass as TwinClass_DETAILED}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      groupings.push({
+        key: "factoryConditionSet",
+        label: "Condition set",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryMultiplierFilters({
+              filters: resolved,
+              groupField: "factoryConditionSetId",
+              offset,
+              limit,
+            }),
+          (g) => g.factoryConditionSetId,
+          (g) => g.factoryConditionSet?.name,
+          (g) =>
+            g.factoryConditionSet && (
+              <FactoryConditionSetResourceLink
+                data={g.factoryConditionSet}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      groupings.push({
+        key: "factoryConditionSetInvert",
+        label: "Condition invert",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryMultiplierFilters({
+              filters: resolved,
+              groupField: "factoryConditionSetInvert",
+              offset,
+              limit,
+            }),
+          (g) =>
+            g.factoryConditionSetInvert === undefined
+              ? undefined
+              : String(g.factoryConditionSetInvert),
+          (g) =>
+            g.factoryConditionSetInvert === undefined
+              ? undefined
+              : g.factoryConditionSetInvert
+                ? "Inverted"
+                : "Not inverted"
+        ),
+      });
+
+      groupings.push({
+        key: "active",
+        label: "Active",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryMultiplierFilters({
+              filters: resolved,
+              groupField: "active",
+              offset,
+              limit,
+            }),
+          (g) => (g.active === undefined ? undefined : String(g.active)),
+          (g) =>
+            g.active === undefined
+              ? undefined
+              : g.active
+                ? "Active"
+                : "Inactive"
+        ),
+      });
+
+      return groupings;
+    },
+    [resolveFilters, countFactoryMultiplierFilters, showMultiplierColumn]
+  );
+
   return (
     <>
       <CrudDataTable
@@ -223,7 +392,7 @@ export function FactoryMultiplierFiltersTable({
         columns={[
           colDefs.id,
           colDefs.factory,
-          ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
+          ...(showMultiplierColumn ? [colDefs.multiplier] : []),
           colDefs.inputTwinClass,
           colDefs.factoryConditionSet,
           colDefs.factoryConditionSetInvert,
@@ -238,7 +407,7 @@ export function FactoryMultiplierFiltersTable({
         defaultVisibleColumns={[
           colDefs.id,
           colDefs.factory,
-          ...(isFalsy(factoryMultiplierId) ? [colDefs.multiplier] : []),
+          ...(showMultiplierColumn ? [colDefs.multiplier] : []),
           colDefs.inputTwinClass,
           colDefs.factoryConditionSet,
           colDefs.factoryConditionSetInvert,
@@ -248,6 +417,7 @@ export function FactoryMultiplierFiltersTable({
         ]}
         getRowId={(row) => row.id!}
         filters={{ filtersInfo: buildFilterFields() }}
+        chartGroupings={buildChartGroupings}
       />
 
       <FactoryMultiplierFilterDuplicateDialog ref={duplicateDialogRef} />
