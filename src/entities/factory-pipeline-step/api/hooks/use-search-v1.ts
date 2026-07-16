@@ -1,9 +1,13 @@
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
-import { PipelineStepFilters, PipelineStep_DETAILED } from "../../api";
+import {
+  PipelineStepFilters,
+  PipelineStepSortField,
+  PipelineStep_DETAILED,
+} from "../../api";
 import { hydratePipelineStepFromMap } from "../../libs";
 
 export function usePipelineStepSearch() {
@@ -13,14 +17,18 @@ export function usePipelineStepSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: PipelineStepFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<PipelineStep_DETAILED>> => {
       try {
         const { data, error } = await api.pipelineStep.search({
           pagination,
           filters,
+          sortField: sort?.field as PipelineStepSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

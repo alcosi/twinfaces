@@ -50,3 +50,14 @@ export type FactoryBranchFilters = Partial<
     FactoryBranchFilterKeys
   >
 >;
+
+export type FactoryBranchSortField = NonNullable<
+  components["schemas"]["FactoryBranchSearchRqV1"]["sortField"]
+>;
+
+export type FactoryBranchCountRq =
+  components["schemas"]["FactoryBranchCountRqV1"];
+
+export type FactoryBranchCountGroupField = NonNullable<
+  FactoryBranchCountRq["groupFields"]
+>[number];

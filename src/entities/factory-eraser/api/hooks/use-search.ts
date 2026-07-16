@@ -3,10 +3,11 @@ import { useCallback, useContext } from "react";
 
 import {
   FactoryEraserFilters,
+  FactoryEraserSortField,
   FactoryEraser_DETAILED,
   hydrateFactoryEraserFromMap,
 } from "@/entities/factory-eraser";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 export function useFactoryEraserSearch() {
   const api = useContext(PrivateApiContext);
@@ -14,14 +15,18 @@ export function useFactoryEraserSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: FactoryEraserFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<FactoryEraser_DETAILED>> => {
       try {
         const { data, error } = await api.factoryEraser.search({
           pagination,
           filters,
+          sortField: sort?.field as FactoryEraserSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

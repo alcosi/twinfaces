@@ -46,3 +46,14 @@ export type FactoryPipelineStepDuplicateRq =
   components["schemas"]["FactoryPipelineStepDuplicateRqV1"];
 export type FactoryPipelineStepExportSqlRq =
   components["schemas"]["FactoryPipelineStepExportSqlRqV1"];
+
+export type PipelineStepSortField = NonNullable<
+  components["schemas"]["FactoryPipelineStepSearchRqV1"]["sortField"]
+>;
+
+export type PipelineStepCountRq =
+  components["schemas"]["FactoryPipelineStepCountRqV1"];
+
+export type PipelineStepCountGroupField = NonNullable<
+  PipelineStepCountRq["groupFields"]
+>[number];

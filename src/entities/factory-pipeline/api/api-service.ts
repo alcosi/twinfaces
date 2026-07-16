@@ -69,6 +69,7 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
           showFactoryPipeline2TwinClassMode: "DETAILED",
           showFactoryPipelineOutputTwinStatus2StatusMode: "DETAILED",
           showFactoryPipeline2FactoryMode: "DETAILED",
+          showFactoryMode: "DETAILED",
           offset,
           limit,
           sortAsc,
