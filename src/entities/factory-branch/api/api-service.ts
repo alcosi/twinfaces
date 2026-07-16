@@ -3,10 +3,12 @@ import { PaginationState } from "@tanstack/react-table";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
+  FactoryBranchCountGroupField,
   FactoryBranchCreateRq,
   FactoryBranchDuplicateRq,
   FactoryBranchExportSqlRq,
   FactoryBranchFilters,
+  FactoryBranchSortField,
   FactoryBranchUpdateRq,
   FactoryBranchViewQuery,
 } from "./types";
@@ -15,9 +17,13 @@ export function createFactoryBranchApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: FactoryBranchFilters;
+    sortField?: FactoryBranchSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/factory_branch/search/v1", {
       params: {
@@ -33,6 +39,41 @@ export function createFactoryBranchApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: FactoryBranchFilters;
+    groupFields: FactoryBranchCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/factory_branch/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactoryBranch2FactoryConditionSetMode: "DETAILED",
+          showFactoryBranch2FactoryMode: "DETAILED",
+          showFactoryMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -95,7 +136,7 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, create, update, duplicate, exportSql };
+  return { search, count, getById, create, update, duplicate, exportSql };
 }
 
 export type FactoryBranchApi = ReturnType<typeof createFactoryBranchApi>;

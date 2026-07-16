@@ -7,17 +7,23 @@ import {
   FactoryPipelineStepExportSqlRq,
   FactoryPipelineStepRqQuery,
   FactoryPipelineStepUpdateRq,
+  PipelineStepCountGroupField,
   PipelineStepCreateRq,
   PipelineStepFilters,
+  PipelineStepSortField,
 } from "./types";
 
 export function createPipelineStepApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: PipelineStepFilters;
+    sortField?: PipelineStepSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/factory_pipeline_step/search/v1", {
       params: {
@@ -38,6 +44,43 @@ export function createPipelineStepApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: PipelineStepFilters;
+    groupFields: PipelineStepCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/factory_pipeline_step/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactoryPipeline2FactoryConditionSetMode: "DETAILED",
+          showFactoryPipeline2FactoryMode: "DETAILED",
+          showFactoryPipelineStep2FactoryConditionSetMode: "DETAILED",
+          showFactoryPipelineStep2FactoryPipelineMode: "DETAILED",
+          showFactoryPipelineStep2FeaturerMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -110,7 +153,7 @@ export function createPipelineStepApi(settings: ApiSettings) {
     );
   }
 
-  return { search, create, getById, update, duplicate, exportSql };
+  return { search, count, create, getById, update, duplicate, exportSql };
 }
 
 export type PipelineStepApi = ReturnType<typeof createPipelineStepApi>;

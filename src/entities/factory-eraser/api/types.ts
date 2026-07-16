@@ -40,3 +40,17 @@ export type FactoryEraserFilters = Partial<
 >;
 export type FactoryEraserDuplicateRq =
   components["schemas"]["FactoryEraserDuplicateRqV1"];
+
+export type FactoryEraserSortField = NonNullable<
+  components["schemas"]["FactoryEraserSearchRqV1"]["sortField"]
+>;
+
+export type FactoryEraserCountRq =
+  components["schemas"]["FactoryEraserCountRqV1"];
+
+export type FactoryEraserCountGroupField = NonNullable<
+  FactoryEraserCountRq["groupFields"]
+>[number];
+
+export type FactoryEraserAction =
+  components["schemas"]["FactoryEraserCountV1"]["action"];

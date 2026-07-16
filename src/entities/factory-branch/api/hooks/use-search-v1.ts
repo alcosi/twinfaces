@@ -1,10 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { hydrateFactoryBranchFromMap } from "../../libs";
-import { FactoryBranchFilters, FactoryBranch_DETAILED } from "../types";
+import {
+  FactoryBranchFilters,
+  FactoryBranchSortField,
+  FactoryBranch_DETAILED,
+} from "../types";
 
 export function useFactoryBranchesSearch() {
   const api = useContext(PrivateApiContext);
@@ -12,14 +16,18 @@ export function useFactoryBranchesSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: FactoryBranchFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<FactoryBranch_DETAILED>> => {
       try {
         const { data, error } = await api.factoryBranch.search({
           pagination,
           filters,
+          sortField: sort?.field as FactoryBranchSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {
