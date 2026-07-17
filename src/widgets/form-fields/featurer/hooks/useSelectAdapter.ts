@@ -39,6 +39,7 @@ export function useFeaturerParamTypesSelectAdapter(
 ): FeaturerParamTypesSelectAdapter {
   const statusAdapter = useTwinStatusSelectAdapter();
   const linkAdapter = useLinkSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapter();
 
   const adapters = {
     [FeaturerParamType.UUID_SET_TWINS_USER_GROUP_ID]:
@@ -49,8 +50,8 @@ export function useFeaturerParamTypesSelectAdapter(
     [FeaturerParamType.UUID_TWINS_DATA_LIST_ID]: useDatalistSelectAdapter(),
     [FeaturerParamType.UUID_SET_TWINS_TWIN_STATUS_ID]: statusAdapter,
     [FeaturerParamType.UUID_TWINS_TWIN_STATUS_ID]: statusAdapter,
-    [FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_ID]:
-      useTwinClassSelectAdapter(),
+    [FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_ID]: twinClassAdapter,
+    [FeaturerParamType.UUID_TWINS_TWIN_CLASS_ID]: twinClassAdapter,
     [FeaturerParamType.UUID_SET_TWINS_TWIN_CLASS_FIELD_ID]:
       useTwinClassFieldSelectAdapter(),
     [FeaturerParamType.UUID_TWINS_TWIN_CLASS_FIELD_ID]:
