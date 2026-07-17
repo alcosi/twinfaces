@@ -1,10 +1,14 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { hydrateFactoryConditionFromMap } from "../../libs";
-import { FactoryConditionFilters, FactoryCondition_DETAILED } from "../types";
+import {
+  FactoryConditionFilters,
+  FactoryConditionSortField,
+  FactoryCondition_DETAILED,
+} from "../types";
 
 export function useFactoryConditionSearch() {
   const api = useContext(PrivateApiContext);
@@ -13,14 +17,18 @@ export function useFactoryConditionSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters?: FactoryConditionFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<FactoryCondition_DETAILED>> => {
       try {
         const { data, error } = await api.factoryCondition.search({
           pagination,
           filters,
+          sortField: sort?.field as FactoryConditionSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

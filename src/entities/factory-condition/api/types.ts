@@ -30,6 +30,17 @@ export type FactoryConditionFilters = Partial<
   >
 >;
 
+export type FactoryConditionSortField = NonNullable<
+  components["schemas"]["FactoryConditionSearchRqV1"]["sortField"]
+>;
+
+export type FactoryConditionCountRq =
+  components["schemas"]["FactoryConditionCountRqV1"];
+
+export type FactoryConditionCountGroupField = NonNullable<
+  FactoryConditionCountRq["groupFields"]
+>[number];
+
 export type FactoryConditionCreateRq =
   components["schemas"]["FactoryConditionCreateRqV1"];
 

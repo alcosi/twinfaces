@@ -4,14 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check, Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   FACTORY_CONDITION_SCHEMA,
+  FactoryConditionFilterKeys,
+  FactoryConditionFilters,
   FactoryCondition_DETAILED,
+  useFactoryConditionCount,
   useFactoryConditionCreate,
   useFactoryConditionFilters,
   useFactoryConditionSearch,
@@ -20,6 +23,7 @@ import { FactoryConditionSet_DETAILED } from "@/entities/factory-condition-set";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import {
@@ -31,7 +35,14 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import {
   FactoryConditionDuplicateDialog,
   FactoryConditionDuplicateDialogRef,
@@ -59,7 +70,12 @@ const colDefs: Record<
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Condition Set",
+    header: () => (
+      <SortableHeader
+        title="Condition Set"
+        sortField="factoryConditionSetName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="inline-flex max-w-48">
@@ -73,7 +89,12 @@ const colDefs: Record<
   conditionerFeaturer: {
     id: "conditionerFeaturer",
     accessorKey: "conditionerFeaturer",
-    header: "Conditioner Featurer",
+    header: () => (
+      <SortableHeader
+        title="Conditioner Featurer"
+        sortField="conditionerFeaturerName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.conditionerFeaturer && (
         <div className="inline-flex max-w-48">
@@ -88,7 +109,9 @@ const colDefs: Record<
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -99,13 +122,13 @@ const colDefs: Record<
   active: {
     id: "active",
     accessorKey: "active",
-    header: "Active",
+    header: () => <SortableHeader title="Active" sortField="active" />,
     cell: (data) => data.getValue() && <Check />,
   },
   invert: {
     id: "invert",
     accessorKey: "invert",
-    header: "Invert",
+    header: () => <SortableHeader title="Invert" sortField="invert" />,
     cell: (data) => data.getValue() && <Check />,
   },
 };
@@ -120,6 +143,7 @@ export function FactoryConditionsTable({
   const router = useRouter();
   const duplicateDialogRef = useRef<FactoryConditionDuplicateDialogRef>(null);
   const { searchFactoryCondition } = useFactoryConditionSearch();
+  const { countFactoryConditions } = useFactoryConditionCount();
   const { buildFilterFields, mapFiltersToPayload } = useFactoryConditionFilters(
     {
       enabledFilters: isTruthy(factoryConditionSetId)
@@ -134,6 +158,26 @@ export function FactoryConditionsTable({
     }
   );
   const { createFactoryCondition } = useFactoryConditionCreate();
+
+  const showConditionSetColumn = isFalsy(factoryConditionSetId);
+
+  // Maps the table filter values to the API payload and injects the
+  // contextual condition-set constraint. Shared by the table fetcher and the
+  // pie-chart count requests so both honour the active filters.
+  const resolveFilters = useCallback(
+    (
+      rawFilters: Record<FactoryConditionFilterKeys, unknown>
+    ): FactoryConditionFilters => {
+      const mapped = mapFiltersToPayload(rawFilters);
+      return {
+        ...mapped,
+        factoryConditionSetIdList: factoryConditionSetId
+          ? toArrayOfString(toArray(factoryConditionSetId), "id")
+          : mapped.factoryConditionSetIdList,
+      };
+    },
+    [mapFiltersToPayload, factoryConditionSetId]
+  );
 
   const factoryConditionForm = useForm<
     z.infer<typeof FACTORY_CONDITION_SCHEMA>
@@ -185,19 +229,16 @@ export function FactoryConditionsTable({
 
   async function fetchFactoryConditions(
     pagination: PaginationState,
-    filters: FiltersState
-  ) {
-    const _filters = mapFiltersToPayload(filters.filters);
-
+    filters: FiltersState,
+    sort?: SortV1
+  ): Promise<PagedResponse<FactoryCondition_DETAILED>> {
     try {
       return await searchFactoryCondition({
         pagination,
-        filters: {
-          ..._filters,
-          factoryConditionSetIdList: factoryConditionSetId
-            ? toArrayOfString(toArray(factoryConditionSetId), "id")
-            : _filters.factoryConditionSetIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<FactoryConditionFilterKeys, unknown>
+        ),
+        sort,
       });
     } catch (error) {
       toast.error(
@@ -206,6 +247,113 @@ export function FactoryConditionsTable({
       throw new Error("An error occured while factory conditions: " + error);
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/factory_condition/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<FactoryConditionFilterKeys, unknown>
+      );
+      const groupings: ChartGrouping[] = [];
+
+      if (showConditionSetColumn) {
+        groupings.push({
+          key: "factoryConditionSet",
+          label: "Condition Set",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryConditions({
+                filters: resolved,
+                groupField: "factoryConditionSetId",
+                offset,
+                limit,
+              }),
+            (g) => g.factoryConditionSetId,
+            (g) => g.factoryConditionSet?.name,
+            (g) =>
+              g.factoryConditionSet && (
+                <FactoryConditionSetResourceLink
+                  data={g.factoryConditionSet as FactoryConditionSet_DETAILED}
+                  withTooltip
+                />
+              )
+          ),
+        });
+      }
+
+      groupings.push({
+        key: "conditionerFeaturer",
+        label: "Conditioner Featurer",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryConditions({
+              filters: resolved,
+              groupField: "conditionerFeaturerId",
+              offset,
+              limit,
+            }),
+          (g) =>
+            g.conditionerFeaturerId === undefined
+              ? undefined
+              : String(g.conditionerFeaturerId),
+          (g) => g.conditionerFeaturer?.name,
+          (g) =>
+            g.conditionerFeaturer && (
+              <FeaturerResourceLink
+                data={g.conditionerFeaturer as Featurer_DETAILED}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      groupings.push({
+        key: "active",
+        label: "Active",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryConditions({
+              filters: resolved,
+              groupField: "active",
+              offset,
+              limit,
+            }),
+          (g) => (g.active === undefined ? undefined : String(g.active)),
+          (g) =>
+            g.active === undefined
+              ? undefined
+              : g.active
+                ? "Active"
+                : "Inactive"
+        ),
+      });
+
+      groupings.push({
+        key: "invert",
+        label: "Invert",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryConditions({
+              filters: resolved,
+              groupField: "invert",
+              offset,
+              limit,
+            }),
+          (g) => (g.invert === undefined ? undefined : String(g.invert)),
+          (g) =>
+            g.invert === undefined
+              ? undefined
+              : g.invert
+                ? "Inverted"
+                : "Not inverted"
+        ),
+      });
+
+      return groupings;
+    },
+    [resolveFilters, countFactoryConditions, showConditionSetColumn]
+  );
 
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_CONDITION_SCHEMA>
@@ -224,9 +372,7 @@ export function FactoryConditionsTable({
         permissionSegment="conditions"
         columns={[
           colDefs.id,
-          ...(isFalsy(factoryConditionSetId)
-            ? [colDefs.factoryConditionSet]
-            : []),
+          ...(showConditionSetColumn ? [colDefs.factoryConditionSet] : []),
           colDefs.conditionerFeaturer,
           colDefs.description,
           colDefs.active,
@@ -240,9 +386,7 @@ export function FactoryConditionsTable({
         }
         defaultVisibleColumns={[
           colDefs.id,
-          ...(isFalsy(factoryConditionSetId)
-            ? [colDefs.factoryConditionSet]
-            : []),
+          ...(showConditionSetColumn ? [colDefs.factoryConditionSet] : []),
           colDefs.conditionerFeaturer,
           colDefs.description,
           colDefs.active,
@@ -250,6 +394,7 @@ export function FactoryConditionsTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
+        chartGroupings={buildChartGroupings}
         dialogForm={factoryConditionForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

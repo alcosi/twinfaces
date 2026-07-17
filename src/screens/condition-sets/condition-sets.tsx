@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -13,13 +13,15 @@ import {
   CONDITION_SET_SCHEMA,
   ConditionSetFieldValues,
   FactoryConditionSetCreateRq,
+  FactoryConditionSetFilterKeys,
   FactoryConditionSet_DETAILED,
+  useFactoryConditionSetCount,
   useFactoryConditionSetFilters,
   useFactoryConditionSetSearch,
 } from "@/entities/factory-condition-set";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { UserResourceLink } from "@/features/user/ui";
-import { PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import {
@@ -30,7 +32,14 @@ import {
   DropdownMenuTrigger,
   GuidWithCopy,
 } from "@/shared/ui";
-import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "@/widgets/crud-data-table";
 
 import {
   FactoryConditionSetDuplicateDialog,
@@ -64,7 +73,9 @@ const colDefs: Record<
   twinFactoryId: {
     id: "factoryId",
     accessorKey: "factoryId",
-    header: "Factory",
+    header: () => (
+      <SortableHeader title="Factory" sortField="twinFactoryName" />
+    ),
     cell: ({ row: { original } }) =>
       original.factory && (
         <div className="inline-flex max-w-48">
@@ -75,12 +86,14 @@ const colDefs: Record<
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -116,7 +129,9 @@ const colDefs: Record<
   createdByUserId: {
     id: "createdByUserId",
     accessorKey: "createdByUserId",
-    header: "Created by",
+    header: () => (
+      <SortableHeader title="Created by" sortField="createdByUserName" />
+    ),
     cell: ({ row: { original } }) =>
       original.createdByUser && (
         <div className="inline-flex max-w-48">
@@ -127,7 +142,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdBy",
     accessorKey: "createdAt",
-    header: "Created at",
+    header: () => <SortableHeader title="Created at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt &&
       formatIntlDate(original.createdAt, "datetime-local"),
@@ -140,6 +155,7 @@ export function ConditionSetsScreen() {
     useRef<FactoryConditionSetDuplicateDialogRef>(null);
   const api = useContext(PrivateApiContext);
   const { searchFactoryConditionSet } = useFactoryConditionSetSearch();
+  const { countFactoryConditionSets } = useFactoryConditionSetCount();
   const { buildFilterFields, mapFiltersToPayload } =
     useFactoryConditionSetFilters();
 
@@ -181,12 +197,15 @@ export function ConditionSetsScreen() {
 
   async function fetchFactoryConditionSet(
     pagination: PaginationState,
-    filters: FiltersState
-  ) {
-    const _filters = mapFiltersToPayload(filters.filters);
+    filters: FiltersState,
+    sort?: SortV1
+  ): Promise<PagedResponse<FactoryConditionSet_DETAILED>> {
+    const _filters = mapFiltersToPayload(
+      filters.filters as Record<FactoryConditionSetFilterKeys, unknown>
+    );
 
     try {
-      return searchFactoryConditionSet({ pagination, filters: _filters });
+      return searchFactoryConditionSet({ pagination, filters: _filters, sort });
     } catch (error) {
       toast.error(
         "An error occured while fetching factory condition sets: " + error
@@ -196,6 +215,76 @@ export function ConditionSetsScreen() {
       );
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/factory_condition_set/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<FactoryConditionSetFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "factory",
+          label: "Factory",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryConditionSets({
+                filters: resolved,
+                groupField: "twinFactoryId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinFactoryId,
+            (g) => g.factory?.name ?? g.factory?.key,
+            (g) =>
+              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
+          ),
+        },
+        {
+          key: "createdByUser",
+          label: "Created by",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryConditionSets({
+                filters: resolved,
+                groupField: "createdByUserId",
+                offset,
+                limit,
+              }),
+            (g) => g.createdByUserId,
+            (g) => g.createdByUser?.fullName,
+            (g) =>
+              g.createdByUser && (
+                <UserResourceLink data={g.createdByUser} withTooltip />
+              )
+          ),
+        },
+        {
+          key: "cachable",
+          label: "Cachable",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryConditionSets({
+                filters: resolved,
+                groupField: "cachable",
+                offset,
+                limit,
+              }),
+            (g) => (g.cachable === undefined ? undefined : String(g.cachable)),
+            (g) =>
+              g.cachable === undefined
+                ? undefined
+                : g.cachable
+                  ? "Cachable"
+                  : "Not cachable"
+          ),
+        },
+      ];
+    },
+    [mapFiltersToPayload, countFactoryConditionSets]
+  );
 
   const conditionSetForm = useForm<ConditionSetFieldValues>({
     resolver: zodResolver(CONDITION_SET_SCHEMA),
@@ -266,6 +355,7 @@ export function ConditionSetsScreen() {
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
+        chartGroupings={buildChartGroupings}
         dialogForm={conditionSetForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (
