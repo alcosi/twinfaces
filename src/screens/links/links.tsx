@@ -366,6 +366,7 @@ export function LinksScreen() {
       fetcher={fetchLink}
       getRowId={(row) => row.id!}
       onRowClick={(row) => router.push(`/${PlatformArea.core}/links/${row.id}`)}
+      getRowHref={(row) => `/${PlatformArea.core}/links/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

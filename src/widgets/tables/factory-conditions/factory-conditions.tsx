@@ -384,6 +384,7 @@ export function FactoryConditionsTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/conditions/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/conditions/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           ...(showConditionSetColumn ? [colDefs.factoryConditionSet] : []),

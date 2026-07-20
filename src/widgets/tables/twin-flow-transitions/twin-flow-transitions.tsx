@@ -308,6 +308,7 @@ export function TwinFlowTransitionsTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/transitions/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/transitions/${row.id}`}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

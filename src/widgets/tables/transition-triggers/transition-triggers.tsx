@@ -209,6 +209,9 @@ export function TransitionTriggersTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/transition-triggers/${row.id}`)
       }
+      getRowHref={(row) =>
+        `/${PlatformArea.core}/transition-triggers/${row.id}`
+      }
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(transitionId) ? [colDefs.twinflowTransitionId] : []),

@@ -1,9 +1,18 @@
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { ComboboxFormField, TextFormField } from "@/components/form-fields";
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { TextFormField } from "@/components/form-fields";
 
-import { DataList, useDatalistSelectAdapter } from "@/entities/datalist";
+import {
+  DataList,
+  useDatalistFilters,
+  useDatalistSelectAdapterWithFilters,
+} from "@/entities/datalist";
 import { DATALIST_OPTION_SCHEMA } from "@/entities/datalist-option";
 import { isPopulatedArray } from "@/shared/libs";
 
@@ -13,24 +22,36 @@ export function DatalistOptionFormFields({
   control: Control<z.infer<typeof DATALIST_OPTION_SCHEMA>>;
 }) {
   const dlWatched = useWatch({ control, name: "dataList" });
-  const dlAdapter = useDatalistSelectAdapter();
+  const dlAdapter = useDatalistSelectAdapterWithFilters();
   const disabled = isPopulatedArray(dlWatched);
 
   const datalist: DataList = isPopulatedArray<DataList>(dlWatched)
     ? dlWatched[0]
     : (dlWatched as DataList);
 
+  const {
+    buildFilterFields: buildDatalistFilters,
+    mapFiltersToPayload: mapDatalistFilters,
+  } = useDatalistFilters();
+
+  const datalistInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Datalist",
+    adapter: dlAdapter,
+    extraFilters: buildDatalistFilters(),
+    mapExtraFilters: (filters) => mapDatalistFilters(filters),
+    searchPlaceholder: "Search datalist...",
+    selectPlaceholder: "Select datalist",
+    multi: false,
+    disabled,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="dataList"
-        label="Datalist"
-        selectPlaceholder="Select datalist"
-        searchPlaceholder="Search datalist..."
-        noItemsText="No datalist found"
-        disabled={disabled}
-        {...dlAdapter}
+        info={datalistInfo}
       />
 
       <TextFormField control={control} name="name" label="Name" />

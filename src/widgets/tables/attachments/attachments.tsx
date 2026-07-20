@@ -416,6 +416,7 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/attachments/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/attachments/${row.id}`}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

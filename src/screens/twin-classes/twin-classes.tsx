@@ -1006,6 +1006,7 @@ export function TwinClasses({ type }: { type?: string }) {
           onRowClick={(row) =>
             router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
           }
+          getRowHref={(row) => `/${PlatformArea.core}/twinclass/${row.id}`}
           filters={{
             filtersInfo: buildFilterFields(),
           }}

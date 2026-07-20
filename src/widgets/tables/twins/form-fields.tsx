@@ -16,6 +16,10 @@ import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
+import {
+  useUserFilters,
+  useUserSelectAdapterWithFilters,
+} from "@/entities/user";
 import { isPopulatedString } from "@/shared/libs";
 
 import { TwinFieldFormField } from "../../form-fields";
@@ -30,7 +34,6 @@ export function TwinFormFields({
   const {
     selectedTwinClass,
     fields,
-    userAdapter,
     hasHeadClass,
     headAdapter,
     hasTagDataList,
@@ -43,11 +46,17 @@ export function TwinFormFields({
     },
     true
   );
+  const userAdapter = useUserSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildUserFilters,
+    mapFiltersToPayload: mapUserFilters,
+  } = useUserFilters();
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -59,6 +68,17 @@ export function TwinFormFields({
     selectPlaceholder: "Select twin class",
     multi: false,
     disabled: isPopulatedString(baseTwinClassId),
+  };
+
+  const userInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Assignee",
+    adapter: userAdapter,
+    extraFilters: buildUserFilters(),
+    mapExtraFilters: (filters) => mapUserFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
   };
 
   return (
@@ -87,11 +107,10 @@ export function TwinFormFields({
         label="Description"
       />
 
-      <ComboboxFormField
-        name="assignerUserId"
+      <ComplexComboboxFormField
         control={control}
-        label="Assignee"
-        {...userAdapter}
+        name="assignerUserId"
+        info={userInfo}
       />
 
       {fields.map((field) => (

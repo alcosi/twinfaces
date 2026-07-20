@@ -217,6 +217,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/twinflows/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/twinflows/${row.id}`}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

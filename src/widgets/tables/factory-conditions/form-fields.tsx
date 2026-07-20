@@ -3,13 +3,17 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextAreaFormField,
-} from "@/components/form-fields";
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
 
 import { FACTORY_CONDITION_SCHEMA } from "@/entities/factory-condition";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import { isTruthy } from "@/shared/libs";
 
 import { FeaturerFormField } from "../../form-fields";
@@ -21,7 +25,7 @@ export function FactoryConditionFormFields({
   control: Control<z.infer<typeof FACTORY_CONDITION_SCHEMA>>;
   factoryConditionSetId?: string;
 }) {
-  const conditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const conditionSetAdapter = useFactoryConditionSetSelectAdapterWithFilters();
   const conditionSetWatch = useWatch({
     control,
     name: "factoryConditionSetId",
@@ -30,17 +34,29 @@ export function FactoryConditionFormFields({
     isTruthy(factoryConditionSetId || conditionSetWatch)
   ).current;
 
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+
+  const conditionSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Condition Set",
+    adapter: conditionSetAdapter,
+    extraFilters: buildFactoryConditionSetFilters(),
+    mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: disabled,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryConditionSetId"
-        label="Condition Set"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
-        {...conditionSetAdapter}
+        info={conditionSetInfo}
       />
 
       <FeaturerFormField

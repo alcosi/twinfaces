@@ -310,6 +310,7 @@ export function FactoryTriggersTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/factory-triggers/${row.id}`}
         dialogForm={triggersForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

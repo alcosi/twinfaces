@@ -403,6 +403,9 @@ export function FactoryMultiplierFiltersTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/multiplier-filters/${row.id}`)
         }
+        getRowHref={(row) =>
+          `/${PlatformArea.core}/multiplier-filters/${row.id}`
+        }
         fetcher={fetchFactoryMultiplierFilter}
         defaultVisibleColumns={[
           colDefs.id,

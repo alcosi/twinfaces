@@ -510,6 +510,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/pipeline-steps/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/pipeline-steps/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           ...(isFalsy(factoryId) ? [colDefs.factoryPipelineId] : []),

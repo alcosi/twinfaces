@@ -149,6 +149,7 @@ export function TwinTriggersTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/twin-triggers/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/twin-triggers/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.triggerFeaturer,

@@ -3,14 +3,21 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextFormField,
-} from "@/components/form-fields";
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { SwitchFormField, TextFormField } from "@/components/form-fields";
 
 import { TRANSITION_TRIGGER_SCHEMA } from "@/entities/transition-trigger";
-import { useTransitionSelectAdapter } from "@/entities/twin-flow-transition";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useTransitionSelectAdapterWithFilters,
+  useTwinFlowTransitionFilters,
+} from "@/entities/twin-flow-transition";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import { isTruthy } from "@/shared/libs";
 
 type TriggersFormValues = z.infer<typeof TRANSITION_TRIGGER_SCHEMA>;
@@ -22,23 +29,52 @@ export function TriggersFormFields({
   control: Control<TriggersFormValues>;
   transitionId?: string;
 }) {
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
   const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
   const disabledTwinTrigger = useRef(isTruthy(twinTriggerWatch)).current;
-  const transitionAdapter = useTransitionSelectAdapter();
+  const transitionAdapter = useTransitionSelectAdapterWithFilters();
   const disabled = useRef(isTruthy(transitionId)).current;
+
+  const {
+    buildFilterFields: buildTwinFlowTransitionFilters,
+    mapFiltersToPayload: mapTwinFlowTransitionFilters,
+  } = useTwinFlowTransitionFilters({});
+
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
+
+  const transitionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Transition",
+    adapter: transitionAdapter,
+    extraFilters: buildTwinFlowTransitionFilters(),
+    mapExtraFilters: (filters) => mapTwinFlowTransitionFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select transition...",
+    multi: false,
+    disabled: disabled,
+  };
+
+  const twinTriggerInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin trigger",
+    adapter: twinTriggerAdapter,
+    extraFilters: buildTwinTriggerFilters(),
+    mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin trigger...",
+    multi: false,
+    disabled: disabledTwinTrigger,
+  };
 
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinflowTransitionId"
-        label="Transition"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select transition..."
-        noItemsText="No data found"
-        {...transitionAdapter}
-        disabled={disabled}
+        info={transitionInfo}
         required
       />
       <TextFormField
@@ -48,16 +84,11 @@ export function TriggersFormFields({
         type="number"
       />
       <SwitchFormField control={control} name="active" label="Active" />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinTriggerId"
-        label="Twin trigger"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select twin trigger..."
-        noItemsText="No data found"
-        {...twinTriggerAdapter}
+        info={twinTriggerInfo}
         required
-        disabled={disabledTwinTrigger}
       />
       <SwitchFormField control={control} name="async" label="Async" />
     </>

@@ -2,14 +2,26 @@ import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { ComboboxFormField, SwitchFormField } from "@/components/form-fields";
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { SwitchFormField } from "@/components/form-fields";
 
 import {
   PERMISSION_GRANT_TWIN_ROLE_SCHEMA,
-  usePermissionSelectAdapter,
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
 } from "@/entities/permission";
-import { usePermissionSchemaSelectAdapter } from "@/entities/permission-schema";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
+import {
+  usePermissionSchemaFilters,
+  usePermissionSchemaSelectAdapterWithFilters,
+} from "@/entities/permission-schema";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
 import { isTruthy } from "@/shared/libs";
 
 export function TwinRoleTableFormFields({
@@ -17,46 +29,80 @@ export function TwinRoleTableFormFields({
 }: {
   control: Control<z.infer<typeof PERMISSION_GRANT_TWIN_ROLE_SCHEMA>>;
 }) {
-  const permissionSchemaAdapter = usePermissionSchemaSelectAdapter();
-  const permissionAdapter = usePermissionSelectAdapter();
-  const twinClassAdapter = useTwinClassSelectAdapter();
+  const permissionSchemaAdapter = usePermissionSchemaSelectAdapterWithFilters();
+  const permissionAdapter = usePermissionSelectAdapterWithFilters();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const permissionWatch = useWatch({ control, name: "permissionId" });
   const disabled = useRef(isTruthy(permissionWatch)).current;
 
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
+  const {
+    buildFilterFields: buildPermissionSchemaFilters,
+    mapFiltersToPayload: mapPermissionSchemaFilters,
+  } = usePermissionSchemaFilters();
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const permissionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Permission",
+    adapter: permissionAdapter,
+    extraFilters: buildPermissionFilters(),
+    mapExtraFilters: (filters) => mapPermissionFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled,
+  };
+
+  const permissionSchemaInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Permission schema",
+    adapter: permissionSchemaAdapter,
+    extraFilters: buildPermissionSchemaFilters(),
+    mapExtraFilters: (filters) => mapPermissionSchemaFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => ({
+      ...mapTwinClassFilters(filters),
+      abstractt: "ONLY_NOT",
+    }),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="permissionId"
-        label="Permission"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
-        {...permissionAdapter}
+        info={permissionInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="permissionSchemaId"
-        label="Permission schema"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...permissionSchemaAdapter}
+        info={permissionSchemaInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Twin class"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...twinClassAdapter}
-        getItems={async (search: string) => {
-          return twinClassAdapter.getItems(search, { abstractt: "ONLY_NOT" });
-        }}
+        info={twinClassInfo}
       />
 
       {/*TODO commented out because the logic has changed to checkboxes*/}

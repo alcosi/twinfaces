@@ -404,6 +404,7 @@ export function FactoryMultipliersTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/multipliers/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/multipliers/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           ...(showFactoryColumn ? [colDefs.factory] : []),

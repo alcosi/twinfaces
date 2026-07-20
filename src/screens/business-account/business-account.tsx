@@ -37,6 +37,7 @@ export function BusinessAccountScreen() {
         <TwinsTable
           businessAccountId={businessAccount.businessAccountId}
           onRowClick={handleRowClick}
+          getRowHref={(row) => `/${PlatformArea.core}/twins/${row.id}`}
         />
       ),
     },

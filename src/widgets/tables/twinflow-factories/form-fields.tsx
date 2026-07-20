@@ -1,10 +1,21 @@
 import { Control } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { ComboboxFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useTwinFlowSelectAdapter } from "@/entities/twin-flow";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useTwinFlowFilters,
+  useTwinFlowSelectAdapterWithFilters,
+} from "@/entities/twin-flow";
 import {
   TWINFLOW_FACTORY_SCHEMA,
   useFactoryLauncherSelectAdapter,
@@ -18,23 +29,51 @@ export function TwinFlowFactoryFormFields({
   control: Control<z.infer<typeof TWINFLOW_FACTORY_SCHEMA>>;
   twinflowId?: string;
 }) {
-  const twinflowAdapter = useTwinFlowSelectAdapter();
-  const factoryAdapter = useFactorySelectAdapter();
+  const twinflowAdapter = useTwinFlowSelectAdapterWithFilters();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const launcherAdapter = useFactoryLauncherSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinFlowFilters,
+    mapFiltersToPayload: mapTwinFlowFilters,
+  } = useTwinFlowFilters({});
+
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
 
   const twinflowDisabled = isTruthy(twinflowId);
 
+  const twinflowInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twinflow",
+    adapter: twinflowAdapter,
+    extraFilters: buildTwinFlowFilters(),
+    mapExtraFilters: (filters) => mapTwinFlowFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: twinflowDisabled,
+  };
+
+  const factoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinflowId"
-        label="Twinflow"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={twinflowDisabled}
-        {...twinflowAdapter}
+        info={twinflowInfo}
       />
 
       <ComboboxFormField
@@ -47,14 +86,10 @@ export function TwinFlowFactoryFormFields({
         {...launcherAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryId"
-        label="Factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryAdapter}
+        info={factoryInfo}
       />
     </>
   );

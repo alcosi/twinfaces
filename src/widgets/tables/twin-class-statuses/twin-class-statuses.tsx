@@ -417,6 +417,7 @@ export function TwinClassStatusesTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/statuses/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/statuses/${row.id}`}
         filters={{
           filtersInfo: buildFilterFields(),
         }}

@@ -185,6 +185,7 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/space-roles/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/space-roles/${row.id}`}
       dialogForm={spaceRoleForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

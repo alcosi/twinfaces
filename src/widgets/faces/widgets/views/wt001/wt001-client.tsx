@@ -46,6 +46,7 @@ export function WT001Client<T extends FaceTC = FaceTC>({
       searchId={searchId}
       searchParams={searchParams}
       onRowClick={handleRowClick}
+      getRowHref={(row) => `/${PlatformArea.browse}/${row.id}`}
     />
   );
 }

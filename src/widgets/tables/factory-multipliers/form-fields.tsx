@@ -7,13 +7,12 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextAreaFormField,
-} from "@/components/form-fields";
+import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
 import { FACTORY_MULTIPLIER_SCHEMA } from "@/entities/factory-multiplier";
 import { FeaturerTypes } from "@/entities/featurer";
 import {
@@ -29,15 +28,31 @@ export function FactoryMultiplierFormFields({
 }: {
   control: Control<z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>>;
 }) {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const disabled = useRef(isTruthy(factoryWatch)).current;
 
   const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const factoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: disabled,
+  };
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -52,15 +67,10 @@ export function FactoryMultiplierFormFields({
 
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryId"
-        label="Factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
-        {...factoryAdapter}
+        info={factoryInfo}
       />
 
       <ComplexComboboxFormField

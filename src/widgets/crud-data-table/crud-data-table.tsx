@@ -373,6 +373,17 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     router.push(`${basePath}/${rowId}`);
   }
 
+  // URL used by the per-row "Open in new tab" context menu. Prefer an explicit
+  // `getRowHref`; otherwise fall back to the default navigation target
+  // (`<pathname>/<rowId>`) — but only when there is no custom `onRowClick`,
+  // since a custom handler may navigate somewhere other than the current path.
+  const resolveRowHref =
+    props.getRowHref ??
+    (onRowClick
+      ? undefined
+      : (row: TData) =>
+          `${pathname.replace(/\/$/, "")}/${props.getRowId(row)}`);
+
   const content = (
     <div className={cn("flex min-h-0 flex-1 flex-col py-4", className)}>
       <div className="shrink-0">
@@ -413,6 +424,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           fetcher={fetchWrapper}
           pageSizes={pageSizes}
           onRowClick={handleOnRowClick}
+          getRowHref={resolveRowHref}
           layoutMode={viewSettings.layoutMode}
           sort={viewSettings.sort}
           onSortChange={(s) => updateViewSettings({ sort: s })}

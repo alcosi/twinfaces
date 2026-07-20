@@ -2,14 +2,25 @@ import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { ComboboxFormField } from "@/components/form-fields";
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 
-import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option/index";
+import {
+  useDatalistOptionFilters,
+  useDatalistOptionSelectAdapterWithFilters,
+} from "@/entities/datalist-option";
 import {
   TWIN_CLASS_DYNAMIC_MARKER_SCHEMA,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
+import {
+  useValidatorSetFilters,
+  useValidatorSetSelectAdapterWithFilters,
+} from "@/entities/validator-set";
 import { isTruthy } from "@/shared/libs";
 
 export function TwinClassDynamicMarkerFormFields({
@@ -17,46 +28,82 @@ export function TwinClassDynamicMarkerFormFields({
 }: {
   control: Control<z.infer<typeof TWIN_CLASS_DYNAMIC_MARKER_SCHEMA>>;
 }) {
-  const twinClassAdapter = useTwinClassSelectAdapter();
-  const validatorSetAdapter = useValidatorSetSelectAdapter();
-  const markerAdapter = useDatalistOptionSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+  const validatorSetAdapter = useValidatorSetSelectAdapterWithFilters();
+  const markerAdapter = useDatalistOptionSelectAdapterWithFilters();
   const twinClassWatch = useWatch({ control, name: "twinClassId" });
   const disabled = useRef(isTruthy(twinClassWatch)).current;
 
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildValidatorSetFilters,
+    mapFiltersToPayload: mapValidatorSetFilters,
+  } = useValidatorSetFilters();
+
+  const {
+    buildFilterFields: buildDatalistOptionFilters,
+    mapFiltersToPayload: mapDatalistOptionFilters,
+  } = useDatalistOptionFilters({});
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled,
+  };
+
+  const validatorSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Validator Set",
+    adapter: validatorSetAdapter,
+    extraFilters: buildValidatorSetFilters(),
+    mapExtraFilters: (filters) => mapValidatorSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
+  const markerInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Marker option",
+    adapter: markerAdapter,
+    extraFilters: buildDatalistOptionFilters(),
+    mapExtraFilters: (filters) => mapDatalistOptionFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Class"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
+        info={twinClassInfo}
         required
-        {...twinClassAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinValidatorSetId"
-        label="Validator Set"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
+        info={validatorSetInfo}
         required
-        {...validatorSetAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="markerDataListOptionId"
-        label="Marker option"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
+        info={markerInfo}
         required
-        {...markerAdapter}
       />
     </>
   );

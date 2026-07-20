@@ -217,6 +217,7 @@ export function ProjectionsTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/projections/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/projections/${row.id}`}
       getRowId={(row) => row.id!}
       defaultVisibleColumns={[
         colDefs.id,

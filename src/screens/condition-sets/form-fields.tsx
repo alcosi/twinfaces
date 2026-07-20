@@ -1,12 +1,16 @@
 import { Control } from "react-hook-form";
 
 import {
-  ComboboxFormField,
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields";
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
 import { ConditionSetFieldValues } from "@/entities/factory-condition-set";
 
 export function ConditionSetFields({
@@ -14,20 +18,31 @@ export function ConditionSetFields({
 }: {
   control: Control<ConditionSetFieldValues>;
 }) {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+
+  const factoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
 
   return (
     <>
       <TextFormField control={control} name="name" label="Name" />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinFactoryId"
-        label="Factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryAdapter}
+        info={factoryInfo}
       />
 
       <TextAreaFormField

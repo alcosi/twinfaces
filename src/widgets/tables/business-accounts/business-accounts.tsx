@@ -397,6 +397,7 @@ export function BusinessAccountsTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/business-accounts/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/business-accounts/${row.id}`}
     />
   );
 }

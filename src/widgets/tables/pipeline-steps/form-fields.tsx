@@ -3,14 +3,24 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  ComboboxFormField,
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
-import { useFactoryPipelineSelectAdapter } from "@/entities/factory-pipeline";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
+import {
+  useFactoryPipelineFilters,
+  useFactoryPipelineSelectAdapterWithFilters,
+} from "@/entities/factory-pipeline";
 import { PIPELINE_STEP_SCHEMA } from "@/entities/factory-pipeline-step";
 import { FeaturerTypes } from "@/entities/featurer";
 import { isTruthy } from "@/shared/libs";
@@ -24,22 +34,52 @@ export function PipelineStepFormFields({
   control: Control<z.infer<typeof PIPELINE_STEP_SCHEMA>>;
   factoryId?: string;
 }) {
-  const factoryPipelineAdapter = useFactoryPipelineSelectAdapter(factoryId);
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryPipelineAdapter =
+    useFactoryPipelineSelectAdapterWithFilters(factoryId);
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
   const factoryPipelineWatch = useWatch({ control, name: "factoryPipelineId" });
   const disabled = useRef(isTruthy(factoryPipelineWatch)).current;
 
+  const {
+    buildFilterFields: buildFactoryPipelineFilters,
+    mapFiltersToPayload: mapFactoryPipelineFilters,
+  } = useFactoryPipelineFilters({});
+
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+
+  const factoryPipelineInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Pipeline",
+    adapter: factoryPipelineAdapter,
+    extraFilters: buildFactoryPipelineFilters(),
+    mapExtraFilters: (filters) => mapFactoryPipelineFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: disabled,
+  };
+
+  const factoryConditionSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Condition set",
+    adapter: factoryConditionSetAdapter,
+    extraFilters: buildFactoryConditionSetFilters(),
+    mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryPipelineId"
-        label="Pipeline"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
-        {...factoryPipelineAdapter}
+        info={factoryPipelineInfo}
       />
 
       <TextFormField
@@ -49,14 +89,10 @@ export function PipelineStepFormFields({
         type="number"
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryConditionSetId"
-        label="Condition set"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryConditionSetAdapter}
+        info={factoryConditionSetInfo}
       />
 
       <SwitchFormField
