@@ -176,6 +176,7 @@ export function TwinClassDynamicMarkersTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/dynamic-markers/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/dynamic-markers/${row.id}`}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

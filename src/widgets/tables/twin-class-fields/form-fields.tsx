@@ -6,14 +6,16 @@ import {
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import {
-  ComboboxFormField,
   SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
 import { FeaturerTypes } from "@/entities/featurer";
-import { usePermissionSelectAdapter } from "@/entities/permission";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -30,12 +32,18 @@ export function TwinClassFieldFormFields({
 }) {
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassId = useWatch({ control, name: "twinClassId" });
-  const permissionAdapter = usePermissionSelectAdapter();
+  const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const editPermissionAdapter = usePermissionSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -47,6 +55,28 @@ export function TwinClassFieldFormFields({
     selectPlaceholder: "Select twin class",
     multi: false,
     disabled: isPopulatedString(twinClassId),
+  };
+
+  const viewPermissionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "View permission",
+    adapter: viewPermissionAdapter,
+    extraFilters: buildPermissionFilters(),
+    mapExtraFilters: (filters) => mapPermissionFilters(filters),
+    searchPlaceholder: "Search view permission...",
+    selectPlaceholder: "Select view permission",
+    multi: false,
+  };
+
+  const editPermissionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Edit permission",
+    adapter: editPermissionAdapter,
+    extraFilters: buildPermissionFilters(),
+    mapExtraFilters: (filters) => mapPermissionFilters(filters),
+    searchPlaceholder: "Search edit permission...",
+    selectPlaceholder: "Select edit permission",
+    multi: false,
   };
 
   return (
@@ -87,24 +117,16 @@ export function TwinClassFieldFormFields({
         paramsFieldName="twinSorterParams"
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="viewPermissionId"
-        label="View permission"
-        selectPlaceholder="Select view permission"
-        searchPlaceholder="Search view permission..."
-        noItemsText="No permission found"
-        {...permissionAdapter}
+        info={viewPermissionInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="editPermissionId"
-        label="Edit permission"
-        selectPlaceholder="Select edit permission"
-        searchPlaceholder="Search edit permission..."
-        noItemsText="No permission found"
-        {...permissionAdapter}
+        info={editPermissionInfo}
       />
 
       <TextFormField control={control} name="externalId" label="External Id" />

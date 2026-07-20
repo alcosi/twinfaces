@@ -24,6 +24,12 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
   pageSizes?: number[];
   onFetchError?: (e: Error) => void;
   onRowClick?: (row: TData) => void;
+  /**
+   * Returns the detail-page URL for a row. When it resolves to a string, the
+   * row gets a right-click context menu with "Open in new tab". Left-click
+   * navigation is unaffected (still driven by `onRowClick` / the default).
+   */
+  getRowHref?: (row: TData) => string | undefined;
   layoutMode?: "grid" | "list";
   sort?: SortV1;
   onSortChange?: (sort: SortV1 | undefined) => void;

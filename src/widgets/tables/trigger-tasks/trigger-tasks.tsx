@@ -215,6 +215,7 @@ export function TriggerTasksTable({ twinId }: { twinId?: string }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/trigger-tasks/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/trigger-tasks/${row.id}`}
     />
   );
 }

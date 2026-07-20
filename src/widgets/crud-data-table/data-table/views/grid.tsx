@@ -13,6 +13,7 @@ import {
 } from "@/shared/ui/table";
 
 import { DataTableRow } from "../types";
+import { RowContextMenu } from "./row-context-menu";
 
 /**
  * Renders a horizontal table with expandable rows.
@@ -20,10 +21,12 @@ import { DataTableRow } from "../types";
 export function DataTableGrid<TData extends DataTableRow<TData>>({
   table,
   onRowClick,
+  getRowHref,
   columnManager,
 }: {
   table: ReturnType<typeof useReactTable<TData>>;
   onRowClick?: (row: TData) => void;
+  getRowHref?: (row: TData) => string | undefined;
   columnManager?: ReactNode;
 }) {
   function getStickyActionsClass(columnId: string, type: "head" | "cell") {
@@ -43,32 +46,34 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
   // Render a single, non-grouped row
   function renderRow(row: Row<TData>) {
     return (
-      <TableRow
-        role={onRowClick ? "button" : undefined}
-        key={row.id}
-        data-state={row.getIsSelected() ? "selected" : undefined}
-        onClick={() => onRowClick?.(row.original)}
-        className={cn(onRowClick && "cursor-pointer", "group")}
-      >
-        {row.getVisibleCells().map((cell) => (
-          <TableCell
-            key={cell.id}
-            className={cn(
-              getStickyActionsClass(cell.column.id, "cell"),
-              // The sticky actions cell keeps an opaque base so scrolled
-              // content can't show through it. The row-hover tint is layered
-              // via an overlay (instead of a semi-transparent cell bg) so it
-              // doesn't double up over the row's own hover background and the
-              // column stays seamless with the rest of the row.
-              cell.column.id === "actions" &&
-                onRowClick &&
-                "before:bg-muted/50 before:pointer-events-none before:absolute before:inset-0 before:opacity-0 group-hover:before:opacity-100"
-            )}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableCell>
-        ))}
-      </TableRow>
+      <RowContextMenu href={getRowHref?.(row.original)}>
+        <TableRow
+          role={onRowClick ? "button" : undefined}
+          key={row.id}
+          data-state={row.getIsSelected() ? "selected" : undefined}
+          onClick={() => onRowClick?.(row.original)}
+          className={cn(onRowClick && "cursor-pointer", "group")}
+        >
+          {row.getVisibleCells().map((cell) => (
+            <TableCell
+              key={cell.id}
+              className={cn(
+                getStickyActionsClass(cell.column.id, "cell"),
+                // The sticky actions cell keeps an opaque base so scrolled
+                // content can't show through it. The row-hover tint is layered
+                // via an overlay (instead of a semi-transparent cell bg) so it
+                // doesn't double up over the row's own hover background and the
+                // column stays seamless with the rest of the row.
+                cell.column.id === "actions" &&
+                  onRowClick &&
+                  "before:bg-muted/50 before:pointer-events-none before:absolute before:inset-0 before:opacity-0 group-hover:before:opacity-100"
+              )}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          ))}
+        </TableRow>
+      </RowContextMenu>
     );
   }
 

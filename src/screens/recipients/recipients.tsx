@@ -140,6 +140,7 @@ export function RecipientsScreen() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/recipients/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/recipients/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

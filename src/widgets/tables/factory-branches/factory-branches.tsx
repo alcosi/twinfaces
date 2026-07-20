@@ -419,6 +419,7 @@ export function FactoryBranchesTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/branches/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/branches/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           ...(isFalsy(factoryId) ? [colDefs.factory] : []),

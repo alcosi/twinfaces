@@ -144,6 +144,7 @@ export function TwinFlowFactoriesTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/twinflow-factories/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/twinflow-factories/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         ...(isFalsy(twinflowId) ? [colDefs.twinflowId] : []),

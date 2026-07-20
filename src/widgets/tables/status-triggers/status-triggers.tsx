@@ -198,6 +198,7 @@ export function StatusTriggersTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/status-triggers/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/status-triggers/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         ...(twinStatusId ? [] : [colDefs.twinStatusId]),

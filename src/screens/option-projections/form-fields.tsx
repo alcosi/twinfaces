@@ -1,9 +1,17 @@
 import { Control } from "react-hook-form";
 import { z } from "zod";
 
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { ComboboxFormField } from "@/components/form-fields";
 
-import { useDatalistOptionSelectAdapter } from "@/entities/datalist-option";
+import {
+  useDatalistOptionFilters,
+  useDatalistOptionSelectAdapterWithFilters,
+} from "@/entities/datalist-option";
 import {
   OPTION_PROJECTION_SHEMA,
   TitleOptionProjections,
@@ -18,7 +26,37 @@ export function OptionsProjectionFormFields({
   title?: TitleOptionProjections;
 }) {
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
-  const dataListOptionAdapter = useDatalistOptionSelectAdapter();
+  const srcDataListOptionAdapter = useDatalistOptionSelectAdapterWithFilters();
+  const dstDataListOptionAdapter = useDatalistOptionSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildDatalistOptionFilters,
+    mapFiltersToPayload: mapDatalistOptionFilters,
+  } = useDatalistOptionFilters({});
+
+  const srcDataListOptionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Src option",
+    adapter: srcDataListOptionAdapter,
+    extraFilters: buildDatalistOptionFilters(),
+    mapExtraFilters: (filters) => mapDatalistOptionFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: title === "Outgoing",
+  };
+
+  const dstDataListOptionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Dst option",
+    adapter: dstDataListOptionAdapter,
+    extraFilters: buildDatalistOptionFilters(),
+    mapExtraFilters: (filters) => mapDatalistOptionFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: title === "Incoming",
+  };
 
   return (
     <>
@@ -32,26 +70,16 @@ export function OptionsProjectionFormFields({
         {...projectionTypeAdapter}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="srcDataListOptionId"
-        label="Src option"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...dataListOptionAdapter}
-        disabled={title === "Outgoing"}
+        info={srcDataListOptionInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="dstDataListOptionId"
-        label="Dst option"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...dataListOptionAdapter}
-        disabled={title === "Incoming"}
+        info={dstDataListOptionInfo}
       />
     </>
   );

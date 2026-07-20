@@ -7,14 +7,16 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextAreaFormField,
-} from "@/components/form-fields";
+import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import { FACTORY_PIPELINE_SCHEMA } from "@/entities/factory-pipeline";
 import {
   useTwinClassFilters,
@@ -37,9 +39,11 @@ export function FactoryPipelineFormFields({
 }: {
   control: Control<z.infer<typeof FACTORY_PIPELINE_SCHEMA>>;
 }) {
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const nextFactoryAdapter = useFactorySelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const twinClassWatch = useWatch({
     control,
@@ -60,6 +64,50 @@ export function FactoryPipelineFormFields({
     buildFilterFields: buildTwinStatusFilters,
     mapFiltersToPayload: mapTwinStatusFilters,
   } = useStatusFilters({});
+
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+
+  const factoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: disabledFactory,
+  };
+
+  const factoryConditionSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Condition set",
+    adapter: factoryConditionSetAdapter,
+    extraFilters: buildFactoryConditionSetFilters(),
+    mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
+  const nextFactoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Next factory",
+    adapter: nextFactoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -93,15 +141,10 @@ export function FactoryPipelineFormFields({
 
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryId"
-        label="Factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabledFactory}
-        {...factoryAdapter}
+        info={factoryInfo}
       />
 
       <ComplexComboboxFormField
@@ -110,14 +153,10 @@ export function FactoryPipelineFormFields({
         info={twinClassInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryConditionSetId"
-        label="Condition set"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryConditionSetAdapter}
+        info={factoryConditionSetInfo}
       />
 
       <SwitchFormField
@@ -134,14 +173,10 @@ export function FactoryPipelineFormFields({
         info={outputTwinStatusInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="nextFactoryId"
-        label="Next factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryAdapter}
+        info={nextFactoryInfo}
       />
 
       <TextAreaFormField

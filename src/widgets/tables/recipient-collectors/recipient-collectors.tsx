@@ -167,6 +167,9 @@ export function RecipientCollectorsTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/recipient-collectors/${row.id}`)
       }
+      getRowHref={(row) =>
+        `/${PlatformArea.core}/recipient-collectors/${row.id}`
+      }
       filters={{ filtersInfo: buildFilterFields() }}
       dialogForm={recipientCollectorForm}
       onCreateSubmit={handleOnCreateSubmit}

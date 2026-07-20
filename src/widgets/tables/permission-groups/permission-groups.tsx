@@ -135,6 +135,7 @@ export function PermissionGroupsTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/permission-groups/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/permission-groups/${row.id}`}
       defaultVisibleColumns={[colDefs.id, colDefs.name, colDefs.twinClassId]}
       orderedColumns={[
         colDefs.id,

@@ -184,6 +184,7 @@ export function PermissionsTable({
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/permissions/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/permissions/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,

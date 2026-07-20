@@ -725,6 +725,7 @@ export function TwinClassFieldsTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/fields/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/fields/${row.id}`}
         filters={{
           filtersInfo: buildFilterFields(),
         }}

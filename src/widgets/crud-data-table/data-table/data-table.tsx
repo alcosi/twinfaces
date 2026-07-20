@@ -43,6 +43,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     pageSizes = [10, 25, 50],
     onFetchError,
     onRowClick,
+    getRowHref,
     layoutMode = "grid",
     sort,
     onSortChange,
@@ -168,6 +169,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
           <DataTableGrid
             table={table}
             onRowClick={onRowClick}
+            getRowHref={getRowHref}
             columnManager={columnManager}
           />
         ) : isEmptyArray(table.getRowModel().rows) ? (
@@ -178,6 +180,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
           <DataTableList
             table={table}
             onRowClick={onRowClick}
+            getRowHref={getRowHref}
             renderItem={renderListItem}
           />
         )}

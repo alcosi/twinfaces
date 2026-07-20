@@ -2,19 +2,31 @@ import { useState } from "react";
 import { Control, useWatch } from "react-hook-form";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   ComboboxFormField,
   SwitchFormField,
   TextAreaFormField,
   TextFormField,
 } from "@/components/form-fields";
 
-import { useDatalistSelectAdapter } from "@/entities/datalist";
+import {
+  useDatalistFilters,
+  useDatalistSelectAdapterWithFilters,
+} from "@/entities/datalist";
 import { useTwinClassOwnerTypeSelectAdapter } from "@/entities/domain";
 import { FeaturerTypes } from "@/entities/featurer";
-import { usePermissionSelectAdapter } from "@/entities/permission";
+import {
+  usePermissionFilters,
+  usePermissionSelectAdapterWithFilters,
+} from "@/entities/permission";
 import {
   TwinClassFieldValues,
-  useTwinClassSelectAdapter,
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { isFalsy, isPopulatedArray } from "@/shared/libs";
 import { FeaturerFormField } from "@/widgets/form-fields";
@@ -30,10 +42,92 @@ export function TwinClassFormFields({
     defaultValue: [],
   });
 
-  const tcAdapter = useTwinClassSelectAdapter();
-  const dlAdapter = useDatalistSelectAdapter();
-  const pAdapter = usePermissionSelectAdapter();
+  const headTwinClassAdapter = useTwinClassSelectAdapterWithFilters();
+  const extendsTwinClassAdapter = useTwinClassSelectAdapterWithFilters();
+  const markerDatalistAdapter = useDatalistSelectAdapterWithFilters();
+  const tagDatalistAdapter = useDatalistSelectAdapterWithFilters();
+  const createPermissionAdapter = usePermissionSelectAdapterWithFilters();
+  const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const twinClassOwnerTypeAdapter = useTwinClassOwnerTypeSelectAdapter();
+
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildDatalistFilters,
+    mapFiltersToPayload: mapDatalistFilters,
+  } = useDatalistFilters();
+  const {
+    buildFilterFields: buildPermissionFilters,
+    mapFiltersToPayload: mapPermissionFilters,
+  } = usePermissionFilters();
+
+  const headTwinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Head",
+    adapter: headTwinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search twin class...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+  };
+
+  const extendsTwinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Extends",
+    adapter: extendsTwinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search twin class...",
+    selectPlaceholder: "Select twin class",
+    multi: false,
+  };
+
+  const markerDataListInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Markers list",
+    adapter: markerDatalistAdapter,
+    extraFilters: buildDatalistFilters(),
+    mapExtraFilters: (filters) => mapDatalistFilters(filters),
+    searchPlaceholder: "Search datalist...",
+    selectPlaceholder: "Select datalist",
+    multi: false,
+  };
+
+  const tagDataListInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Tags list",
+    adapter: tagDatalistAdapter,
+    extraFilters: buildDatalistFilters(),
+    mapExtraFilters: (filters) => mapDatalistFilters(filters),
+    searchPlaceholder: "Search datalist...",
+    selectPlaceholder: "Select datalist",
+    multi: false,
+  };
+
+  const createPermissionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Create",
+    adapter: createPermissionAdapter,
+    extraFilters: buildPermissionFilters(),
+    mapExtraFilters: (filters) => mapPermissionFilters(filters),
+    searchPlaceholder: "Search create permission...",
+    selectPlaceholder: "Select create permission",
+    multi: false,
+  };
+
+  const viewPermissionInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "View",
+    adapter: viewPermissionAdapter,
+    extraFilters: buildPermissionFilters(),
+    mapExtraFilters: (filters) => mapPermissionFilters(filters),
+    searchPlaceholder: "Search view permission...",
+    selectPlaceholder: "Select view permission",
+    multi: false,
+  };
 
   const [isSpaceChecked, setIsSpaceChecked] = useState<boolean>(false);
   const [isAutoCreatePermission, setIsAutoCreatePermission] =
@@ -84,14 +178,10 @@ export function TwinClassFormFields({
 
       <TextFormField control={control} name="logo" label="Logo URL" />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="headTwinClass"
-        label="Head"
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...tcAdapter}
+        info={headTwinClassInfo}
       />
 
       {isPopulatedArray(headTwinClass) && (
@@ -104,34 +194,22 @@ export function TwinClassFormFields({
         />
       )}
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="extendsTwinClassId"
-        label="Extends"
-        selectPlaceholder="Select twin class"
-        searchPlaceholder="Search twin class..."
-        noItemsText="No classes found"
-        {...tcAdapter}
+        info={extendsTwinClassInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="markerDataListId"
-        label="Markers list"
-        selectPlaceholder="Select datalist"
-        searchPlaceholder="Search datalist..."
-        noItemsText="No datalist found"
-        {...dlAdapter}
+        info={markerDataListInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="tagDataListId"
-        label="Tags list"
-        selectPlaceholder="Select datalist"
-        searchPlaceholder="Search datalist..."
-        noItemsText="No datalist found"
-        {...dlAdapter}
+        info={tagDataListInfo}
       />
 
       <SwitchFormField
@@ -156,24 +234,16 @@ export function TwinClassFormFields({
       {isFalsy(isAutoCreatePermission) && (
         <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Permissions</legend>
-          <ComboboxFormField
+          <ComplexComboboxFormField
             control={control}
             name="createPermissionId"
-            label="Create"
-            selectPlaceholder="Select create permission"
-            searchPlaceholder="Search create permission..."
-            noItemsText="No create permission found"
-            {...pAdapter}
+            info={createPermissionInfo}
           />
 
-          <ComboboxFormField
+          <ComplexComboboxFormField
             control={control}
             name="viewPermissionId"
-            label="View"
-            selectPlaceholder="Select view permission"
-            searchPlaceholder="Search view permission..."
-            noItemsText="No view permission found"
-            {...pAdapter}
+            info={viewPermissionInfo}
           />
         </fieldset>
       )}

@@ -2,6 +2,11 @@ import { Control } from "react-hook-form";
 import z from "zod";
 
 import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import {
   ComboboxFormField,
   SwitchFormField,
   TextFormField,
@@ -12,41 +17,90 @@ import {
   useNotificationSchemaSelectAdapter,
   useRecipientSelectAdapter,
 } from "@/entities/notification";
-import { useTwinClassSelectAdapter } from "@/entities/twin-class";
-import { useTwinClassFieldSelectAdapter } from "@/entities/twin-class-field";
-import { useValidatorSetSelectAdapter } from "@/entities/validator-set";
+import {
+  useTwinClassFilters,
+  useTwinClassSelectAdapterWithFilters,
+} from "@/entities/twin-class";
+import {
+  useTwinClassFieldFilters,
+  useTwinClassFieldSelectAdapterWithFilters,
+} from "@/entities/twin-class-field";
+import {
+  useValidatorSetFilters,
+  useValidatorSetSelectAdapterWithFilters,
+} from "@/entities/validator-set";
 
 export function NotificationFormFields({
   control,
 }: {
   control: Control<z.infer<typeof NOTIFICATION_SCHEMA>>;
 }) {
-  const twinClassAdapter = useTwinClassSelectAdapter();
-  const twinClassFieldAdapter = useTwinClassFieldSelectAdapter();
-  const validatorSetAdapter = useValidatorSetSelectAdapter();
+  const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
+  const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
+  const validatorSetAdapter = useValidatorSetSelectAdapterWithFilters();
   const recipientAdapter = useRecipientSelectAdapter();
   const notificationSchemaAdapter = useNotificationSchemaSelectAdapter();
 
+  const {
+    buildFilterFields: buildTwinClassFilters,
+    mapFiltersToPayload: mapTwinClassFilters,
+  } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildTwinClassFieldFilters,
+    mapFiltersToPayload: mapTwinClassFieldFilters,
+  } = useTwinClassFieldFilters({});
+
+  const {
+    buildFilterFields: buildValidatorSetFilters,
+    mapFiltersToPayload: mapValidatorSetFilters,
+  } = useValidatorSetFilters();
+
+  const twinClassInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin class",
+    adapter: twinClassAdapter,
+    extraFilters: buildTwinClassFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class...",
+    multi: false,
+  };
+
+  const twinClassFieldInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin class field",
+    adapter: twinClassFieldAdapter,
+    extraFilters: buildTwinClassFieldFilters(),
+    mapExtraFilters: (filters) => mapTwinClassFieldFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin class field...",
+    multi: false,
+  };
+
+  const twinValidatorSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin validator set",
+    adapter: validatorSetAdapter,
+    extraFilters: buildValidatorSetFilters(),
+    mapExtraFilters: (filters) => mapValidatorSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin validator set...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassId"
-        label="Twin class"
-        selectPlaceholder="Select twin class..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
+        info={twinClassInfo}
         required
-        {...twinClassAdapter}
       />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinClassFieldId"
-        label="Twin class field"
-        selectPlaceholder="Select twin class field..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...twinClassFieldAdapter}
+        info={twinClassFieldInfo}
       />
       // TODO Replace by [input field] history type
       https://alcosi.atlassian.net/browse/TWINFACES-784
@@ -84,14 +138,10 @@ export function NotificationFormFields({
         label="Notification channel event"
         required
       />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinValidatorSetId"
-        label="Twin validator set"
-        selectPlaceholder="Select twin validator set..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...validatorSetAdapter}
+        info={twinValidatorSetInfo}
       />
       <SwitchFormField
         control={control}

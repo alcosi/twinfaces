@@ -114,6 +114,7 @@ export function ValidatorSetsTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/validator-sets/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/validator-sets/${row.id}`}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.name,

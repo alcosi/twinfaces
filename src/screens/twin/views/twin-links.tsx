@@ -158,6 +158,7 @@ export function TwinLinks() {
           baseTwinClassIdList={twin.subordinates.map((el) => el.id)}
           targetHeadTwinId={twin.id}
           onRowClick={handleRowClick}
+          getRowHref={(row) => `/${PlatformArea.core}/twins/${row.id}`}
         />
       )}
     </>

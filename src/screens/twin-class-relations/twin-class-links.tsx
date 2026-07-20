@@ -221,6 +221,7 @@ export function TwinClassRelations() {
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/links/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/links/${row.id}`}
         getRowId={(row) => row.id!}
         disablePagination={true}
         defaultVisibleColumns={[
@@ -251,6 +252,7 @@ export function TwinClassRelations() {
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/links/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/links/${row.id}`}
         getRowId={(row) => row.id!}
         disablePagination={true}
         defaultVisibleColumns={[

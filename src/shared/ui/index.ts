@@ -11,6 +11,7 @@ export * from "./carousel";
 export * from "./charts";
 export * from "./collapsible";
 export * from "./command";
+export * from "./context-menu";
 export * from "./copy-button";
 export * from "./dialog";
 export * from "./dropdown-menu";

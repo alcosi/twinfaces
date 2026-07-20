@@ -240,6 +240,7 @@ export function TiersTable() {
       fetcher={fetchTiers}
       getRowId={(row) => row.id!}
       onRowClick={(row) => router.push(`/${PlatformArea.core}/tiers/${row.id}`)}
+      getRowHref={(row) => `/${PlatformArea.core}/tiers/${row.id}`}
       filters={{
         filtersInfo: buildFilterFields(),
       }}

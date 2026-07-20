@@ -9,15 +9,20 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { isEmptyString, isPopulatedString } from "@/shared/libs";
+import {
+  AdvancedFilterPanels,
+  useAdvancedFilterLevels,
+} from "@/components/advanced-filters";
+import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
+
+import { isPopulatedString } from "@/shared/libs";
 import {
   Button,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   Form,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
 } from "@/shared/ui";
 
 export type CrudDataTableDialogRef = {
@@ -56,6 +61,16 @@ function Component(
 ) {
   const defaultValues = useRef(dialogForm?.formState.defaultValues).current;
 
+  const {
+    renderedLevels,
+    scrollRef,
+    visibleWidth,
+    openAdvancedFilters,
+    openAdvancedFiltersFromLevel,
+    closeFrom,
+    reset: resetAdvancedFilters,
+  } = useAdvancedFilterLevels();
+
   const [dialogState, updateDialogState] = useReducer(
     (state: DialogState, updates: Partial<DialogState>) => ({
       ...state,
@@ -71,6 +86,7 @@ function Component(
     open: (row) => {
       updateDialogState({ open: true, rowId: row?.id });
       dialogForm?.reset(row ?? defaultValues);
+      resetAdvancedFilters();
     },
   }));
 
@@ -79,6 +95,7 @@ function Component(
 
     updateDialogState({ open: false, rowId: undefined });
     dialogForm?.reset();
+    resetAdvancedFilters();
   }
 
   async function handleFormSubmit(formValues: unknown) {
@@ -90,6 +107,7 @@ function Component(
       }
       updateDialogState({ open: false, rowId: undefined });
       onSubmitSuccess?.();
+      resetAdvancedFilters();
     } catch (error) {
       console.error("Action failed:", error);
       toast.error("Action failed");
@@ -99,34 +117,63 @@ function Component(
   const fallbackTitle = dialogState.rowId ? "Edit" : "Create";
 
   return dialogForm ? (
-    <Dialog open={dialogState.open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[100%] sm:max-h-[80%] sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            {isPopulatedString(title) ? title : fallbackTitle}
-          </DialogTitle>
-        </DialogHeader>
-
+    <Sheet open={dialogState.open} onOpenChange={handleOpenChange}>
+      <SheetContent
+        className="overflow-hidden p-0"
+        style={{
+          width: `min(${visibleWidth}px, 95vw)`,
+          maxWidth: `min(${visibleWidth}px, 95vw)`,
+          transitionProperty: "width, max-width",
+          transitionDuration: "300ms",
+        }}
+      >
         <Form {...dialogForm}>
-          <form onSubmit={dialogForm.handleSubmit(handleFormSubmit)}>
-            <div className="max-h-[60vh] space-y-8 overflow-y-auto px-8 py-6">
-              {renderFormFields && renderFormFields()}
-            </div>
+          <div
+            ref={scrollRef}
+            className="flex h-full w-full overflow-x-auto"
+            style={{ scrollBehavior: "smooth" }}
+          >
+            {/* Main create/edit panel */}
+            <form
+              className="flex h-full w-[400px] shrink-0 flex-col"
+              onSubmit={dialogForm.handleSubmit(handleFormSubmit)}
+            >
+              <SheetHeader className="px-6 py-4">
+                <SheetTitle className="text-base">
+                  {isPopulatedString(title) ? title : fallbackTitle}
+                </SheetTitle>
+              </SheetHeader>
 
-            <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
-              <Button
-                type="submit"
-                loading={dialogForm.formState.isSubmitting}
-                disabled={!dialogForm.formState.isDirty}
-              >
-                {isPopulatedString(submitButtonLabel)
-                  ? submitButtonLabel
-                  : "Save"}
-              </Button>
-            </DialogFooter>
-          </form>
+              <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
+                <AdvancedFiltersContext.Provider
+                  value={{ openAdvancedFilters }}
+                >
+                  {renderFormFields && renderFormFields()}
+                </AdvancedFiltersContext.Provider>
+              </div>
+
+              <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
+                <Button
+                  type="submit"
+                  loading={dialogForm.formState.isSubmitting}
+                  disabled={!dialogForm.formState.isDirty}
+                >
+                  {isPopulatedString(submitButtonLabel)
+                    ? submitButtonLabel
+                    : "Save"}
+                </Button>
+              </div>
+            </form>
+
+            {/* Advanced filter panels (stack-based, supports N levels) */}
+            <AdvancedFilterPanels
+              renderedLevels={renderedLevels}
+              openAdvancedFiltersFromLevel={openAdvancedFiltersFromLevel}
+              closeFrom={closeFrom}
+            />
+          </div>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   ) : null;
 }

@@ -7,13 +7,12 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  ComboboxFormField,
-  TextAreaFormField,
-  TextFormField,
-} from "@/components/form-fields";
+import { TextAreaFormField, TextFormField } from "@/components/form-fields";
 
-import { useBusinessAccountSelectAdapter } from "@/entities/business-account";
+import {
+  useBusinessAccountFilters,
+  useBusinessAccountSelectAdapterWithFilters,
+} from "@/entities/business-account";
 import { SPACE_ROLE_SHEMA } from "@/entities/space-role";
 import {
   useTwinClassFilters,
@@ -26,7 +25,7 @@ export function SpaceRolesFormFields({
 }: {
   control: Control<z.infer<typeof SPACE_ROLE_SHEMA>>;
 }) {
-  const businessAccountAdapter = useBusinessAccountSelectAdapter();
+  const businessAccountAdapter = useBusinessAccountSelectAdapterWithFilters();
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const twinClassWatch = useWatch({ control, name: "twinClassId" });
   const disabled = useRef(isTruthy(twinClassWatch)).current;
@@ -35,6 +34,11 @@ export function SpaceRolesFormFields({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildBusinessAccountFilters,
+    mapFiltersToPayload: mapBusinessAccountFilters,
+  } = useBusinessAccountFilters({});
 
   const twinClassInfo: AutoFormComplexComboboxValueInfo = {
     type: AutoFormValueType.complexCombobox,
@@ -46,6 +50,17 @@ export function SpaceRolesFormFields({
     selectPlaceholder: "Select twin class",
     multi: false,
     disabled: disabled,
+  };
+
+  const businessAccountInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Business account",
+    adapter: businessAccountAdapter,
+    extraFilters: buildBusinessAccountFilters(),
+    mapExtraFilters: (filters) => mapBusinessAccountFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
   };
 
   return (
@@ -66,14 +81,10 @@ export function SpaceRolesFormFields({
         info={twinClassInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="businessAccountId"
-        label="Business account"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...businessAccountAdapter}
+        info={businessAccountInfo}
       />
     </>
   );

@@ -1,8 +1,18 @@
+import { ExternalLink } from "lucide-react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { cn, slugify } from "@/shared/libs";
-import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/shared/ui";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/shared/ui";
 
 import { isItemActive } from "./helpers";
 import { MenuItemProps } from "./types";
@@ -18,7 +28,6 @@ export function MenuItem({
 }: MenuItemProps) {
   const { open } = useSidebar();
   const pathname = usePathname() || "";
-  const router = useRouter();
   const isActive = url ? isItemActive(slugify(url), pathname) : false;
 
   function renderIcon() {
@@ -41,24 +50,27 @@ export function MenuItem({
     return <div className="border-primary h-4 w-4 rounded-md border" />;
   }
 
+  const iconAndLabel = (
+    <>
+      {renderIcon()}
+      {open && <span>{label}</span>}
+    </>
+  );
+
   const menuButtonContent = (
     <SidebarMenuButton
       asChild
-      onClick={url ? () => router.push(url) : undefined}
       className={cn(
         "rounded-lg border border-transparent transition-colors",
         isActive && "bg-brand-500/10 text-brand-600 font-semibold",
         buttonClassName
       )}
     >
-      <div>
-        {renderIcon()}
-        {open && <span>{label}</span>}
-      </div>
+      {url ? <Link href={url}>{iconAndLabel}</Link> : <div>{iconAndLabel}</div>}
     </SidebarMenuButton>
   );
 
-  return (
+  const menuItem = (
     <SidebarMenuItem
       title={label}
       className={cn(
@@ -70,5 +82,24 @@ export function MenuItem({
     >
       {menuButtonContent}
     </SidebarMenuItem>
+  );
+
+  if (!url) {
+    return menuItem;
+  }
+
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger asChild>{menuItem}</ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem
+          className="cursor-pointer rounded-md"
+          onSelect={() => window.open(url, "_blank", "noopener,noreferrer")}
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          Open in new tab
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }

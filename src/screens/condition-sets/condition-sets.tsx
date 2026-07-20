@@ -340,6 +340,7 @@ export function ConditionSetsScreen() {
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/condition-sets/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/condition-sets/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           colDefs.twinFactoryId,

@@ -118,6 +118,7 @@ type Props = {
   // === end ===
   modalCreateData?: FaceTC001ViewRs;
   onRowClick?: (row: Twin_DETAILED) => void;
+  getRowHref?: (row: Twin_DETAILED) => string | undefined;
   businessAccountId?: string;
 };
 
@@ -131,6 +132,7 @@ export function TwinsTable({
   resourceNavigationEnabled = true,
   modalCreateData,
   onRowClick,
+  getRowHref,
   searchId,
   searchParams = {},
   businessAccountId,
@@ -616,6 +618,7 @@ export function TwinsTable({
       dialogForm={form}
       onCreateSubmit={showCreateButton ? handleOnCreateSubmit : undefined}
       onRowClick={onRowClick}
+      getRowHref={getRowHref}
       renderFormFields={() =>
         modalCreateData ? (
           <TC001Form payload={modalCreateData} />

@@ -3,14 +3,21 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextFormField,
-} from "@/components/form-fields";
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { SwitchFormField, TextFormField } from "@/components/form-fields";
 
 import { STATUS_TRIGGER_SCHEMA } from "@/entities/status-trigger";
-import { useTwinStatusSelectAdapter } from "@/entities/twin-status";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useStatusFilters,
+  useTwinStatusSelectAdapterWithFilters,
+} from "@/entities/twin-status";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import { isTruthy } from "@/shared/libs";
 
 type TriggersFormValues = z.infer<typeof STATUS_TRIGGER_SCHEMA>;
@@ -20,24 +27,54 @@ export function StatusTriggerFormFields({
 }: {
   control: Control<TriggersFormValues>;
 }) {
-  const twinStatusAdapter = useTwinStatusSelectAdapter();
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
+  const twinStatusAdapter = useTwinStatusSelectAdapterWithFilters();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
   const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
   const disabled = useRef(isTruthy(twinTriggerWatch)).current;
   const statusWatch = useWatch({ control, name: "twinStatusId" });
   const disabledStatus = useRef(isTruthy(statusWatch)).current;
+
+  const {
+    buildFilterFields: buildTwinStatusFilters,
+    mapFiltersToPayload: mapTwinStatusFilters,
+  } = useStatusFilters({});
+
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
+
+  const twinStatusInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin status",
+    adapter: twinStatusAdapter,
+    extraFilters: buildTwinStatusFilters(),
+    mapExtraFilters: (filters) => mapTwinStatusFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin status...",
+    multi: false,
+    disabled: disabledStatus,
+  };
+
+  const twinTriggerInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin trigger",
+    adapter: twinTriggerAdapter,
+    extraFilters: buildTwinTriggerFilters(),
+    mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin trigger...",
+    multi: false,
+    disabled: disabled,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinStatusId"
-        label="Twin status"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select twin status..."
-        noItemsText="No data found"
-        {...twinStatusAdapter}
+        info={twinStatusInfo}
         required
-        disabled={disabledStatus}
       />
       <SwitchFormField
         control={control}
@@ -50,16 +87,11 @@ export function StatusTriggerFormFields({
         label="Order"
         type="number"
       />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinTriggerId"
-        label="Twin trigger"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select twin trigger..."
-        noItemsText="No data found"
-        {...twinTriggerAdapter}
+        info={twinTriggerInfo}
         required
-        disabled={disabled}
       />
       <SwitchFormField control={control} name="async" label="Async" />
       <SwitchFormField control={control} name="active" label="Active" />

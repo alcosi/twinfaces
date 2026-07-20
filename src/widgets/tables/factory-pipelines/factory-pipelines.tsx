@@ -598,6 +598,7 @@ export function FactoryPipelinesTable({
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/pipelines/${row.id}`)
         }
+        getRowHref={(row) => `/${PlatformArea.core}/pipelines/${row.id}`}
         defaultVisibleColumns={[
           colDefs.id,
           ...(showFactoryColumn ? [colDefs.factory] : []),

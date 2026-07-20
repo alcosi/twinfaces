@@ -7,20 +7,25 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextAreaFormField,
-} from "@/components/form-fields";
+import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import { FACTORY_TRIGGER_SCHEMA } from "@/entities/factory-trigger";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
-import { useTwinTriggerSelectAdapter } from "@/entities/twin-trigger";
+import {
+  useTwinTriggerFilters,
+  useTwinTriggerSelectAdapterWithFilters,
+} from "@/entities/twin-trigger";
 import { isTruthy } from "@/shared/libs";
 
 type TriggersFormValues = z.infer<typeof FACTORY_TRIGGER_SCHEMA>;
@@ -30,14 +35,27 @@ export function TriggersFormFields({
 }: {
   control: Control<TriggersFormValues>;
 }) {
-  const twinTriggerAdapter = useTwinTriggerSelectAdapter();
-  const factoryAdapter = useFactorySelectAdapter();
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
+  const twinTriggerAdapter = useTwinTriggerSelectAdapterWithFilters();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+  const {
+    buildFilterFields: buildTwinTriggerFilters,
+    mapFiltersToPayload: mapTwinTriggerFilters,
+  } = useTwinTriggerFilters({});
   const twinTriggerWatch = useWatch({ control, name: "twinTriggerId" });
   const disabled = useRef(isTruthy(twinTriggerWatch)).current;
 
@@ -52,16 +70,46 @@ export function TriggersFormFields({
     multi: false,
   };
 
+  const twinFactoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
+  const twinFactoryConditionSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin factory condition set",
+    adapter: factoryConditionSetAdapter,
+    extraFilters: buildFactoryConditionSetFilters(),
+    mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select transition...",
+    multi: false,
+  };
+
+  const twinTriggerInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Twin trigger",
+    adapter: twinTriggerAdapter,
+    extraFilters: buildTwinTriggerFilters(),
+    mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select twin trigger...",
+    multi: false,
+    disabled: disabled,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinFactoryId"
-        label="Twin factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryAdapter}
+        info={twinFactoryInfo}
         required
       />
       <ComplexComboboxFormField
@@ -70,14 +118,10 @@ export function TriggersFormFields({
         info={twinClassInfo}
         required
       />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinFactoryConditionSetId"
-        label="Twin factory condition set"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select transition..."
-        noItemsText="No data found"
-        {...factoryConditionSetAdapter}
+        info={twinFactoryConditionSetInfo}
         required
       />
       <SwitchFormField
@@ -92,16 +136,11 @@ export function TriggersFormFields({
         name="description"
         label="Description"
       />
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="twinTriggerId"
-        label="Twin trigger"
-        searchPlaceholder="Search..."
-        selectPlaceholder="Select twin trigger..."
-        noItemsText="No data found"
-        {...twinTriggerAdapter}
+        info={twinTriggerInfo}
         required
-        disabled={disabled}
       />
       <SwitchFormField control={control} name="async" label="Async" />
     </>

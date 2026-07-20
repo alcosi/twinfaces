@@ -325,6 +325,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/datalist-options/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/datalist-options/${row.id}`}
       dialogForm={twinClassesForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

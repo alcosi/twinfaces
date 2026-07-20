@@ -230,6 +230,7 @@ export function NotificationsTable() {
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/notifications/${row.id}`)
       }
+      getRowHref={(row) => `/${PlatformArea.core}/notifications/${row.id}`}
       dialogForm={notificationForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

@@ -3,14 +3,21 @@ import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import {
-  ComboboxFormField,
-  SwitchFormField,
-  TextAreaFormField,
-} from "@/components/form-fields";
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormField } from "@/components/complex-combobox";
+import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
 
-import { useFactorySelectAdapter } from "@/entities/factory";
+import {
+  useFactoryFilters,
+  useFactorySelectAdapterWithFilters,
+} from "@/entities/factory";
 import { FACTORY_BRANCH_SCHEMA } from "@/entities/factory-branch";
-import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
+import {
+  useFactoryConditionSetFilters,
+  useFactoryConditionSetSelectAdapterWithFilters,
+} from "@/entities/factory-condition-set";
 import { isTruthy } from "@/shared/libs";
 
 export function FactoryBranchFormFields({
@@ -18,32 +25,68 @@ export function FactoryBranchFormFields({
 }: {
   control: Control<z.infer<typeof FACTORY_BRANCH_SCHEMA>>;
 }) {
-  const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
-  const factoryAdapter = useFactorySelectAdapter();
+  const factoryConditionSetAdapter =
+    useFactoryConditionSetSelectAdapterWithFilters();
+  const factoryAdapter = useFactorySelectAdapterWithFilters();
+  const nextFactoryAdapter = useFactorySelectAdapterWithFilters();
   const factoryWatch = useWatch({ control, name: "factoryId" });
   const disabled = useRef(isTruthy(factoryWatch)).current;
 
+  const {
+    buildFilterFields: buildFactoryFilters,
+    mapFiltersToPayload: mapFactoryFilters,
+  } = useFactoryFilters();
+  const {
+    buildFilterFields: buildFactoryConditionSetFilters,
+    mapFiltersToPayload: mapFactoryConditionSetFilters,
+  } = useFactoryConditionSetFilters();
+
+  const factoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Factory",
+    adapter: factoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+    disabled: disabled,
+  };
+
+  const factoryConditionSetInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Condition set",
+    adapter: factoryConditionSetAdapter,
+    extraFilters: buildFactoryConditionSetFilters(),
+    mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
+  const nextFactoryInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Next factory",
+    adapter: nextFactoryAdapter,
+    extraFilters: buildFactoryFilters(),
+    mapExtraFilters: (filters) => mapFactoryFilters(filters),
+    searchPlaceholder: "Search...",
+    selectPlaceholder: "Select...",
+    multi: false,
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryId"
-        label="Factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        disabled={disabled}
-        {...factoryAdapter}
+        info={factoryInfo}
       />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="factoryConditionSetId"
-        label="Condition set"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryConditionSetAdapter}
+        info={factoryConditionSetInfo}
       />
 
       <SwitchFormField
@@ -60,14 +103,10 @@ export function FactoryBranchFormFields({
 
       <SwitchFormField control={control} name="active" label="Active" />
 
-      <ComboboxFormField
+      <ComplexComboboxFormField
         control={control}
         name="nextFactoryId"
-        label="Next factory"
-        selectPlaceholder="Select..."
-        searchPlaceholder="Search..."
-        noItemsText="No data found"
-        {...factoryAdapter}
+        info={nextFactoryInfo}
       />
     </>
   );
