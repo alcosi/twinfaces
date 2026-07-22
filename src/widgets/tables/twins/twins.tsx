@@ -332,6 +332,20 @@ export function TwinsTable({
         original.createdAt &&
         formatIntlDate(original.createdAt, "datetime-local"),
     },
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.flavorDataListOptionId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.flavorDataListOptionId,
+      accessorKey: "flavorDataListOptionId",
+      header: "Flavor",
+      cell: ({ row: { original } }) =>
+        original.flavor && (
+          <div className="inline-flex max-w-48 flex-wrap gap-2">
+            <DatalistOptionResourceLink
+              data={original.flavor}
+              disabled={!resourceNavigationEnabled}
+            />
+          </div>
+        ),
+    },
   };
   const staticFieldColumnMap = isPopulatedArray(enabledColumns)
     ? Object.fromEntries(

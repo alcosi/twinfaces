@@ -1,6 +1,12 @@
 "use client";
 
-import { Asterisk, Eraser, Zap } from "lucide-react";
+import {
+  Asterisk,
+  BrushIcon,
+  Eraser,
+  TrendingUpDownIcon,
+  Zap,
+} from "lucide-react";
 import {
   ForwardedRef,
   forwardRef,
@@ -60,6 +66,18 @@ const FACTORY_EXPORT_OPTIONS: ExportSqlOption[] = [
     description: "Triggers with condition sets & conditions",
     icon: Zap,
   },
+  {
+    name: "cascadeFactory",
+    label: "Cascade factory",
+    description: "Cascade factory",
+    icon: TrendingUpDownIcon,
+  },
+  {
+    name: "clearElements",
+    label: "Clear elements",
+    description: "Clear elements",
+    icon: BrushIcon,
+  },
 ];
 
 export type FactoryExportSqlDialogRef = {
@@ -101,6 +119,8 @@ function Component(
         includePipelineSteps: flags.includePipelineSteps,
         includeErasers: flags.includeErasers,
         includeTriggers: flags.includeTriggers,
+        cascadeFactory: flags.cascadeFactory,
+        clearElements: flags.clearElements,
       },
     });
 

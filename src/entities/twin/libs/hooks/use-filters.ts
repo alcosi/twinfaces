@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
+import {
+  useDatalistOptionFilters,
+  useDatalistOptionSelectAdapterWithFilters,
+} from "@/entities/datalist-option";
 import { FaceWT001 } from "@/entities/face";
 import {
   TwinClass_DETAILED,
@@ -48,9 +52,15 @@ export function useTwinFilters({
   const createdByUserAdapter = useUserSelectAdapterWithFilters();
   const assignerUserAdapter = useUserSelectAdapterWithFilters();
   const headTwinAdapter = useTwinSelectAdapterWithFilters();
+  const dataListOptionAdapter = useDatalistOptionSelectAdapterWithFilters();
 
   const tcAdapter = useTwinClassSelectAdapterWithFilters();
   const tsAdapter = useTwinStatusSelectAdapterWithFilters();
+
+  const {
+    buildFilterFields: buildDataListOptionFilters,
+    mapFiltersToPayload: mapDataListOptionFilters,
+  } = useDatalistOptionFilters({});
 
   const {
     buildFilterFields: buildTwinClassFilters,
@@ -156,6 +166,18 @@ export function useTwinFilters({
         searchPlaceholder: "Search...",
         selectPlaceholder: "Select...",
       },
+      flavorDataListOptionIdList: {
+        type: AutoFormValueType.complexCombobox,
+        label:
+          columnById[TWIN_SELF_FIELD_KEY_TO_ID_MAP["flavorDataListOptionId"]]
+            ?.label ?? "Flavor",
+        multi: true,
+        adapter: dataListOptionAdapter,
+        extraFilters: buildDataListOptionFilters(),
+        mapExtraFilters: (filters) => mapDataListOptionFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select",
+      },
       createdAt: {
         type: AutoFormValueType.dateRange,
         label:
@@ -234,6 +256,10 @@ export function useTwinFilters({
         "description"
       ).map(wrapWithPercent),
       headTwinIdList: toArrayOfString(toArray(filters.headTwinIdList), "id"),
+      flavorDataListOptionIdList: toArrayOfString(
+        toArray(filters.flavorDataListOptionIdList),
+        "id"
+      ),
       createdAt: {
         from: createdAt?.from ? `${createdAt.from}T00:00:00` : "",
         to: createdAt?.to ? `${createdAt.to}T23:59:59` : "",

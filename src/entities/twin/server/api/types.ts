@@ -19,6 +19,7 @@ type TwinRelations = {
   transitions?: TwinFlowTransition[];
   tags?: DataListOptionV1[];
   markers?: DataListOptionV1[];
+  flavor?: DataListOptionV1;
 };
 
 export type Twin = TwinSchema & TwinRelations;
@@ -81,7 +82,8 @@ export type TwinFilterKeys =
   | "createdByUserIdList"
   | "assignerUserIdList"
   | "fields"
-  | "createdAt";
+  | "createdAt"
+  | "flavorDataListOptionIdList";
 
 export type TwinFilters = Partial<
   Pick<components["schemas"]["TwinSearchRqV1"], TwinFilterKeys>

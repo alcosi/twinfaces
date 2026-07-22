@@ -42,6 +42,7 @@ export const TWIN_SELF_FIELD_KEYS = [
   "aliases",
   "tags",
   "markers",
+  "flavorDataListOptionId",
 ] as const;
 export const TWIN_SELF_FIELD_IDS = [
   "00000000-0000-0000-0011-000000000003",
@@ -58,6 +59,7 @@ export const TWIN_SELF_FIELD_IDS = [
   "00000000-0000-0000-0011-000000000014",
   "00000000-0000-0000-0011-000000000015",
   "00000000-0000-0000-0011-000000000016",
+  "00000000-0000-0000-0011-000000000017",
 ] as const;
 
 export const TWIN_SELF_FIELD_ID_TO_KEY_MAP: Record<
@@ -78,6 +80,7 @@ export const TWIN_SELF_FIELD_ID_TO_KEY_MAP: Record<
   "00000000-0000-0000-0011-000000000014": "aliases",
   "00000000-0000-0000-0011-000000000015": "tags",
   "00000000-0000-0000-0011-000000000016": "markers",
+  "00000000-0000-0000-0011-000000000017": "flavorDataListOptionId",
 };
 export const TWIN_SELF_FIELD_KEY_TO_ID_MAP: Record<
   TwinSelfFieldKey,
@@ -96,6 +99,7 @@ export const STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP: Partial<
   "00000000-0000-0000-0011-000000000008": "createdByUserIdList",
   "00000000-0000-0000-0011-000000000007": "assignerUserIdList",
   "00000000-0000-0000-0011-000000000011": "createdAt",
+  "00000000-0000-0000-0011-000000000017": "flavorDataListOptionIdList",
 } as const;
 
 export const FieldDescriptorText = {

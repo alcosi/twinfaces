@@ -53,6 +53,7 @@ export function createTwinApi(settings: ApiSettings) {
           showAttachment2TwinMode: "DETAILED",
           showTwin2AttachmentMode: "DETAILED",
           showTwin2AttachmentCollectionMode: "FROM_FIELDS",
+          showTwinFlavor2DataListOptionMode: "DETAILED",
         },
       },
       body: {

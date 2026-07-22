@@ -62,6 +62,11 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
     );
   }
 
+  if (dto.flavorDataListOptionId && relatedObjects.dataListsOptionMap) {
+    hydrated.flavor =
+      relatedObjects.dataListsOptionMap[dto.flavorDataListOptionId];
+  }
+
   if (dto.transitionsIdList && relatedObjects.transitionsMap) {
     hydrated.transitions = dto.transitionsIdList.reduce<TwinFlowTransition[]>(
       (acc, id) => {
