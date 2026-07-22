@@ -35,6 +35,7 @@ function buildTwinUrl(id: string) {
   q.set("showTwinField2DataListOptionMode", "DETAILED");
   q.set("showTwinByLinkMode", "GREEN");
   q.set("showTwin2TwinLinkMode", "SHORT");
+  q.set("showTwinFlavor2DataListOptionMode", "DETAILED");
 
   return url.toString();
 }

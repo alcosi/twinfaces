@@ -10,6 +10,7 @@ import { formatIntlDate } from "@/shared/libs";
 
 import { TwinResourceLink } from "../../../../features/twin/ui";
 import { UserResourceLink } from "../../../../features/user/ui";
+import { DatalistOptionResourceLink } from "../../../datalist-option/ui";
 import { MarkdownPreview } from "../../../markdown";
 import { TwinClassResourceLink } from "../../../twin-class/ui";
 import { TwinStatusActions } from "../twin-status-actions";
@@ -125,5 +126,15 @@ export const SELF_FIELD_MAP: Record<TwinSelfFieldId, TwinSelfFieldMeta> = {
   "00000000-0000-0000-0011-000000000016": {
     key: "markers",
     descriptor: undefined,
+  },
+  "00000000-0000-0000-0011-000000000017": {
+    key: "flavorDataListOptionId",
+    renderPreview: (twin, { disabled }) => {
+      return twin.flavor ? (
+        <DatalistOptionResourceLink data={twin.flavor} disabled={disabled} />
+      ) : (
+        twin.flavorDataListOptionId
+      );
+    },
   },
 };

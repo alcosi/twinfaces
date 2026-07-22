@@ -6,6 +6,10 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import {
+  DataListOption_DETAILED,
+  useDatalistOptionSelectAdapter,
+} from "@/entities/datalist-option";
+import {
   FieldDescriptorText,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
   categorizeTwinTags,
@@ -42,6 +46,7 @@ export function TwinGeneral() {
     useState<AutoEditDialogSettings | undefined>(undefined);
   const uAdapter = useUserSelectAdapter();
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
+  const flavorAdapter = useDatalistOptionSelectAdapter();
 
   async function handleTwinUpdate(body: TwinUpdateRq) {
     if (isUndefined(twin)) {
@@ -101,6 +106,28 @@ export function TwinGeneral() {
     },
   };
 
+  const flavorSettings: InPlaceEditProps<typeof twin.flavorDataListOptionId> = {
+    id: "flavorDataListOptionId",
+    value: twin.flavorDataListOptionId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select flavor...",
+      ...flavorAdapter,
+    },
+    renderPreview: twin.flavor
+      ? () => (
+          <DatalistOptionResourceLink
+            data={twin.flavor as DataListOption_DETAILED}
+            withTooltip
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      const selected = (value as unknown as Array<{ id: string }>)[0];
+      return handleTwinUpdate({ flavorDataListOptionId: selected?.id });
+    },
+  };
+
   const externalIdSettings: InPlaceEditProps<typeof twin.externalId> = {
     id: "externalId",
     value: twin.externalId,
@@ -126,7 +153,7 @@ export function TwinGeneral() {
     try {
       handleTwinUpdate({});
       toast.success("Transition is performed successfully");
-    } catch (error) {
+    } catch {
       toast.error("Error performing transition");
     }
   }
@@ -265,6 +292,13 @@ export function TwinGeneral() {
                   />
                 </div>
               )}
+            </TableCell>
+          </TableRow>
+
+          <TableRow className="cursor-pointer">
+            <TableCell>Flavor</TableCell>
+            <TableCell>
+              <InPlaceEdit {...flavorSettings} />
             </TableCell>
           </TableRow>
 
