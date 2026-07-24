@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,6 +12,7 @@ import {
   type Permission,
   PermissionFormValues,
   Permission_DETAILED,
+  usePermissionCount,
   usePermissionCreate,
   usePermissionFilters,
   usePermissionSearchV1,
@@ -20,15 +21,19 @@ import { PermissionGroup } from "@/entities/permission-group";
 import { useFetchPermissionsByUserId } from "@/entities/user";
 import { PermissionGroupResourceLink } from "@/features/permission-group/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { PermissionsFormFields } from "./form-fields";
 
@@ -46,13 +51,13 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
   },
 
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
     cell: ({ row }) => (
       <div className="column-flex max-w-48 space-y-2">
         <PermissionResourceLink data={row.original} withTooltip />
@@ -63,7 +68,7 @@ const colDefs: Record<
   groupId: {
     id: "groupId",
     accessorKey: "groupId",
-    header: "Group",
+    header: () => <SortableHeader title="Group" sortField="groupName" />,
     cell: ({ row: { original } }) =>
       original.group && (
         <div className="inline-flex max-w-48">
@@ -78,7 +83,9 @@ const colDefs: Record<
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -97,6 +104,7 @@ export function PermissionsTable({
 }) {
   const tableRef = useRef<DataTableHandle>(null);
   const { searchPermissions } = usePermissionSearchV1();
+  const { countPermissions } = usePermissionCount();
   const { buildFilterFields, mapFiltersToPayload } = usePermissionFilters();
   const { createPermission } = usePermissionCreate();
   const { fetchPermissionsByUserId } = useFetchPermissionsByUserId();
@@ -114,7 +122,8 @@ export function PermissionsTable({
 
   async function fetchPermissions(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<Permission_DETAILED | Permission>> {
     try {
       if (userId) {
@@ -129,6 +138,7 @@ export function PermissionsTable({
         const response = await searchPermissions({
           pagination,
           filters: _filters,
+          sort,
         });
 
         return response;
@@ -139,6 +149,41 @@ export function PermissionsTable({
       return { data: [], pagination: {} };
     }
   }
+
+  // Server-side pie-chart breakdown backed by /private/permission/count/v1,
+  // bound to the active filters. Permissions can only be grouped by their
+  // permission group.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(filters);
+
+      return [
+        {
+          key: "group",
+          label: "Group",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countPermissions({
+                filters: resolved,
+                groupField: "groupId",
+                offset,
+                limit,
+              }),
+            (g) => g.groupId,
+            (g) => g.group?.name,
+            (g) =>
+              g.group && (
+                <PermissionGroupResourceLink
+                  data={g.group as PermissionGroup}
+                  withTooltip
+                />
+              )
+          ),
+        },
+      ];
+    },
+    [countPermissions, mapFiltersToPayload]
+  );
 
   async function handleCreate(formValues: z.infer<typeof PERMISSION_SCHEMA>) {
     const body: CreatePermissionRequestBody = {
@@ -199,7 +244,9 @@ export function PermissionsTable({
         colDefs.groupId,
         colDefs.description,
       ]}
-      groupableColumns={[colDefs.name, colDefs.groupId, colDefs.description]}
+      {...(isFalsy(userId) && {
+        chartGroupings: buildChartGroupings,
+      })}
       dialogForm={form}
       onCreateSubmit={handleCreate}
       renderFormFields={() => <PermissionsFormFields control={form.control} />}

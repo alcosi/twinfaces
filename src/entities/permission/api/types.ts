@@ -19,8 +19,19 @@ export type PermissionFilterKeys =
   | "groupIdList";
 
 export type PermissionFilters = Partial<
-  Pick<components["schemas"]["PermissionSearchRqV1"], PermissionFilterKeys>
+  Pick<components["schemas"]["PermissionSearchV1"], PermissionFilterKeys>
 >;
+
+export type PermissionSortField = NonNullable<
+  components["schemas"]["PermissionSearchRqV1"]["sortField"]
+>;
+
+export type PermissionCountRq = components["schemas"]["PermissionCountRqV1"];
+
+export type PermissionCountGroupField = NonNullable<
+  PermissionCountRq["groupFields"]
+>[number];
+
 export type QueryPermissionViewV1 =
   operations["permissionViewV1"]["parameters"]["query"];
 

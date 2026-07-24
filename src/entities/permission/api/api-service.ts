@@ -8,7 +8,9 @@ import {
   GrantTwinRolePermissionPayload,
   GrantUserGroupPermissionPayload,
   GrantUserPermissionPayload,
+  PermissionCountGroupField,
   PermissionFilters,
+  PermissionSortField,
   QueryPermissionViewV1,
   UpdatePermissionRequestBody,
 } from "./types";
@@ -17,9 +19,13 @@ export function createPermissionApi(settings: ApiSettings) {
   async function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: PermissionFilters;
+    sortField?: PermissionSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/permission/search/v1", {
       params: {
@@ -30,11 +36,47 @@ export function createPermissionApi(settings: ApiSettings) {
           showPermissionMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
-          sortAsc: false,
         },
       },
       body: {
-        ...filters,
+        search: {
+          ...filters,
+        },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: PermissionFilters;
+    groupFields: PermissionCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/permission/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showPermission2PermissionGroupMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: {
+          ...filters,
+        },
+        groupFields,
       },
     });
   }
@@ -130,6 +172,7 @@ export function createPermissionApi(settings: ApiSettings) {
 
   return {
     search,
+    count,
     create,
     update,
     getById,

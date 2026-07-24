@@ -51,7 +51,7 @@ export function GeneralSection() {
       selectPlaceholder: "Select twin class...",
       ...twinClassAdapter,
     },
-    renderPreview: link.srcTwinClassId
+    renderPreview: link.srcTwinClass
       ? (_) => (
           <TwinClassResourceLink
             data={link.srcTwinClass as TwinClass_DETAILED}
@@ -76,7 +76,7 @@ export function GeneralSection() {
       selectPlaceholder: "Select twin class...",
       ...twinClassAdapter,
     },
-    renderPreview: link.srcTwinClassId
+    renderPreview: link.dstTwinClass
       ? (_) => (
           <TwinClassResourceLink
             data={link.dstTwinClass as TwinClass_DETAILED}

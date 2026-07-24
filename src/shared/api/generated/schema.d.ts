@@ -3167,6 +3167,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/permission/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Returns permission count grouped by specified fields */
+        post: operations["permissionCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/notification_schema/search/v1": {
         parameters: {
             query?: never;
@@ -12525,6 +12542,19 @@ export interface components {
             nameI18n?: components["schemas"]["I18nSaveV1"];
             /** @description description i18n */
             descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: int32
+             * @description Factory processor featurer ID. Drives a single factory run (multipliers, pipelines, branches, erasers, triggers). Defaults to the db-driven processor when null
+             * @example 5401
+             */
+            factoryProcessorFeaturerId?: number;
+            /**
+             * @description Factory processor featurer parameters
+             * @example {}
+             */
+            factoryProcessorParams?: {
+                [key: string]: string;
+            };
         };
         FactoryRsV1: {
             /**
@@ -20230,13 +20260,27 @@ export interface components {
             permission?: components["schemas"]["PermissionV1"];
         };
         PermissionSearchRqV1: {
+            /** @description search params */
+            search: components["schemas"]["PermissionSearchV1"];
+            /**
+             * @description Sort field. Default: key
+             * @enum {string}
+             */
+            sortField?: "key" | "name" | "description" | "groupName";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        PermissionSearchV1: {
             /** @description id list */
             idList?: string[];
             /** @description id exclude list */
             idExcludeList?: string[];
             /** @description key like list */
             keyLikeList?: string[];
-            /** @description ley not like list */
+            /** @description key not like list */
             keyNotLikeList?: string[];
             /** @description name like list */
             nameLikeList?: string[];
@@ -20274,6 +20318,49 @@ export interface components {
             pagination?: components["schemas"]["PaginationV1"];
             /** @description permission list */
             permissions?: components["schemas"]["PermissionV1"][];
+        };
+        PermissionCountRqV1: {
+            /** @description search params */
+            search: components["schemas"]["PermissionSearchV1"];
+            /** @description Group by fields */
+            groupFields?: "groupId"[];
+        };
+        PermissionCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["PermissionCountV1"][];
+        };
+        PermissionCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description permission group id
+             * @example 7efd9df0-cae7-455f-a721-eaec455105a4
+             */
+            groupId?: string;
         };
         NotificationSchemaCreateRqV1: {
             /** @description notification schema list */
@@ -22616,6 +22703,19 @@ export interface components {
             nameI18n?: components["schemas"]["I18nSaveV1"];
             /** @description description i18n */
             descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: int32
+             * @description Factory processor featurer ID. Drives a single factory run (multipliers, pipelines, branches, erasers, triggers). Defaults to the db-driven processor when null
+             * @example 5401
+             */
+            factoryProcessorFeaturerId?: number;
+            /**
+             * @description Factory processor featurer parameters
+             * @example {}
+             */
+            factoryProcessorParams?: {
+                [key: string]: string;
+            };
         };
         FactorySearchDTOv1: {
             /** @description id list */
@@ -22780,6 +22880,10 @@ export interface components {
             duplicateTriggers?: boolean;
             /** @description [optional] duplicate condition set with condition sets, conditions */
             duplicateConditionSets?: boolean;
+            /** @description [optional] Recursively duplicate EVERY factory reachable through branch/pipeline nextTwinFactoryId and remap the FK to the clone. Each cascaded factory is duplicated FULLY (all its branches, multipliers, pipelines, erasers, triggers, condition sets) and keeps cascading through its own next/afterCommit factories — the whole reachable factory graph is cloned, not a single factory. Granular flags above apply only to the top-level factory. Cycles and self-references are handled (each original is cloned exactly once). */
+            duplicateNextFactoryCascade?: boolean;
+            /** @description [optional] Duplicate the factory reachable through pipeline.afterCommitTwinFactoryId and remap the FK to the clone. That factory is duplicated FULLY (all its branches, multipliers, pipelines, erasers, triggers, condition sets). Independent from duplicateNextFactoryCascade — the two flags are orthogonal. */
+            duplicateAfterCommitFactory?: boolean;
         };
         FactoryListRsV1: {
             /**
@@ -26845,6 +26949,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -26974,6 +27079,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27383,6 +27489,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27507,6 +27614,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27641,6 +27749,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27774,6 +27883,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -27987,6 +28097,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28111,6 +28222,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28236,6 +28348,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28374,6 +28487,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28495,6 +28609,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28619,6 +28734,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28745,6 +28861,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28871,6 +28988,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -28996,6 +29114,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29139,6 +29258,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29280,6 +29400,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29404,6 +29525,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29526,6 +29648,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29648,6 +29771,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29770,6 +29894,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -29892,6 +30017,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30013,6 +30139,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30178,6 +30305,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30303,6 +30431,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30428,6 +30557,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30549,6 +30679,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30669,6 +30800,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30846,6 +30978,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30980,6 +31113,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31194,6 +31328,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31316,6 +31451,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31441,6 +31577,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31566,6 +31703,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31694,6 +31832,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31820,6 +31959,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31956,6 +32096,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32093,6 +32234,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32313,6 +32455,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32437,6 +32580,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32561,6 +32705,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32685,6 +32830,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32813,6 +32959,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32941,6 +33088,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33109,6 +33257,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33289,6 +33438,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33459,6 +33609,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33631,6 +33782,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -33883,6 +34035,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34006,6 +34159,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34372,6 +34526,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34505,6 +34660,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34645,6 +34801,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -34780,6 +34937,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35382,6 +35540,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35523,6 +35682,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35704,6 +35864,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35906,6 +36067,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36075,6 +36237,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36202,6 +36365,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36593,6 +36757,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36715,6 +36880,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37267,6 +37433,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37768,6 +37935,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37902,6 +38070,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38078,6 +38247,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38210,6 +38380,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38337,6 +38508,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38467,6 +38639,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38592,6 +38765,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38757,6 +38931,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38878,6 +39053,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39002,6 +39178,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39130,6 +39307,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39340,6 +39518,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39482,6 +39661,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39654,6 +39834,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39779,6 +39960,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39907,6 +40089,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40032,6 +40215,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40156,6 +40340,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40281,6 +40466,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40403,6 +40589,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40528,6 +40715,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40653,6 +40841,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40778,6 +40967,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40902,6 +41092,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41030,6 +41221,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41159,6 +41351,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41297,6 +41490,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41471,6 +41665,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41602,6 +41797,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41726,6 +41922,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41847,6 +42044,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -41974,6 +42172,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42098,6 +42297,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42262,6 +42462,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42383,6 +42584,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42550,6 +42752,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42690,6 +42893,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42814,6 +43018,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42987,6 +43192,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43155,6 +43361,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43492,6 +43699,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43616,6 +43824,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43784,6 +43993,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -43912,6 +44122,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44037,6 +44248,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44162,6 +44374,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44417,6 +44630,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44545,6 +44759,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44674,6 +44889,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44803,6 +45019,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -44931,6 +45148,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45060,6 +45278,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45327,6 +45546,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45456,6 +45676,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45584,6 +45805,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45713,6 +45935,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45945,6 +46168,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46180,6 +46404,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46308,6 +46533,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46630,6 +46856,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46761,6 +46988,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -46935,6 +47163,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47066,6 +47295,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47194,6 +47424,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47324,6 +47555,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47461,6 +47693,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47588,6 +47821,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47719,6 +47953,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47847,6 +48082,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -47980,6 +48216,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48110,6 +48347,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48235,6 +48473,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48355,6 +48594,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48479,6 +48719,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48601,6 +48842,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48638,6 +48880,131 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PermissionSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": unknown;
+                };
+            };
+        };
+    };
+    permissionCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PermissionCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionCountRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -48774,6 +49141,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -48898,6 +49266,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49025,6 +49394,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49152,6 +49522,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49434,6 +49805,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49710,6 +50082,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -49896,6 +50269,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50041,6 +50415,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50184,6 +50559,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50367,6 +50743,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50508,6 +50885,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50653,6 +51031,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50798,6 +51177,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -50941,6 +51321,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51076,6 +51457,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51251,6 +51633,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51383,6 +51766,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51524,6 +51908,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51705,6 +52090,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51844,6 +52230,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52571,6 +52958,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52706,6 +53094,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52847,6 +53236,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53197,6 +53587,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -53890,6 +54281,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54389,6 +54781,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54561,6 +54954,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54688,6 +55082,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54815,6 +55210,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54982,6 +55378,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -55155,6 +55552,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -55282,6 +55680,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -55406,6 +55805,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56275,6 +56675,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56396,6 +56797,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56517,6 +56919,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56635,6 +57038,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56794,6 +57198,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56919,6 +57324,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57043,6 +57449,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57164,6 +57571,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57287,6 +57695,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57408,6 +57817,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57528,6 +57938,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57648,6 +58059,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57769,6 +58181,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57903,6 +58316,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58292,6 +58706,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58418,6 +58833,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58631,6 +59047,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58752,6 +59169,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58879,6 +59297,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59006,6 +59425,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59135,6 +59555,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59258,6 +59679,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59384,6 +59806,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59567,6 +59990,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59706,6 +60130,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59847,6 +60272,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59978,6 +60404,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60115,6 +60542,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60428,6 +60856,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60551,6 +60980,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60674,6 +61104,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60798,6 +61229,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60922,6 +61354,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61046,6 +61479,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61170,6 +61604,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61295,6 +61730,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61554,6 +61990,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61730,6 +62167,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61952,6 +62390,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62214,6 +62653,7 @@ export interface operations {
                 showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
                 showTwinFieldCollectionMapMode?: "KEY" | "ID";
                 showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";

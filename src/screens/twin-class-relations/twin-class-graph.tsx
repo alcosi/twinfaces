@@ -3,11 +3,8 @@
 import {
   Background,
   BackgroundVariant,
-  BaseEdge,
   Controls,
   type Edge,
-  EdgeLabelRenderer,
-  type EdgeProps,
   Handle,
   MarkerType,
   type Node,
@@ -15,7 +12,6 @@ import {
   Panel,
   Position,
   ReactFlow,
-  getBezierPath,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Tag } from "lucide-react";
@@ -50,6 +46,8 @@ type GraphRole = "center" | "head" | "child" | "backward" | "forward";
 type ClassGraphNodeData = {
   twinClass: TwinClass_DETAILED;
   role: GraphRole;
+  /** Link whose label is rendered as a vertical strip on the right of the card. */
+  link?: Link_MANAGED;
   onHeightChange?: (nodeId: string, height: number) => void;
 };
 type ClassGraphFlowNode = Node<ClassGraphNodeData, "classNode">;
@@ -67,80 +65,8 @@ const EDGE_ARROW_WIDTH = 22;
 const EDGE_ARROW_HEIGHT = 22;
 const EDGE_STROKE_WIDTH = 1.8;
 
-type LabeledEdgeData = {
-  link?: Link_MANAGED;
-  /** Index/size of the group of edges sharing this target, for vertical stagger. */
-  stackIndex?: number;
-  stackCount?: number;
-};
-
-// How far to the left of the arrowhead the label sits.
-const ARROW_LABEL_OFFSET = 90;
-// Vertical spacing between labels of edges that converge on the same target.
-const ARROW_LABEL_STACK_GAP = 34;
-
-function LabeledEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style,
-  markerEnd,
-  data,
-}: EdgeProps) {
-  const [edgePath] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  });
-
-  const {
-    link,
-    stackIndex = 0,
-    stackCount = 1,
-  } = (data as LabeledEdgeData | undefined) ?? {};
-
-  // Labeled edges always arrive at the target's Left handle, so the label sits
-  // just to the left of the arrowhead at the arrow's height. When several edges
-  // converge on one target (backward links all point at the center class) the
-  // labels are stacked vertically around the arrowhead so they don't overlap.
-  const labelX = targetX - ARROW_LABEL_OFFSET;
-  const labelY =
-    targetY + (stackIndex - (stackCount - 1) / 2) * ARROW_LABEL_STACK_GAP;
-
-  return (
-    <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
-      {link && (
-        <EdgeLabelRenderer>
-          <div
-            className="nodrag nopan"
-            style={{
-              position: "absolute",
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              pointerEvents: "all",
-            }}
-          >
-            <LinkResourceLink data={link} withTooltip />
-          </div>
-        </EdgeLabelRenderer>
-      )}
-    </>
-  );
-}
-
 const nodeTypes = {
   classNode: ClassGraphNode,
-};
-
-const edgeTypes = {
-  labeled: LabeledEdge,
 };
 
 const HANDLE_IDS = {
@@ -388,7 +314,8 @@ export function TwinClassRelationsGraph() {
       twinClassData: TwinClass_DETAILED,
       role: GraphRole,
       x: number,
-      y: number
+      y: number,
+      link?: Link_MANAGED
     ) => {
       if (!twinClassData?.id || usedIds.has(nodeId)) return;
       usedIds.add(nodeId);
@@ -400,6 +327,7 @@ export function TwinClassRelationsGraph() {
         data: {
           twinClass: twinClassData,
           role,
+          link,
           onHeightChange: handleNodeHeightChange,
         },
         draggable: false,
@@ -436,18 +364,32 @@ export function TwinClassRelationsGraph() {
     });
 
     let backwardYCursor = sideBottomLimitY;
-    backwardItems.forEach((item) => {
+    backwardItems.forEach((item, index) => {
       const itemHeight = getNodeHeight(item.nodeId);
       const nextY = backwardYCursor - itemHeight;
-      addNode(item.nodeId, item.twinClass, "backward", -SIDE_X, nextY);
+      addNode(
+        item.nodeId,
+        item.twinClass,
+        "backward",
+        -SIDE_X,
+        nextY,
+        showLinkLabels ? backwardLinks[index] : undefined
+      );
       backwardYCursor = nextY - SIDE_ROW_GAP;
     });
 
     let forwardYCursor = sideBottomLimitY;
-    forwardItems.forEach((item) => {
+    forwardItems.forEach((item, index) => {
       const itemHeight = getNodeHeight(item.nodeId);
       const nextY = forwardYCursor - itemHeight;
-      addNode(item.nodeId, item.twinClass, "forward", SIDE_X, nextY);
+      addNode(
+        item.nodeId,
+        item.twinClass,
+        "forward",
+        SIDE_X,
+        nextY,
+        showLinkLabels ? forwardLinks[index] : undefined
+      );
       forwardYCursor = nextY - SIDE_ROW_GAP;
     });
 
@@ -502,12 +444,7 @@ export function TwinClassRelationsGraph() {
         target: centerClass.id,
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
-        type: "labeled",
-        data: {
-          link: showLinkLabels ? backwardLinks[index] : undefined,
-          stackIndex: index,
-          stackCount: backwardItems.length,
-        },
+        type: "default",
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -526,8 +463,7 @@ export function TwinClassRelationsGraph() {
         target: item.nodeId,
         sourceHandle: HANDLE_IDS.sourceRight,
         targetHandle: HANDLE_IDS.targetLeft,
-        type: "labeled",
-        data: { link: showLinkLabels ? forwardLinks[index] : undefined },
+        type: "default",
         style: { strokeWidth: EDGE_STROKE_WIDTH },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -574,7 +510,6 @@ export function TwinClassRelationsGraph() {
         nodes={graph.nodes}
         edges={graph.edges}
         nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.35, minZoom: 0.2, maxZoom: 1.2 }}
         nodesDraggable={false}
@@ -610,9 +545,10 @@ export function TwinClassRelationsGraph() {
 }
 
 function ClassGraphNode({ id, data }: NodeProps<ClassGraphFlowNode>) {
-  const { twinClass, role } = data;
+  const { twinClass, role, link } = data;
   const [showAllFields, setShowAllFields] = useState(false);
   const [showAllStatuses, setShowAllStatuses] = useState(false);
+  const [cardHeight, setCardHeight] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const fieldList = twinClass.fields ?? [];
@@ -638,6 +574,7 @@ function ClassGraphNode({ id, data }: NodeProps<ClassGraphFlowNode>) {
 
     const reportHeight = () => {
       data.onHeightChange?.(id, element.offsetHeight);
+      setCardHeight(element.offsetHeight);
     };
 
     reportHeight();
@@ -655,7 +592,9 @@ function ClassGraphNode({ id, data }: NodeProps<ClassGraphFlowNode>) {
     <div
       ref={containerRef}
       className={cn(
-        "from-background via-background to-muted/20 pointer-events-none relative w-full max-w-[280px] min-w-0 rounded-2xl border bg-gradient-to-br px-3.5 py-3 shadow-[0_10px_34px_-28px_rgba(15,23,42,0.8)] transition-colors",
+        "from-background via-background to-muted/20 pointer-events-none relative w-full max-w-[280px] min-w-0 rounded-2xl border bg-gradient-to-br py-3 pl-3.5 shadow-[0_10px_34px_-28px_rgba(15,23,42,0.8)] transition-colors",
+        // Trim the card's right padding when a link label occupies the right edge.
+        link?.name ? "pr-1.5" : "pr-3.5",
         role === "center" &&
           "border-emerald-600 bg-emerald-50/25 shadow-[0_0_0_2px_rgba(16,185,129,0.35)]",
         role === "head" && "border-blue-400/70",
@@ -722,105 +661,133 @@ function ClassGraphNode({ id, data }: NodeProps<ClassGraphFlowNode>) {
         className="!opacity-0"
       />
 
-      <div className="mb-2 flex flex-wrap items-center gap-2 pt-1">
-        <span className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
-          Class
-        </span>
-        <div className="pointer-events-auto">
-          <TwinClassResourceLink data={twinClass} withTooltip />
+      <div className="flex">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex flex-wrap items-center gap-2 pt-1">
+            <span className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
+              Class
+            </span>
+            <div className="pointer-events-auto max-w-full min-w-0">
+              <TwinClassResourceLink data={twinClass} withTooltip />
+            </div>
+          </div>
+
+          {fieldList.length > 0 && (
+            <div className="mb-2 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <div className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
+                  Fields
+                </div>
+                <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-semibold">
+                  {fieldList.length}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-start gap-1.5">
+                {visibleFieldList.map((field) => (
+                  <div
+                    key={field.id}
+                    className="pointer-events-auto max-w-full min-w-0"
+                  >
+                    <TwinClassFieldResourceLink
+                      data={field as TwinClassField_DETAILED}
+                      withTooltip
+                    />
+                  </div>
+                ))}
+                {hiddenFieldCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setShowAllFields(true);
+                    }}
+                    className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
+                  >
+                    +{hiddenFieldCount} more
+                  </button>
+                )}
+                {showAllFields && fieldList.length > FIELD_LIMIT && (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setShowAllFields(false);
+                    }}
+                    className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
+                  >
+                    Hide
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {statusList.length > 0 && (
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <div className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
+                  Statuses
+                </div>
+                <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-semibold">
+                  {statusList.length}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-start gap-1.5">
+                {visibleStatusList.map((status) => (
+                  <div
+                    key={status.id}
+                    className="pointer-events-auto max-w-full min-w-0"
+                  >
+                    <TwinClassStatusResourceLink data={status} withTooltip />
+                  </div>
+                ))}
+                {hiddenStatusCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setShowAllStatuses(true);
+                    }}
+                    className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
+                  >
+                    +{hiddenStatusCount} more
+                  </button>
+                )}
+                {showAllStatuses && statusList.length > STATUS_LIMIT && (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setShowAllStatuses(false);
+                    }}
+                    className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
+                  >
+                    Hide
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
+
+        {link?.name && (
+          <div className="ml-0.5 flex items-stretch gap-1">
+            <span aria-hidden className="bg-border my-2 w-px self-stretch" />
+            <div className="relative w-6">
+              <div className="pointer-events-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div
+                  style={{
+                    transform: "rotate(-90deg)",
+                    maxWidth: cardHeight ? cardHeight - 32 : undefined,
+                  }}
+                >
+                  <LinkResourceLink data={link} withTooltip />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {fieldList.length > 0 && (
-        <div className="mb-2 space-y-1.5">
-          <div className="flex items-center gap-2">
-            <div className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
-              Fields
-            </div>
-            <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-semibold">
-              {fieldList.length}
-            </span>
-          </div>
-          <div className="flex flex-wrap items-start gap-1.5">
-            {visibleFieldList.map((field) => (
-              <div key={field.id} className="pointer-events-auto">
-                <TwinClassFieldResourceLink
-                  data={field as TwinClassField_DETAILED}
-                  withTooltip
-                />
-              </div>
-            ))}
-            {hiddenFieldCount > 0 && (
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowAllFields(true);
-                }}
-                className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
-              >
-                +{hiddenFieldCount} more
-              </button>
-            )}
-            {showAllFields && fieldList.length > FIELD_LIMIT && (
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowAllFields(false);
-                }}
-                className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
-              >
-                Hide
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {statusList.length > 0 && (
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <div className="text-muted-foreground text-[9px] font-semibold tracking-[0.24em] uppercase">
-              Statuses
-            </div>
-            <span className="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-[10px] font-semibold">
-              {statusList.length}
-            </span>
-          </div>
-          <div className="flex flex-wrap items-start gap-1.5">
-            {visibleStatusList.map((status) => (
-              <div key={status.id} className="pointer-events-auto">
-                <TwinClassStatusResourceLink data={status} withTooltip />
-              </div>
-            ))}
-            {hiddenStatusCount > 0 && (
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowAllStatuses(true);
-                }}
-                className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
-              >
-                +{hiddenStatusCount} more
-              </button>
-            )}
-            {showAllStatuses && statusList.length > STATUS_LIMIT && (
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setShowAllStatuses(false);
-                }}
-                className="bg-muted text-muted-foreground hover:text-foreground pointer-events-auto inline-flex h-6 cursor-pointer items-center rounded-full px-2 text-[10px] font-semibold transition-colors"
-              >
-                Hide
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
