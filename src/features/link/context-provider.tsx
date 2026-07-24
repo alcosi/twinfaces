@@ -1,7 +1,15 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "sonner";
 
 import { Link, useLinkFetchById } from "@/entities/link";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { PrivateApiContext } from "@/shared/api";
 import { isUndefined } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui";
 
@@ -28,6 +36,24 @@ export function LinkContextProvider({
 
   const [link, setLink] = useState<Link | undefined>(undefined);
   const { fetchLinkById, loading } = useLinkFetchById();
+  const api = useContext(PrivateApiContext);
+
+  async function fetchTwinClass(
+    id: string
+  ): Promise<TwinClass_DETAILED | undefined> {
+    try {
+      const { data, error } = await api.twinClass.getById({
+        id,
+        query: { lazyRelation: false, showTwinClassMode: "DETAILED" },
+      });
+
+      if (error || !data?.twinClass) return undefined;
+
+      return data.twinClass as TwinClass_DETAILED;
+    } catch {
+      return undefined;
+    }
+  }
 
   async function refresh() {
     try {
@@ -42,9 +68,21 @@ export function LinkContextProvider({
         },
       });
 
-      if (response) {
-        setLink(response);
-      }
+      if (!response) return;
+
+      // The single-link endpoint doesn't always expand src/dst twin classes
+      // into relatedObjects, so resolve any missing one so the page renders it
+      // as a resource link instead of a raw id.
+      const [srcTwinClass, dstTwinClass] = await Promise.all([
+        response.srcTwinClassId && !response.srcTwinClass
+          ? fetchTwinClass(response.srcTwinClassId)
+          : response.srcTwinClass,
+        response.dstTwinClassId && !response.dstTwinClass
+          ? fetchTwinClass(response.dstTwinClassId)
+          : response.dstTwinClass,
+      ]);
+
+      setLink({ ...response, srcTwinClass, dstTwinClass });
     } catch {
       toast.error("Failed to fetch link:");
     }

@@ -1,11 +1,15 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
 import { hydratePermissionFromMap } from "../../libs";
-import { PermissionFilters, Permission_DETAILED } from "../types";
+import {
+  PermissionFilters,
+  PermissionSortField,
+  Permission_DETAILED,
+} from "../types";
 
 export const usePermissionSearchV1 = () => {
   const api = useContext(PrivateApiContext);
@@ -15,10 +19,12 @@ export const usePermissionSearchV1 = () => {
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
       search?: string;
       pagination?: PaginationState;
       filters?: PermissionFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<Permission_DETAILED>> => {
       try {
         const { data, error } = await api.permission.search({
@@ -29,6 +35,8 @@ export const usePermissionSearchV1 = () => {
               ? [wrapWithPercent(search)]
               : filters.keyLikeList,
           },
+          sortField: sort?.field as PermissionSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {
