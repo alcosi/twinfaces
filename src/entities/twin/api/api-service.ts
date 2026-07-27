@@ -192,22 +192,6 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function getLinks({ twinId }: { twinId: string }) {
-    return settings.client.GET("/private/twin/{twinId}/v2", {
-      params: {
-        header: getApiDomainHeaders(settings),
-        path: { twinId: twinId },
-        query: {
-          showTwin2TwinLinkMode: "DETAILED",
-          showTwinLink2UserMode: "DETAILED",
-          showTwinLink2LinkMode: "DETAILED",
-          showTwinField2TwinMode: "DETAILED",
-          showTwinByLinkMode: "GREEN",
-        },
-      },
-    });
-  }
-
   function upsertField({
     twinId,
     fieldKey,
@@ -264,7 +248,6 @@ export function createTwinApi(settings: ApiSettings) {
     create,
     update,
     getFieldsById,
-    getLinks,
     upsertField,
     getValidTwinsForLink,
   };

@@ -1,14 +1,7 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import type { Twin } from "@/entities/twin/server";
 import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
-
-export type TwinLinkView = components["schemas"]["TwinLinkViewV1"] & {
-  link?: Link;
-  dstTwin?: Twin;
-  createdByUser?: User;
-};
 
 export type Link = components["schemas"]["LinkV2"] & {
   srcTwinClass?: TwinClass_DETAILED;

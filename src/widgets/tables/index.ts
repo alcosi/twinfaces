@@ -24,4 +24,5 @@ export * from "./twin-class-statuses";
 export * from "./twin-class-statuses";
 export * from "./twin-flow-transitions";
 export * from "./twin-flows";
+export * from "./twin-links";
 export * from "./twins";

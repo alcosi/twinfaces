@@ -10,6 +10,7 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
 
   //? NOTE Twin menu
   twins: ["TWIN"],
+  "twin-links": ["TWIN_LINK"],
   comments: ["COMMENT"],
   attachments: ["ATTACHMENT"],
   historyes: ["TWIN"],
