@@ -28,6 +28,7 @@ import {
   User,
   UsersRound,
   Wand,
+  Waypoints,
   Workflow,
   Zap,
 } from "lucide-react";
@@ -101,6 +102,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Twins",
         url: `/${PlatformArea.core}/twins`,
         icon: TwinIcon,
+      },
+      {
+        title: "Twin Links",
+        url: `/${PlatformArea.core}/twin-links`,
+        icon: Waypoints,
       },
       {
         title: "Comments",

@@ -106,6 +106,7 @@ import {
   TwinFlowTransitionApi,
   createTwinFlowTransitionApi,
 } from "@/entities/twin-flow-transition";
+import { TwinLinkApi, createTwinLinkApi } from "@/entities/twin-link";
 import {
   PermissionTwinRoleApi,
   createPermissionTwinRoleApi,
@@ -167,6 +168,7 @@ export interface PrivateApiContextProps {
   spaceRole: PermissionSpaceRoleApi;
   datalistOption: DatalistOptionApi;
   link: LinkApi;
+  twinLink: TwinLinkApi;
   tier: TierApi;
   projection: ProjectionApi;
   notification: NotificationApi;
@@ -231,6 +233,7 @@ export function PrivateApiContextProvider({
         spaceRole: createPermissionSpaceRoleApi(settings),
         datalistOption: createDatalistOptionApi(settings),
         link: createLinkApi(settings),
+        twinLink: createTwinLinkApi(settings),
         tier: createTierApi(settings),
         projection: createProjectionApi(settings),
         notification: createNotificationApi(settings),
