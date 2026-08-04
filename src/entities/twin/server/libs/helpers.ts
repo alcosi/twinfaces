@@ -4,6 +4,7 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinFieldUI, hydrateTwinFieldFromMap } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
+import { isBoolean } from "@/shared/libs";
 
 import { Twin, Twin_HYDRATED } from "../api";
 
@@ -116,6 +117,10 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
 
       if (fMapEntry.fieldAttributes) {
         hydratedField.attributes = Object.values(fMapEntry.fieldAttributes);
+      }
+
+      if (isBoolean(fMapEntry.editable)) {
+        hydratedField.editable = fMapEntry.editable;
       }
     });
   }

@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useLinkSelectAdapter } from "@/entities/link";
+import {
+  useLinkFilters,
+  useLinkSelectAdapterWithFilters,
+} from "@/entities/link";
 import {
   useTwinFilters,
   useTwinSelectAdapterWithFilters,
@@ -29,7 +32,7 @@ export function useTwinLinkFilters({
   const srcTwinAdapter = useTwinSelectAdapterWithFilters();
   const dstTwinAdapter = useTwinSelectAdapterWithFilters();
   const userAdapter = useUserSelectAdapterWithFilters();
-  const linkAdapter = useLinkSelectAdapter();
+  const linkAdapter = useLinkSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinFilters,
@@ -39,6 +42,10 @@ export function useTwinLinkFilters({
     buildFilterFields: buildUserFilters,
     mapFiltersToPayload: mapUserFilters,
   } = useUserFilters();
+  const {
+    buildFilterFields: buildLinkFilters,
+    mapFiltersToPayload: mapLinkFilters,
+  } = useLinkFilters();
 
   const allFilters: Record<TwinLinkFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -68,10 +75,14 @@ export function useTwinLinkFilters({
       multi: true,
     },
     linkIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Link",
+      adapter: linkAdapter,
+      extraFilters: buildLinkFilters(),
+      mapExtraFilters: (filters) => mapLinkFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...linkAdapter,
     },
     createdByUserIdList: {
       type: AutoFormValueType.complexCombobox,

@@ -3,6 +3,7 @@ import { ComboboxFormItem, FormItemProps } from "@/components/form-fields";
 import { useValidTwinsForLinkSelectAdapter as useByTwinIdAdapter } from "@/entities/twin";
 import { useValidTwinsForLinkSelectAdapter as useByTwinClassIdAdapter } from "@/entities/twin-class";
 import { Twin } from "@/entities/twin/server";
+import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 
 import { TwinFieldFormItemProps } from "../twin-field-item";
 
@@ -24,8 +25,19 @@ export function TwinFieldSelectLinkLongFormItem({
     ? useByTwinIdAdapter({ twinId, linkId })
     : useByTwinClassIdAdapter({ twinClassId, linkId });
 
-  const handleOnSelect = (twins: unknown) =>
-    onChange?.((twins as Twin[])[0]?.id!);
+  // Multi-valued fields are stored as one comma-separated string of ids.
+  const handleOnSelect = (selected?: unknown) => {
+    const twins = selected as Twin[] | undefined;
+
+    if (isPopulatedArray<Twin>(twins)) {
+      onChange?.(
+        twins
+          .map((twin) => twin.id)
+          .filter(isPopulatedString)
+          .join(",")
+      );
+    }
+  };
 
   return (
     <ComboboxFormItem

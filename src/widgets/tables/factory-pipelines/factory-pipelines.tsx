@@ -62,6 +62,9 @@ const colDefs: Record<
     | "nextFactoryId"
     | "outputTwinStatusId"
     | "inputTwinClass"
+    // Wire-only payload: no resolved relation to render, so no column.
+    | "afterCommitFactoryId"
+    | "stepIdList"
   >,
   ColumnDef<FactoryPipeline_DETAILED>
 > = {
@@ -198,9 +201,9 @@ const colDefs: Record<
     cell: (data) => data.getValue() && <Check />,
   },
 
-  pipelineStepsCount: {
-    id: "pipelineStepsCount",
-    accessorKey: "pipelineStepsCount",
+  factoryPipelineStepsCount: {
+    id: "factoryPipelineStepsCount",
+    accessorKey: "factoryPipelineStepsCount",
     header: "Pipeline Steps",
   },
 };

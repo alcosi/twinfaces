@@ -9,12 +9,24 @@ import { TWIN_FIELD_TYPES } from "./constants";
 
 export type FieldAttribute = components["schemas"]["TwinFieldAttributeV1"];
 
+/** A field value resolved against `relatedObjects` into a domain object. */
+export type TwinFieldValueObject = DataListOptionV1 | Twin | User;
+
 export type TwinFieldUI = RequireFields<
   TwinClassField,
   "id" | "key" | "descriptor"
 > & {
-  value: string | DataListOptionV1 | Twin | User;
+  /**
+   * The raw wire value (an id, or comma-separated ids for `multiple` fields),
+   * or its resolved form — one object per id.
+   */
+  value: string | TwinFieldValueObject | TwinFieldValueObject[];
   attributes?: FieldAttribute[];
+  /**
+   * Whether the server allows editing this field on this twin. Absent means the
+   * response did not report it — see {@link isTwinFieldEditable}.
+   */
+  editable?: boolean;
 };
 
 export type TwinClassFieldDescriptorTextV1 =

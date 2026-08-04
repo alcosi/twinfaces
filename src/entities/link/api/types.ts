@@ -3,7 +3,7 @@ import { User } from "@/entities/user";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
-export type Link = components["schemas"]["LinkV2"] & {
+export type Link = components["schemas"]["LinkV1"] & {
   srcTwinClass?: TwinClass_DETAILED;
   dstTwinClass?: TwinClass_DETAILED;
   createdByUser?: User;

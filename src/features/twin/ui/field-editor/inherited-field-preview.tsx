@@ -1,18 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import { ReactNode } from "react";
 
 import { CheckboxFormItem, SwitchFormItem } from "@/components/form-fields";
 
 import { DataListOptionV1 } from "@/entities/datalist-option";
 import { Twin } from "@/entities/twin/server";
-import { TwinFieldUI } from "@/entities/twinField";
+import { TwinFieldUI, toTwinFieldValueList } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import {
   formatIntlDate,
-  isObject,
+  isPopulatedArray,
   isPopulatedString,
-  isTruthy,
   mapPatternToInputType,
 } from "@/shared/libs";
 import { AnchorWithCopy, MaskedValue } from "@/shared/ui";
@@ -81,13 +81,20 @@ export function InheritedFieldPreview({
     case "selectListV1":
     case "selectLongV1":
     case "selectSharedInHeadV1": {
-      if (isObject(value) && isTruthy(value.id)) {
+      const options = toTwinFieldValueList<DataListOptionV1>(value);
+
+      if (isPopulatedArray(options)) {
         return (
-          <DatalistOptionResourceLink
-            data={value as DataListOptionV1}
-            withTooltip
-            disabled={disabled}
-          />
+          <ResourceLinkList>
+            {options.map((option) => (
+              <DatalistOptionResourceLink
+                key={option.id}
+                data={option}
+                withTooltip
+                disabled={disabled}
+              />
+            ))}
+          </ResourceLinkList>
         );
       }
       break;
@@ -95,13 +102,20 @@ export function InheritedFieldPreview({
 
     case "selectLinkV1":
     case "selectLinkLongV1": {
-      if (isObject(value) && isTruthy(value.id)) {
+      const twins = toTwinFieldValueList<Twin>(value);
+
+      if (isPopulatedArray(twins)) {
         return (
-          <TwinResourceLink
-            data={value as Twin}
-            withTooltip
-            disabled={disabled}
-          />
+          <ResourceLinkList>
+            {twins.map((twin) => (
+              <TwinResourceLink
+                key={twin.id}
+                data={twin}
+                withTooltip
+                disabled={disabled}
+              />
+            ))}
+          </ResourceLinkList>
         );
       }
       break;
@@ -109,13 +123,20 @@ export function InheritedFieldPreview({
 
     case "selectUserV1":
     case "selectUserLongV1": {
-      if (isObject(value) && isTruthy(value.id)) {
+      const users = toTwinFieldValueList<User>(value);
+
+      if (isPopulatedArray(users)) {
         return (
-          <UserResourceLink
-            data={value as User}
-            withTooltip
-            disabled={disabled}
-          />
+          <ResourceLinkList>
+            {users.map((user) => (
+              <UserResourceLink
+                key={user.id}
+                data={user}
+                withTooltip
+                disabled={disabled}
+              />
+            ))}
+          </ResourceLinkList>
         );
       }
       break;
@@ -161,4 +182,13 @@ export function InheritedFieldPreview({
   }
 
   return <p className="max-w-full overflow-hidden">{`${value}`}</p>;
+}
+
+/** Keeps a `multiple` field's links on one wrapping row. */
+function ResourceLinkList({ children }: { children: ReactNode }) {
+  return (
+    <div className="inline-flex max-w-full flex-wrap items-center gap-1">
+      {children}
+    </div>
+  );
 }

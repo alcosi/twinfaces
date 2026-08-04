@@ -98,6 +98,14 @@ type CrudDataTableProps<
      * instead of falling back to the parent route's pathname.
      */
     permissionSegment?: string;
+    /**
+     * Opts out of row-level navigation entirely — no pointer cursor, no button
+     * role, no "Open in new tab". Only the interactive cell content (resource
+     * links, in-place editors) reacts to clicks. Use it for tables whose rows
+     * are not resources of the current route, where the default
+     * `<pathname>/<rowId>` target would lead nowhere.
+     */
+    disableRowClick?: boolean;
   };
 
 export const CrudDataTable = fixedForwardRef(CrudDataTableInternal);
@@ -112,6 +120,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onRowClick,
     pageSizes = DEFAULT_PAGE_SIZES,
     permissionSegment,
+    disableRowClick,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -123,12 +132,13 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     segment: permissionSegment,
   });
 
-  const { viewSettings, updateViewSettings } = useViewSettings(
-    props.defaultVisibleColumns,
-    props.orderedColumns,
-    props.columns,
-    props.defaultLayoutMode
-  );
+  const { viewSettings, updateViewSettings } = useViewSettings({
+    defaultVisibleColumns: props.defaultVisibleColumns,
+    orderedColumns: props.orderedColumns,
+    columns: props.columns,
+    defaultLayoutMode: props.defaultLayoutMode,
+    title: props.title,
+  });
 
   // Stable identity: the header pushes its state through this on every change,
   // and it is a dependency of the header's effect — an inline function here
@@ -377,12 +387,13 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   // `getRowHref`; otherwise fall back to the default navigation target
   // (`<pathname>/<rowId>`) — but only when there is no custom `onRowClick`,
   // since a custom handler may navigate somewhere other than the current path.
-  const resolveRowHref =
-    props.getRowHref ??
-    (onRowClick
-      ? undefined
-      : (row: TData) =>
-          `${pathname.replace(/\/$/, "")}/${props.getRowId(row)}`);
+  const resolveRowHref = disableRowClick
+    ? undefined
+    : (props.getRowHref ??
+      (onRowClick
+        ? undefined
+        : (row: TData) =>
+            `${pathname.replace(/\/$/, "")}/${props.getRowId(row)}`));
 
   const content = (
     <div className={cn("flex min-h-0 flex-1 flex-col py-4", className)}>
@@ -423,7 +434,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           columns={visibleColumns}
           fetcher={fetchWrapper}
           pageSizes={pageSizes}
-          onRowClick={handleOnRowClick}
+          onRowClick={disableRowClick ? undefined : handleOnRowClick}
           getRowHref={resolveRowHref}
           layoutMode={viewSettings.layoutMode}
           sort={viewSettings.sort}

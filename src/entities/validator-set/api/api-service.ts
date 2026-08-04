@@ -27,7 +27,7 @@ export function createValidatorSetApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

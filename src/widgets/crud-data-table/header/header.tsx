@@ -97,12 +97,15 @@ function CrudDataTableHeaderComponent<
   }: Props<TData, TValue>,
   tableRef: ForwardedRef<DataTableHandle>
 ) {
-  const { viewSettings, updateViewSettings } = useViewSettings(
+  // Must resolve to the same storage key as the table's own call in
+  // CrudDataTable — the two share one entry through `onViewSettingsChange`.
+  const { viewSettings, updateViewSettings } = useViewSettings({
     defaultVisibleColumns,
     orderedColumns,
     columns,
-    defaultLayoutMode
-  );
+    defaultLayoutMode,
+    title,
+  });
 
   const debouncedUpdate = useCallback(
     debounce(

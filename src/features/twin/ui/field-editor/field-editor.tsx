@@ -14,7 +14,7 @@ import {
   useTwinUpdate,
 } from "@/entities/twin";
 import { Twin, TwinUpdateRq, hydrateTwinFromMap } from "@/entities/twin/server";
-import { TwinFieldUI } from "@/entities/twinField";
+import { TwinFieldUI, stringifyTwinFieldValue } from "@/entities/twinField";
 import { RelatedObjects } from "@/shared/api";
 import { cn, isPopulatedString } from "@/shared/libs";
 
@@ -95,9 +95,7 @@ export function TwinFieldEditor({
     }
   }
 
-  const fieldValue = isPopulatedString(field.value)
-    ? field.value
-    : field.value.id!;
+  const fieldValue = stringifyTwinFieldValue(field.value);
 
   return (
     <div>

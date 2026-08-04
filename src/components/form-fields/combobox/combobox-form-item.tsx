@@ -51,15 +51,25 @@ export function ComboboxFormItem<TFieldModel>({
     const selected = comboboxRef.current?.getSelected();
 
     if (isEmptyArray(selected)) {
-      if (isFalsy(props.multi)) {
-        if (isPopulatedString(values)) {
-          const result = await props.getById(values);
-          comboboxRef.current?.setSelected(
-            isTruthy(result) ? [result] : undefined
-          );
-          return;
-        }
+      // A string value carries ids — several comma-separated ones when the
+      // source field is multi-valued — so each has to be resolved on its own.
+      if (isPopulatedString(values)) {
+        const ids = values
+          .split(",")
+          .map((id) => id.trim())
+          .filter(isPopulatedString);
 
+        const resolved = await Promise.all(
+          (isFalsy(props.multi) ? ids.slice(0, 1) : ids).map((id) =>
+            props.getById(id)
+          )
+        );
+
+        comboboxRef.current?.setSelected(resolved.filter(isTruthy));
+        return;
+      }
+
+      if (isFalsy(props.multi)) {
         comboboxRef.current?.setSelected(
           isPopulatedArray(values) ? values.slice(-1) : []
         );
