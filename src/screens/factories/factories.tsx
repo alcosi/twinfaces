@@ -49,8 +49,11 @@ import {
 } from "./factory-export-sql-dialog";
 import { FactoryFormFields } from "./form-fields";
 
+// Every displayable field of a factory gets a column. The related-entity id
+// lists (`pipelineIdList`, `stepIdList`, …) are wire payload with no column of
+// their own, so they are excluded rather than stubbed out.
 const colDefs: Record<
-  keyof Omit<Factory, "createdByUserId">,
+  keyof Omit<Factory, "createdByUserId" | `${string}IdList`>,
   ColumnDef<Factory>
 > = {
   id: {

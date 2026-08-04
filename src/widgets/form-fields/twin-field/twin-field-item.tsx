@@ -19,7 +19,11 @@ import { useTwinSelectAdapter } from "@/entities/twin";
 import { Twin } from "@/entities/twin/server";
 import { TwinFieldType, TwinFieldUI } from "@/entities/twinField";
 import { DomainUser_DETAILED, useUserSelectAdapter } from "@/entities/user";
-import { isPopulatedArray, mapPatternToInputType } from "@/shared/libs";
+import {
+  isPopulatedArray,
+  isPopulatedString,
+  mapPatternToInputType,
+} from "@/shared/libs";
 
 import {
   TwinFieldSelectLinkLongFormItem,
@@ -62,21 +66,26 @@ export function TwinFieldFormItem({
     return onChange?.(newValue);
   }
 
+  // Multi-valued fields are stored as one comma-separated string of ids.
+  function joinIds(ids: (string | undefined)[]) {
+    return ids.filter(isPopulatedString).join(",");
+  }
+
   function handleOnTwinSelect(twins?: Twin[]) {
     if (isPopulatedArray<Twin>(twins)) {
-      return onChange?.(twins[0].id!);
+      return onChange?.(joinIds(twins.map((twin) => twin.id)));
     }
   }
 
   function handleOnDataListSelect(datalistOptions?: DataListOptionV1[]) {
     if (isPopulatedArray<DataListOptionV1>(datalistOptions)) {
-      return onChange?.(datalistOptions[0].id!);
+      return onChange?.(joinIds(datalistOptions.map((option) => option.id)));
     }
   }
 
   function handleOnUserSelect(users?: DomainUser_DETAILED[]) {
     if (isPopulatedArray<DomainUser_DETAILED>(users)) {
-      return onChange?.(users[0].userId);
+      return onChange?.(joinIds(users.map((user) => user.userId)));
     }
   }
 
@@ -187,21 +196,22 @@ export function TwinFieldFormItem({
             }
             renderItem={userAdapter.renderItem}
             onSelect={handleOnUserSelect}
+            multi={descriptor.multiple}
             {...props}
           />
         );
       case TwinFieldType.selectUserLongV1:
+        // NOTE: `descriptor.userFilterId` narrows the valid users server-side,
+        // but /private/domain/user/search/v1 has no matching filter yet, so all
+        // domain users are offered.
         return (
           <ComboboxFormItem
             {...userAdapter}
             getById={userAdapter.getById}
-            getItems={(search) =>
-              userAdapter.getItems(search, {
-                userIdList: descriptor.userFilterId ?? [],
-              })
-            }
+            getItems={(search) => userAdapter.getItems(search)}
             renderItem={userAdapter.renderItem}
             onSelect={handleOnUserSelect}
+            multi={descriptor.multiple}
             {...props}
           />
         );

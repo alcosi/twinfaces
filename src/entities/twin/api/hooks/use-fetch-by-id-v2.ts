@@ -33,6 +33,9 @@ function buildTwinUrl(id: string) {
   q.set("showTwinClassFieldCollectionFilterRequiredMode", "ANY");
   q.set("showTwinClassFieldCollectionFilterSystemMode", "ANY");
   q.set("showTwinField2DataListOptionMode", "DETAILED");
+  // Without it `relatedObjects.userMap` misses the users referenced by
+  // `selectUser*` fields, so their previews fall back to raw ids.
+  q.set("showTwinField2UserMode", "DETAILED");
   q.set("showTwinByLinkMode", "GREEN");
   q.set("showTwin2TwinLinkMode", "SHORT");
   q.set("showTwinFlavor2DataListOptionMode", "DETAILED");

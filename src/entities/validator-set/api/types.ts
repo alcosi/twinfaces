@@ -7,6 +7,10 @@ export type ValidatorSet_DETAILED = Required<ValidatorSet> & {};
 export type ValidatorSetSearchRq =
   components["schemas"]["TwinValidatorSetSearchRqV1"];
 
+/** Inner payload of a search request — filters live under its `search` key. */
+export type ValidatorSetSearch =
+  components["schemas"]["TwinValidatorSetSearchV1"];
+
 export type ValidatorSetCreateRq =
   components["schemas"]["TwinValidatorSetCreateRqV1"];
 
@@ -20,5 +24,5 @@ export type ValidatorSetFilterKeys =
   | "invert";
 
 export type ValidatorSetFilters = Partial<
-  Pick<ValidatorSetSearchRq, ValidatorSetFilterKeys>
+  Pick<ValidatorSetSearch, ValidatorSetFilterKeys>
 >;

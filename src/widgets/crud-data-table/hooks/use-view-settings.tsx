@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useReducer } from "react";
 
 import { useCrudDataTableStore } from "@/features/crud-data-table";
+import { isPopulatedString } from "@/shared/libs";
 
 import { DataTableProps, DataTableRow } from "../data-table";
 import { TableViewState, TableViewStateUpdate } from "../header";
@@ -22,12 +23,26 @@ function getParentPath(pathname: string): string {
   return `/${segments.slice(0, -1).join("/")}`;
 }
 
+/**
+ * The area a page belongs to. A detail page reports its list page, so drilling
+ * into a row keeps the list's view state alive — and restores it on the way
+ * back — while moving to another area clears it.
+ */
 function getStorageKey(pathname: string): string {
   return isDetailPage(pathname) ? getParentPath(pathname) : pathname;
 }
 
+/**
+ * Identity of a single table's stored view state. Unlike the area key above it
+ * is built from the *real* pathname, so a table embedded in a detail page never
+ * shares an entry with the list table it happens to have the same columns as.
+ * `title` separates sibling tables on one page (e.g. "Heads" and "Childs"), the
+ * column signature separates tables that differ only by their columns. Every
+ * key still starts with the area key, so leaving the area clears them all.
+ */
 function getTableStorageKey<TData extends DataTableRow<TData>, TValue>(
-  baseStorageKey: string,
+  pathname: string,
+  title: string | undefined,
   defaultVisibleColumns: DataTableProps<TData, TValue>["columns"],
   orderedColumns: DataTableProps<TData, TValue>["columns"],
   columns: DataTableProps<TData, TValue>["columns"]
@@ -37,11 +52,10 @@ function getTableStorageKey<TData extends DataTableRow<TData>, TValue>(
     : columns.length
       ? columns
       : orderedColumns;
-  const columnSignature = storageColumns.map(getColumnKey).join("|");
 
-  return columnSignature
-    ? `${baseStorageKey}::${columnSignature}`
-    : baseStorageKey;
+  return [pathname, title, storageColumns.map(getColumnKey).join("|")]
+    .filter(isPopulatedString)
+    .join("::");
 }
 
 function getInitialState<TData extends DataTableRow<TData>, TValue>(
@@ -71,18 +85,29 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
   };
 }
 
-export function useViewSettings<TData extends DataTableRow<TData>, TValue>(
-  defaultVisibleColumns: DataTableProps<TData, TValue>["columns"] = [],
-  orderedColumns: DataTableProps<TData, TValue>["columns"] = [],
-  columns: DataTableProps<TData, TValue>["columns"] = [],
-  defaultLayoutMode: "grid" | "list" = "grid"
-) {
+type ViewSettingsOptions<TData extends DataTableRow<TData>, TValue> = {
+  defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
+  orderedColumns?: DataTableProps<TData, TValue>["columns"];
+  columns?: DataTableProps<TData, TValue>["columns"];
+  defaultLayoutMode?: "grid" | "list";
+  /** The table's heading — part of its storage identity, see above. */
+  title?: string;
+};
+
+export function useViewSettings<TData extends DataTableRow<TData>, TValue>({
+  defaultVisibleColumns = [],
+  orderedColumns = [],
+  columns = [],
+  defaultLayoutMode = "grid",
+  title,
+}: ViewSettingsOptions<TData, TValue> = {}) {
   const store = useCrudDataTableStore();
   const pathname = usePathname();
 
   const storageKey = getStorageKey(pathname);
   const tableStorageKey = getTableStorageKey(
-    storageKey,
+    pathname,
+    title,
     defaultVisibleColumns,
     orderedColumns,
     columns
