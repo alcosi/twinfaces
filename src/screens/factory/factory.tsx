@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 import { Tab, TabsLayout } from "@/widgets/layout";
 
-import { FactoryFlow, FactoryGeneral } from "./views";
+import { FactoryFlow, FactoryGeneral, FactoryGraph } from "./views";
 
 const tabs: Tab[] = [
   {
@@ -16,6 +16,11 @@ const tabs: Tab[] = [
     key: "flow",
     label: "Flow",
     content: <FactoryFlow />,
+  },
+  {
+    key: "graph",
+    label: "Graph",
+    content: <FactoryGraph />,
   },
 ];
 
