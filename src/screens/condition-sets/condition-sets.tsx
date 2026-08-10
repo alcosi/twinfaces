@@ -40,12 +40,12 @@ import {
   SortableHeader,
   buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
+import { ConditionSetFields } from "@/widgets/form-fields";
 
 import {
   FactoryConditionSetDuplicateDialog,
   FactoryConditionSetDuplicateDialogRef,
 } from "./factory-condition-set-duplicate-dialog";
-import { ConditionSetFields } from "./form-fields";
 
 const colDefs: Record<
   | "id"

@@ -13,5 +13,7 @@ export type {
   DataTableRow,
 } from "./data-table";
 export { SortableHeader } from "./data-table";
+export type { CrudDataTableDialogRef } from "./dialog";
+export { CrudDataTableDialog } from "./dialog";
 export type { SortableFieldOption } from "./header";
 export * from "./types";
