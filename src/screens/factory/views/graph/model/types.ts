@@ -19,11 +19,16 @@ export type FactoryGraphSelection =
   | { kind: "conditionSets"; factoryId: string }
   | { kind: "pipeline"; factoryId: string; id: string };
 
+/**
+ * Whether two selections point at the same element. Anything undefined is not a
+ * selection, so it never matches — a node that cannot be expanded (a dashed
+ * create placeholder) must not read as active just because nothing is expanded.
+ */
 export function isSameSelection(
   left: FactoryGraphSelection | undefined,
   right: FactoryGraphSelection | undefined
 ): boolean {
-  if (!left || !right) return left === right;
+  if (!left || !right) return false;
   if (left.kind !== right.kind || left.factoryId !== right.factoryId)
     return false;
 

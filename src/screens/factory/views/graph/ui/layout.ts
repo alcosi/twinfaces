@@ -1,7 +1,7 @@
 import type { ElkNode as ElkLayoutNode } from "elkjs/lib/elk-api";
 import ELK from "elkjs/lib/elk.bundled.js";
 
-import { Diagram, DiagramNode } from "../model";
+import { Diagram, DiagramNode, LAYER_SPACING } from "../model";
 
 const elk = new ELK();
 
@@ -30,9 +30,13 @@ export async function layoutDiagram(diagram: Diagram): Promise<DiagramLayout> {
       "elk.direction": "DOWN",
       "elk.edgeRouting": "ORTHOGONAL",
       "elk.spacing.nodeNode": "48",
-      "elk.layered.spacing.nodeNodeBetweenLayers": "56",
+      "elk.layered.spacing.nodeNodeBetweenLayers": `${LAYER_SPACING}`,
       "elk.spacing.edgeNode": "28",
-      "elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
+      // Keeps each layer in the order the builder emitted it, which puts the
+      // dashed create placeholders at the outer ends of a row. Left to reorder
+      // freely, elk drops them between the real nodes, and their dashed run
+      // along the shared trunk then cuts through the solid one.
+      "elk.layered.crossingMinimization.strategy": "NONE",
       "elk.layered.nodePlacement.strategy": "BRANDES_KOEPF",
       "elk.layered.nodePlacement.favorStraightEdges": "true",
       // Placeholders and rejoining columns would otherwise be scattered into
