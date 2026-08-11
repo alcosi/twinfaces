@@ -11,6 +11,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
+  CSSProperties,
   MouseEvent,
   useCallback,
   useEffect,
@@ -23,9 +24,15 @@ import { cn } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 import {
+  DASHED_STROKE,
+  DIAGRAM_STROKE,
+  DIAGRAM_STROKE_COLOR,
+  DIAGRAM_STROKE_VAR,
   Diagram,
+  EDGE_PATH_OPTIONS,
   FactoryCreateTarget,
   FactoryGraphSelection,
+  SOLID_EDGE_WIDTH,
   isSameSelection,
 } from "../model";
 import { DiagramLayout, layoutDiagram } from "./layout";
@@ -101,14 +108,24 @@ export function FactoryDiagram({
         source: edge.source,
         target: edge.target,
         type: "smoothstep",
+        pathOptions: EDGE_PATH_OPTIONS,
+        // Along the shared trunk the dashed and solid edges lie exactly on top of
+        // each other, so the order decides what shows: solid wins, and a dash
+        // only appears once its branch peels off towards the placeholder.
+        zIndex: edge.dashed ? 0 : 1,
         style: {
-          strokeWidth: 1.6,
-          strokeDasharray: edge.dashed ? "5 4" : undefined,
+          // Dashed edges carry the very stroke the create affordances outline
+          // themselves with, so an edge and the dashed node it arrives at read
+          // as one line. Solid ones are heavier — see SOLID_EDGE_WIDTH.
+          stroke: DIAGRAM_STROKE,
+          strokeWidth: edge.dashed ? DASHED_STROKE.width : SOLID_EDGE_WIDTH,
+          strokeDasharray: edge.dashed ? DASHED_STROKE.dashArray : undefined,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
           width: 18,
           height: 18,
+          color: DIAGRAM_STROKE,
         },
       })),
     [diagram.edges]
@@ -161,7 +178,12 @@ export function FactoryDiagram({
   }
 
   return (
-    <div ref={containerRef} className={cn("h-full w-full", className)}>
+    <div
+      ref={containerRef}
+      className={cn("h-full w-full", className)}
+      // Inherited by the edges and by every node's dashed outline.
+      style={{ [DIAGRAM_STROKE_VAR]: DIAGRAM_STROKE_COLOR } as CSSProperties}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
