@@ -43,34 +43,28 @@ export function FactoryTriggerGeneral() {
   const twinTriggerAdapter = useTwinTriggerSelectAdapter();
   const { confirm } = useActionDialogs();
 
-  const factorySettings: InPlaceEditProps<typeof factoryTrigger.twinFactoryId> =
-    {
-      id: "twinFactoryId",
-      value: factoryTrigger.twinFactoryId,
-      valueInfo: {
-        type: AutoFormValueType.combobox,
-        selectPlaceholder: "Select factory...",
-        ...factoryAdapter,
-      },
-      renderPreview: factoryTrigger.factory
-        ? () => (
-            <FactoryResourceLink data={factoryTrigger.factory!} withTooltip />
-          )
-        : undefined,
-      onSubmit: async (value) => {
-        const id = (value as unknown as Array<{ id: string }>)[0]?.id;
-        return updateFactoryTrigger({
-          body: {
-            twinFactoryTriggers: [
-              {
-                id: factoryTrigger.id,
-                twinFactoryId: id,
-              },
-            ],
-          },
-        }).then(refresh);
-      },
-    };
+  const factorySettings: InPlaceEditProps<typeof factoryTrigger.factoryId> = {
+    id: "factoryId",
+    value: factoryTrigger.factoryId,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select factory...",
+      ...factoryAdapter,
+    },
+    renderPreview: factoryTrigger.factory
+      ? () => <FactoryResourceLink data={factoryTrigger.factory!} withTooltip />
+      : undefined,
+    onSubmit: async (value) => {
+      const id = (value as unknown as Array<{ id: string }>)[0]?.id;
+      return updateFactoryTrigger({
+        body: {
+          // The read DTO renamed this to `factoryId`, but the update payload
+          // still spells it `twinFactoryId` — keep them apart.
+          twinFactoryTriggers: [{ id: factoryTrigger.id, twinFactoryId: id }],
+        },
+      }).then(refresh);
+    },
+  };
 
   const inputTwinClassSettings: InPlaceEditProps<
     typeof factoryTrigger.inputTwinClassId

@@ -26,3 +26,14 @@ export type ValidatorSetFilterKeys =
 export type ValidatorSetFilters = Partial<
   Pick<ValidatorSetSearch, ValidatorSetFilterKeys>
 >;
+
+export type ValidatorSetSortField = NonNullable<
+  ValidatorSetSearchRq["sortField"]
+>;
+
+export type ValidatorSetCountRq =
+  components["schemas"]["TwinValidatorSetCountRqV1"];
+
+export type ValidatorSetCountGroupField = NonNullable<
+  ValidatorSetCountRq["groupFields"]
+>[number];

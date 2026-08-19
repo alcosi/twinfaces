@@ -15,7 +15,9 @@ export type PermissionGrantSpaceRole_DETAILED =
 
 export type PermissionGrantSpaceRoleFilters =
   components["schemas"]["PermissionGrantSpaceRoleSearchRqV1"];
-export type SpaceRoleFilters = components["schemas"]["SpaceRoleSearchRqV1"];
+export type SpaceRoleSearchRq = components["schemas"]["SpaceRoleSearchRqV1"];
+/** Inner payload of a search request — filters live under its `search` key. */
+export type SpaceRoleFilters = components["schemas"]["SpaceRoleSearchV1"];
 
 export type SpaceRole = components["schemas"]["SpaceRoleV1"];
 

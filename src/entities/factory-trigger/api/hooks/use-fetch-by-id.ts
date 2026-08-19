@@ -30,14 +30,14 @@ export function useFetchFactoryTriggerById() {
         }
 
         if (
-          isUndefined(data?.twinFactoryTriggers) ||
-          isEmptyArray(data.twinFactoryTriggers)
+          isUndefined(data?.factoryTriggerList) ||
+          isEmptyArray(data.factoryTriggerList)
         ) {
           throw new Error(`Factory trigger with ID ${id} not found.`);
         }
         if (data.relatedObjects) {
           return hydrateFactoryTriggerFromMap(
-            data.twinFactoryTriggers[0]!,
+            data.factoryTriggerList[0]!,
             data.relatedObjects
           );
         }
