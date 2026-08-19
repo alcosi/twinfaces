@@ -114,6 +114,10 @@ import {
 import { TwinStatusApi, createTwinStatusApi } from "@/entities/twin-status";
 import { TwinTriggerApi, createTwinTriggerApi } from "@/entities/twin-trigger";
 import {
+  TwinValidatorApi,
+  createTwinValidatorApi,
+} from "@/entities/twin-validator";
+import {
   TwinFlowSchemaApi,
   createTwinFlowSchemaApi,
 } from "@/entities/twinFlowSchema";
@@ -173,6 +177,7 @@ export interface PrivateApiContextProps {
   projection: ProjectionApi;
   notification: NotificationApi;
   validatorSet: ValidatorSetApi;
+  twinValidator: TwinValidatorApi;
   optionProjection: OptionProjectionApi;
   twinTrigger: TwinTriggerApi;
   transitionTrigger: TransitionTriggerApi;
@@ -238,6 +243,7 @@ export function PrivateApiContextProvider({
         projection: createProjectionApi(settings),
         notification: createNotificationApi(settings),
         validatorSet: createValidatorSetApi(settings),
+        twinValidator: createTwinValidatorApi(settings),
         optionProjection: createOptionProjectionApi(settings),
         twinTrigger: createTwinTriggerApi(settings),
         transitionTrigger: createTransitionTriggerApi(settings),

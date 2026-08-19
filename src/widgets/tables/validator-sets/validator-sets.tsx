@@ -4,22 +4,32 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   VALIDATOR_SETS_SHEMA,
+  ValidatorSetFilterKeys,
   ValidatorSet_DETAILED,
+  useValidatorSetCount,
   useValidatorSetCreate,
   useValidatorSetFilters,
   useValidatorSetSearch,
 } from "@/entities/validator-set";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import { ValidatorSetFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -35,12 +45,14 @@ const colDefs: Record<
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -51,7 +63,7 @@ const colDefs: Record<
   invert: {
     id: "invert",
     accessorKey: "invert",
-    header: "Invert",
+    header: () => <SortableHeader title="Invert" sortField="invert" />,
     cell: (data) => data.getValue() && <Check />,
   },
 };
@@ -59,20 +71,20 @@ const colDefs: Record<
 export function ValidatorSetsTable() {
   const router = useRouter();
   const { searchValidatorSets } = useValidatorSetSearch();
+  const { countValidatorSets } = useValidatorSetCount();
   const { createValidatorSet } = useValidatorSetCreate();
   const { buildFilterFields, mapFiltersToPayload } = useValidatorSetFilters();
 
   async function fetchValidatorSets(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<ValidatorSet_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchValidatorSets({
         pagination,
-        filters: {
-          ..._filters,
-        },
+        filters: mapFiltersToPayload(filters.filters),
+        sort,
       });
     } catch (error) {
       toast.error("An error occured while fetching validator sets: " + error);
@@ -81,6 +93,41 @@ export function ValidatorSetsTable() {
       );
     }
   }
+
+  // Builds the pie-chart breakdown from the server-side count endpoint
+  // (/private/twin_validator_set/count/v1), bound to the active filters.
+  // `invert` is the only field the endpoint groups by.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<ValidatorSetFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "invert",
+          label: "Invert",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countValidatorSets({
+                filters: resolved,
+                groupField: "invert",
+                offset,
+                limit,
+              }),
+            (g) => (g.invert === undefined ? undefined : String(g.invert)),
+            (g) =>
+              g.invert === undefined
+                ? undefined
+                : g.invert
+                  ? "Inverted"
+                  : "Not inverted"
+          ),
+        },
+      ];
+    },
+    [mapFiltersToPayload, countValidatorSets]
+  );
 
   const validatorSetsForm = useForm<z.infer<typeof VALIDATOR_SETS_SHEMA>>({
     resolver: zodResolver(VALIDATOR_SETS_SHEMA),
@@ -122,6 +169,7 @@ export function ValidatorSetsTable() {
         colDefs.invert,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
+      chartGroupings={buildChartGroupings}
       dialogForm={validatorSetsForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

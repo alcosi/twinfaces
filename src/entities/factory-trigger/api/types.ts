@@ -4,7 +4,7 @@ import type { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinTrigger } from "@/entities/twin-trigger";
 import { components } from "@/shared/api/generated/schema";
 
-export type FactoryTrigger = components["schemas"]["TwinFactoryTriggerV1"];
+export type FactoryTrigger = components["schemas"]["FactoryTriggerV1"];
 
 export type FactoryTrigger_DETAILED = Required<FactoryTrigger> & {
   factory?: Factory;

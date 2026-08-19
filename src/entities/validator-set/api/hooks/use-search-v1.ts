@@ -1,9 +1,13 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
-import { ValidatorSetFilters, ValidatorSet_DETAILED } from "../types";
+import {
+  ValidatorSetFilters,
+  ValidatorSetSortField,
+  ValidatorSet_DETAILED,
+} from "../types";
 
 export function useValidatorSetSearch() {
   const api = useContext(PrivateApiContext);
@@ -12,14 +16,18 @@ export function useValidatorSetSearch() {
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
       pagination?: PaginationState;
       filters?: ValidatorSetFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<ValidatorSet_DETAILED>> => {
       try {
         const { data, error } = await api.validatorSet.search({
           pagination,
           filters,
+          sortField: sort?.field as ValidatorSetSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

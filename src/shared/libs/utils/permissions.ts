@@ -70,6 +70,9 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
 
   //? NOTE Validator menu
   "validator-sets": ["TWIN_VALIDATOR_SET"],
+  // Spelled out because the fallback would normalise the segment to
+  // "VALIDATOR" and miss the backend's TWIN_VALIDATOR_* keys.
+  validators: ["TWIN_VALIDATOR_SET"], //TODO CHANGE TO TWIN_VALIDATOR FATER ADDING
 
   //? NOTE Triggers menu
   "twin-triggers": ["TWIN_TRIGGER"],

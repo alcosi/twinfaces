@@ -31,7 +31,7 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
         },
       },
       body: {
-        ...filters,
+        search: { ...filters },
       },
     });
   }

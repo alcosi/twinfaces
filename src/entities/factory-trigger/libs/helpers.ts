@@ -15,9 +15,9 @@ export function hydrateFactoryTriggerFromMap(
     dto
   ) as FactoryTrigger_DETAILED;
 
-  if (dto.twinFactoryId && relatedObjects?.factoryMap) {
+  if (dto.factoryId && relatedObjects?.factoryMap) {
     hydrated.factory = relatedObjects.factoryMap[
-      dto.twinFactoryId
+      dto.factoryId
     ] as Factory_DETAILED;
   }
 
