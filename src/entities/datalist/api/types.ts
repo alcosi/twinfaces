@@ -26,6 +26,14 @@ export type DatalistFilterKeys =
 
 export type DatalistFilters = Partial<Pick<DataListSearch, DatalistFilterKeys>>;
 
+export type DataListSortField = NonNullable<DataListSearchRq["sortField"]>;
+
+export type DataListCountRq = components["schemas"]["DataListCountRqV1"];
+
+export type DataListCountGroupField = NonNullable<
+  DataListCountRq["groupFields"]
+>[number];
+
 export type DataListOptionMap = {
   [key: string]: DataListOptionV1;
 };

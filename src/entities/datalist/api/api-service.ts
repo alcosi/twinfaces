@@ -1,8 +1,10 @@
 import { PaginationState } from "@tanstack/table-core";
 
 import {
+  DataListCountGroupField,
   DataListCreateRqV1,
   DataListRqQuery,
+  DataListSortField,
   DatalistFilters,
 } from "@/entities/datalist";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -11,9 +13,13 @@ export function createDatalistApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: DatalistFilters;
+    sortField?: DataListSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/data_list/search/v1", {
       params: {
@@ -27,6 +33,40 @@ export function createDatalistApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: DatalistFilters;
+    groupFields: DataListCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/data_list/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showDataListMode: "MANAGED",
+          showDataList2UserMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -72,7 +112,7 @@ export function createDatalistApi(settings: ApiSettings) {
     });
   }
 
-  return { search, getById, create, update };
+  return { search, count, getById, create, update };
 }
 
 export type DatalistApi = ReturnType<typeof createDatalistApi>;

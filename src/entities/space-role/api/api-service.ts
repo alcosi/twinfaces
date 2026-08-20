@@ -2,8 +2,10 @@ import { PaginationState } from "@tanstack/table-core";
 
 import {
   PermissionGrantSpaceRoleFilters,
+  SpaceRoleCountGroupField,
   SpaceRoleCreateRq,
   SpaceRoleFilters,
+  SpaceRoleSortField,
   SpaceRoleUpdateRq,
 } from "@/entities/space-role";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -12,9 +14,13 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
   async function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: SpaceRoleFilters;
+    sortField?: SpaceRoleSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST(`/private/space_role/search/v1`, {
       params: {
@@ -32,6 +38,42 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
       },
       body: {
         search: { ...filters },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  async function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: SpaceRoleFilters;
+    groupFields: SpaceRoleCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST(`/private/space_role/count/v1`, {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showSpaceRoleMode: "DETAILED",
+          showSpaceRole2TwinClassMode: "DETAILED",
+          showSpaceRole2BusinessAccountMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -92,6 +134,7 @@ export function createPermissionSpaceRoleApi(settings: ApiSettings) {
     update,
     create,
     search,
+    count,
     searchPermissionGranSpaceRole,
   };
 }

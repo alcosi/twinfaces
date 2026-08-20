@@ -38,5 +38,13 @@ export type SpaceRoleFilter = Partial<
   Pick<SpaceRoleFilters, SpaceRoleFilterKeys>
 >;
 
+export type SpaceRoleSortField = NonNullable<SpaceRoleSearchRq["sortField"]>;
+
+export type SpaceRoleCountRq = components["schemas"]["SpaceRoleCountRqV1"];
+
+export type SpaceRoleCountGroupField = NonNullable<
+  SpaceRoleCountRq["groupFields"]
+>[number];
+
 export type SpaceRoleCreateRq = components["schemas"]["SpaceRoleCreateRqV1"];
 export type SpaceRoleUpdateRq = components["schemas"]["SpaceRoleUpdateRqV1"];

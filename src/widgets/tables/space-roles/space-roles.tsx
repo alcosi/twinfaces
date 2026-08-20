@@ -3,14 +3,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   SPACE_ROLE_SHEMA,
+  SpaceRoleFilterKeys,
   SpaceRole_DETAILED,
+  useSpaceRoleCount,
   useSpaceRoleCreate,
   useSpaceRoleSearch,
 } from "@/entities/space-role";
@@ -18,12 +20,19 @@ import { useSpaceRoleFilters } from "@/entities/space-role/libs";
 import { TwinClassContext } from "@/entities/twin-class";
 import { BusinessAccountResourceLink } from "@/features/business-account/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import { SpaceRolesFormFields } from "./form-fields";
 
 const colDefs: Record<
@@ -39,13 +48,15 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
     cell: (data) => data.getValue<string>(),
   },
   twinClass: {
     id: "twinClass",
     accessorKey: "twinClass",
-    header: "Twin class",
+    header: () => (
+      <SortableHeader title="Twin class" sortField="twinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.twinClass && (
         <div className="inline-flex max-w-48">
@@ -56,7 +67,12 @@ const colDefs: Record<
   businessAccountId: {
     id: "businessAccountId",
     accessorKey: "businessAccountId",
-    header: "Business account",
+    header: () => (
+      <SortableHeader
+        title="Business account"
+        sortField="businessAccountName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.businessAccount && (
         <div className="inline-flex max-w-48">
@@ -70,19 +86,22 @@ const colDefs: Record<
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
     cell: (data) => data.getValue<string>(),
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: (data) => data.getValue<string>(),
   },
 };
 
 export function SpaceRolesTable({ title }: { title?: string }) {
   const { searchSpaceRole } = useSpaceRoleSearch();
+  const { countSpaceRoles } = useSpaceRoleCount();
   const { createSpaceRole } = useSpaceRoleCreate();
   const { twinClass } = useContext(TwinClassContext);
   const { buildFilterFields, mapFiltersToPayload } = useSpaceRoleFilters({
@@ -133,21 +152,35 @@ export function SpaceRolesTable({ title }: { title?: string }) {
     toast.success("Space role created successfully!");
   };
 
+  // Maps the table filter values to the API payload and pins the contextual
+  // twin class when the table is embedded in one. Shared by the fetcher and the
+  // pie-chart count requests so both honour the active filters.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<SpaceRoleFilterKeys, unknown>) => {
+      const mapped = mapFiltersToPayload(rawFilters);
+
+      return {
+        ...mapped,
+        twinClassIdList: twinClass?.id
+          ? [twinClass.id]
+          : mapped.twinClassIdList,
+      };
+    },
+    [mapFiltersToPayload, twinClass?.id]
+  );
+
   async function fetchSpaceRoles(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<SpaceRole_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       const response = await searchSpaceRole({
         pagination,
-        filters: {
-          ..._filters,
-          twinClassIdList: twinClass?.id
-            ? [twinClass?.id]
-            : _filters.twinClassIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<SpaceRoleFilterKeys, unknown>
+        ),
+        sort,
       });
       return {
         data: response.data ?? [],
@@ -158,6 +191,67 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       throw new Error("An error occured while fetching space roles: " + error);
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/space_role/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<SpaceRoleFilterKeys, unknown>
+      );
+      const groupings: ChartGrouping[] = [];
+
+      // Scoped to one twin class, that column is a constant and carries no
+      // information — same reason it is dropped from the filters.
+      if (!twinClass?.id) {
+        groupings.push({
+          key: "twinClass",
+          label: "Twin class",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countSpaceRoles({
+                filters: resolved,
+                groupField: "twinClassId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinClassId,
+            (g) => g.twinClass?.name,
+            (g) =>
+              g.twinClass && (
+                <TwinClassResourceLink data={g.twinClass} withTooltip />
+              )
+          ),
+        });
+      }
+
+      groupings.push({
+        key: "businessAccount",
+        label: "Business account",
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countSpaceRoles({
+              filters: resolved,
+              groupField: "businessAccountId",
+              offset,
+              limit,
+            }),
+          (g) => g.businessAccountId,
+          (g) => g.businessAccount?.name,
+          (g) =>
+            g.businessAccount && (
+              <BusinessAccountResourceLink
+                data={g.businessAccount}
+                withTooltip
+              />
+            )
+        ),
+      });
+
+      return groupings;
+    },
+    [resolveFilters, countSpaceRoles, twinClass?.id]
+  );
 
   return (
     <CrudDataTable
@@ -182,6 +276,7 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       ]}
       getRowId={(row) => row.id!}
       filters={{ filtersInfo: buildFilterFields() }}
+      chartGroupings={buildChartGroupings}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/space-roles/${row.id}`)
       }

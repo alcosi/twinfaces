@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,16 +11,23 @@ import {
   DATALIST_SCHEMA,
   DataList,
   DataListCreateRqV1,
+  DatalistFilterKeys,
+  useDatalistCount,
   useDatalistCreate,
   useDatalistFilters,
   useDatalistSearchV1,
 } from "@/entities/datalist";
-import { PagedResponse } from "@/shared/api";
+import { UserResourceLink } from "@/features/user/ui";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import {
+  ChartDataContext,
+  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
 
 import { DatalistFormFields } from "./form-fields";
@@ -42,19 +49,21 @@ const colDefs: Record<
   key: {
     id: "key",
     accessorKey: "key",
-    header: "Key",
+    header: () => <SortableHeader title="Key" sortField="key" />,
   },
 
   name: {
     id: "name",
     accessorKey: "name",
-    header: "Name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
   },
 
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -66,7 +75,7 @@ const colDefs: Record<
   createdAt: {
     id: "createdAt",
     accessorKey: "createdAt",
-    header: "Сreated at",
+    header: () => <SortableHeader title="Сreated at" sortField="createdAt" />,
     cell: ({ row: { original } }) =>
       original.createdAt
         ? new Date(original.createdAt).toLocaleDateString()
@@ -76,7 +85,7 @@ const colDefs: Record<
   updatedAt: {
     id: "updatedAt",
     accessorKey: "updatedAt",
-    header: "Updated at",
+    header: () => <SortableHeader title="Updated at" sortField="updatedAt" />,
     cell: ({ row: { original } }) =>
       original.updatedAt
         ? new Date(original.updatedAt).toLocaleDateString()
@@ -88,16 +97,55 @@ export const DatalistsScreen = () => {
   const tableRef = useRef<DataTableHandle>(null);
   const { buildFilterFields, mapFiltersToPayload } = useDatalistFilters();
   const { searchDatalist } = useDatalistSearchV1();
+  const { countDatalists } = useDatalistCount();
   const { createDatalist } = useDatalistCreate();
 
   async function fetchDataLists(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<DataList>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
-    return searchDatalist({ pagination, filters: _filters });
+    return searchDatalist({
+      pagination,
+      filters: mapFiltersToPayload(filters.filters),
+      sort,
+    });
   }
+
+  // Builds the pie-chart breakdown from the server-side count endpoint
+  // (/private/data_list/count/v1), bound to the active filters. `createdByUserId`
+  // is the only field the endpoint groups by — it has no column of its own, the
+  // chart is the only place it surfaces.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = mapFiltersToPayload(
+        filters as Record<DatalistFilterKeys, unknown>
+      );
+
+      return [
+        {
+          key: "createdByUser",
+          label: "Created by",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countDatalists({
+                filters: resolved,
+                groupField: "createdByUserId",
+                offset,
+                limit,
+              }),
+            (g) => g.createdByUserId,
+            (g) => g.createdByUser?.fullName,
+            (g) =>
+              g.createdByUser && (
+                <UserResourceLink data={g.createdByUser} withTooltip />
+              )
+          ),
+        },
+      ];
+    },
+    [mapFiltersToPayload, countDatalists]
+  );
 
   const datalistForm = useForm<z.infer<typeof DATALIST_SCHEMA>>({
     resolver: zodResolver(DATALIST_SCHEMA),
@@ -151,6 +199,7 @@ export const DatalistsScreen = () => {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      chartGroupings={buildChartGroupings}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,

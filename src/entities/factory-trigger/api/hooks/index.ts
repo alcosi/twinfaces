@@ -1,3 +1,4 @@
+export * from "./use-count";
 export * from "./use-create";
 export * from "./use-duplicate";
 export * from "./use-fetch-by-id";

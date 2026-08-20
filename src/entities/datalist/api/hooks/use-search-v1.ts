@@ -1,10 +1,10 @@
 import { PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { isPopulatedString, wrapWithPercent } from "@/shared/libs";
 
-import { DataList, DatalistFilters } from "../types";
+import { DataList, DataListSortField, DatalistFilters } from "../types";
 
 export const useDatalistSearchV1 = () => {
   const api = useContext(PrivateApiContext);
@@ -14,10 +14,12 @@ export const useDatalistSearchV1 = () => {
       search,
       pagination = { pageIndex: 0, pageSize: 10 },
       filters,
+      sort,
     }: {
       search?: string;
       pagination?: PaginationState;
       filters?: DatalistFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<DataList>> => {
       try {
         const { data, error } = await api.datalist.search({
@@ -28,6 +30,8 @@ export const useDatalistSearchV1 = () => {
               ? [wrapWithPercent(search)]
               : filters?.nameLikeList,
           },
+          sortField: sort?.field as DataListSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

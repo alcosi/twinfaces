@@ -31,6 +31,17 @@ export type FactoryTriggerFilters = Partial<
   Pick<FactoryTriggerSearchRq, FactoryTriggerFilterKeys>
 >;
 
+export type FactoryTriggerSortField = NonNullable<
+  components["schemas"]["TwinFactoryTriggerSearchRqV1"]["sortField"]
+>;
+
+export type FactoryTriggerCountRq =
+  components["schemas"]["TwinFactoryTriggerCountRqV1"];
+
+export type FactoryTriggerCountGroupField = NonNullable<
+  FactoryTriggerCountRq["groupFields"]
+>[number];
+
 export type FactoryTriggerCreateRq =
   components["schemas"]["TwinFactoryTriggerCreateRqV1"];
 export type FactoryTriggerExportSqlRq =
