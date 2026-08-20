@@ -1,10 +1,10 @@
 import { PaginationState } from "@tanstack/table-core";
 import { useCallback, useContext } from "react";
 
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 import { hydrateSpaceRoleFromMap } from "../../libs";
-import { SpaceRole, SpaceRoleFilters } from "../types";
+import { SpaceRole, SpaceRoleFilters, SpaceRoleSortField } from "../types";
 
 export const useSpaceRoleSearch = () => {
   const api = useContext(PrivateApiContext);
@@ -13,14 +13,18 @@ export const useSpaceRoleSearch = () => {
     async ({
       pagination = { pageIndex: 0, pageSize: 10 },
       filters = {},
+      sort,
     }: {
       pagination?: PaginationState;
       filters?: SpaceRoleFilters;
+      sort?: SortV1;
     } = {}): Promise<PagedResponse<SpaceRole>> => {
       try {
         const { data, error } = await api.spaceRole.search({
           pagination,
           filters,
+          sortField: sort?.field as SpaceRoleSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

@@ -3,10 +3,11 @@ import { useCallback, useContext } from "react";
 
 import {
   FactoryTriggerFilters,
+  FactoryTriggerSortField,
   FactoryTrigger_DETAILED,
   hydrateFactoryTriggerFromMap,
 } from "@/entities/factory-trigger";
-import { PagedResponse, PrivateApiContext } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 
 export function useFactoryTriggerSearch() {
   const api = useContext(PrivateApiContext);
@@ -15,14 +16,18 @@ export function useFactoryTriggerSearch() {
     async ({
       pagination,
       filters = {},
+      sort,
     }: {
       pagination: PaginationState;
       filters: FactoryTriggerFilters;
+      sort?: SortV1;
     }): Promise<PagedResponse<FactoryTrigger_DETAILED>> => {
       try {
         const { data, error } = await api.factoryTrigger.search({
           pagination,
           filters,
+          sortField: sort?.field as FactoryTriggerSortField | undefined,
+          sortDirection: sort?.direction,
         });
 
         if (error) {

@@ -1,10 +1,12 @@
 import { PaginationState } from "@tanstack/react-table";
 
 import {
+  FactoryTriggerCountGroupField,
   FactoryTriggerCreateRq,
   FactoryTriggerDuplicateRq,
   FactoryTriggerExportSqlRq,
   FactoryTriggerFilters,
+  FactoryTriggerSortField,
   FactoryTriggerUpdateRq,
 } from "@/entities/factory-trigger";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -13,20 +15,24 @@ export function createFactoryTriggerApi(settings: ApiSettings) {
   function search({
     pagination,
     filters,
+    sortField,
+    sortDirection,
   }: {
     pagination: PaginationState;
     filters: FactoryTriggerFilters;
+    sortField?: FactoryTriggerSortField;
+    sortDirection?: "ASC" | "DESC";
   }) {
     return settings.client.POST("/private/twin_factory/trigger/search/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         query: {
           lazyRelation: false,
-          showTwinFactoryTrigger2FactoryMode: "DETAILED",
-          showTwinFactoryTrigger2TwinTriggerMode: "DETAILED",
-          showTwinFactoryTrigger2TwinClassMode: "DETAILED",
-          showTwinFactoryTriggerMode: "DETAILED",
-          showTwinFactoryTrigger2FactoryConditionSetMode: "DETAILED",
+          showFactoryTrigger2FactoryMode: "DETAILED",
+          showFactoryTrigger2TwinTriggerMode: "DETAILED",
+          showFactoryTrigger2TwinClassMode: "DETAILED",
+          showFactoryTriggerMode: "DETAILED",
+          showFactoryTrigger2FactoryConditionSetMode: "DETAILED",
           limit: pagination.pageSize,
           offset: pagination.pageIndex * pagination.pageSize,
         },
@@ -35,6 +41,43 @@ export function createFactoryTriggerApi(settings: ApiSettings) {
         search: {
           ...filters,
         },
+        sortField,
+        sortDirection,
+      },
+    });
+  }
+
+  function count({
+    filters,
+    groupFields,
+    offset,
+    limit,
+    sortAsc,
+  }: {
+    filters: FactoryTriggerFilters;
+    groupFields: FactoryTriggerCountGroupField[];
+    offset?: number;
+    limit?: number;
+    sortAsc?: boolean;
+  }) {
+    return settings.client.POST("/private/twin_factory/trigger/count/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        query: {
+          lazyRelation: false,
+          showFactoryTriggerMode: "DETAILED",
+          showFactoryTrigger2FactoryMode: "DETAILED",
+          showFactoryTrigger2TwinTriggerMode: "DETAILED",
+          showFactoryTrigger2TwinClassMode: "DETAILED",
+          showTwinClassMode: "DETAILED",
+          offset,
+          limit,
+          sortAsc,
+        },
+      },
+      body: {
+        search: { ...filters },
+        groupFields,
       },
     });
   }
@@ -74,7 +117,7 @@ export function createFactoryTriggerApi(settings: ApiSettings) {
     });
   }
 
-  return { search, update, create, exportSql, duplicate };
+  return { search, count, update, create, exportSql, duplicate };
 }
 
 export type FactoryTriggerApi = ReturnType<typeof createFactoryTriggerApi>;

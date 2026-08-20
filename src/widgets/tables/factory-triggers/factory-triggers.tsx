@@ -2,14 +2,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   FACTORY_TRIGGER_SCHEMA,
+  FactoryTriggerCountGroup,
+  FactoryTriggerCountGroupField,
+  FactoryTriggerFilterKeys,
   FactoryTrigger_DETAILED,
+  useFactoryTriggerCount,
   useFactoryTriggerCreate,
   useFactoryTriggerFilters,
   useFactoryTriggerSearch,
@@ -19,7 +23,7 @@ import { FactoryConditionSetResourceLink } from "@/features/factory-condition-se
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
-import { PagedResponse } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import {
@@ -31,7 +35,14 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 
-import { CrudDataTable, FiltersState } from "../../crud-data-table";
+import {
+  ChartDataContext,
+  ChartGrouping,
+  CrudDataTable,
+  FiltersState,
+  SortableHeader,
+  buildCountGroupingLoad,
+} from "../../crud-data-table";
 import {
   FactoryTriggerDuplicateDialog,
   FactoryTriggerDuplicateDialogRef,
@@ -65,7 +76,9 @@ const colDefs: Record<
   factory: {
     id: "factory",
     accessorKey: "factory",
-    header: "Twin factory",
+    header: () => (
+      <SortableHeader title="Twin factory" sortField="twinFactoryName" />
+    ),
     cell: ({ row: { original } }) =>
       original.factory && (
         <div className="inline-flex max-w-48">
@@ -76,7 +89,9 @@ const colDefs: Record<
   inputTwinClass: {
     id: "inputTwinClass",
     accessorKey: "inputTwinClass",
-    header: "Input twin class",
+    header: () => (
+      <SortableHeader title="Input twin class" sortField="inputTwinClassName" />
+    ),
     cell: ({ row: { original } }) =>
       original.inputTwinClass && (
         <div className="inline-flex max-w-48">
@@ -90,7 +105,12 @@ const colDefs: Record<
   factoryConditionSet: {
     id: "factoryConditionSet",
     accessorKey: "factoryConditionSet",
-    header: "Twin factory condition set",
+    header: () => (
+      <SortableHeader
+        title="Twin factory condition set"
+        sortField="twinFactoryConditionSetName"
+      />
+    ),
     cell: ({ row: { original } }) =>
       original.factoryConditionSet && (
         <div className="inline-flex max-w-48">
@@ -104,19 +124,26 @@ const colDefs: Record<
   twinFactoryConditionInvert: {
     id: "twinFactoryConditionInvert",
     accessorKey: "twinFactoryConditionInvert",
-    header: "Twin factory condition invert",
+    header: () => (
+      <SortableHeader
+        title="Twin factory condition invert"
+        sortField="twinFactoryConditionInvert"
+      />
+    ),
     cell: (data) => data.getValue() && <Check />,
   },
   active: {
     id: "active",
     accessorKey: "active",
-    header: "Active",
+    header: () => <SortableHeader title="Active" sortField="active" />,
     cell: (data) => data.getValue() && <Check />,
   },
   description: {
     id: "description",
     accessorKey: "description",
-    header: "Description",
+    header: () => (
+      <SortableHeader title="Description" sortField="description" />
+    ),
     cell: ({ row: { original } }) =>
       original.description && (
         <div className="text-muted-foreground line-clamp-2 max-w-64">
@@ -127,7 +154,9 @@ const colDefs: Record<
   twinTrigger: {
     id: "twinTrigger",
     accessorKey: "twinTrigger",
-    header: "Twin trigger",
+    header: () => (
+      <SortableHeader title="Twin trigger" sortField="twinTriggerName" />
+    ),
     cell: ({ row: { original } }) =>
       original.twinTrigger && (
         <div className="inline-flex max-w-48">
@@ -138,7 +167,7 @@ const colDefs: Record<
   async: {
     id: "async",
     accessorKey: "async",
-    header: "Async",
+    header: () => <SortableHeader title="Async" sortField="async" />,
     cell: (data) => data.getValue() && <Check />,
   },
 };
@@ -162,6 +191,7 @@ export function FactoryTriggersTable({
         ]
       : undefined,
   });
+  const { countFactoryTriggers } = useFactoryTriggerCount();
   const { createFactoryTrigger } = useFactoryTriggerCreate();
   const duplicateDialogRef = useRef<FactoryTriggerDuplicateDialogRef>(null);
   const exportSqlDialogRef = useRef<FactoryTriggerExportSqlDialogRef>(null);
@@ -216,20 +246,35 @@ export function FactoryTriggersTable({
     ),
   };
 
+  // Maps the table filter values to the API payload and pins the contextual
+  // twin trigger. Shared by the fetcher and the pie-chart count requests so
+  // both honour the active filters.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<FactoryTriggerFilterKeys, unknown>) => {
+      const mapped = mapFiltersToPayload(rawFilters);
+
+      return {
+        ...mapped,
+        twinTriggerIdList: twinTriggerId
+          ? toArrayOfString(toArray(twinTriggerId), "id")
+          : mapped.twinTriggerIdList,
+      };
+    },
+    [mapFiltersToPayload, twinTriggerId]
+  );
+
   async function fetchFactoryTriggers(
     pagination: PaginationState,
-    filters: FiltersState
+    filters: FiltersState,
+    sort?: SortV1
   ): Promise<PagedResponse<FactoryTrigger_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
     try {
       return await searchFactoryTrigger({
         pagination,
-        filters: {
-          ..._filters,
-          twinTriggerIdList: twinTriggerId
-            ? toArrayOfString(toArray(twinTriggerId), "id")
-            : _filters.twinTriggerIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<FactoryTriggerFilterKeys, unknown>
+        ),
+        sort,
       });
     } catch (error) {
       toast.error("An error occured while fetching factory triggers:" + error);
@@ -238,6 +283,116 @@ export function FactoryTriggersTable({
       );
     }
   }
+
+  // Builds the pie-chart groupings backed by the server-side count endpoint
+  // (/private/twin_factory/trigger/count/v1), bound to the active filters.
+  const buildChartGroupings = useCallback(
+    ({ filters }: ChartDataContext): ChartGrouping[] => {
+      const resolved = resolveFilters(
+        filters as Record<FactoryTriggerFilterKeys, unknown>
+      );
+
+      /** Wraps a boolean grouping, whose label is just the flag's meaning. */
+      const flagGrouping = (
+        key: FactoryTriggerCountGroupField,
+        label: string,
+        read: (group: FactoryTriggerCountGroup) => boolean | undefined,
+        [onLabel, offLabel]: [string, string]
+      ): ChartGrouping => ({
+        key,
+        label,
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countFactoryTriggers({
+              filters: resolved,
+              groupField: key,
+              offset,
+              limit,
+            }),
+          (g) => (read(g) === undefined ? undefined : String(read(g))),
+          (g) =>
+            read(g) === undefined ? undefined : read(g) ? onLabel : offLabel
+        ),
+      });
+
+      const groupings: ChartGrouping[] = [
+        {
+          key: "twinFactoryId",
+          label: "Twin factory",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryTriggers({
+                filters: resolved,
+                groupField: "twinFactoryId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinFactoryId,
+            (g) => g.factory?.name,
+            (g) =>
+              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
+          ),
+        },
+        {
+          key: "inputTwinClassId",
+          label: "Input twin class",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryTriggers({
+                filters: resolved,
+                groupField: "inputTwinClassId",
+                offset,
+                limit,
+              }),
+            (g) => g.inputTwinClassId,
+            (g) => g.inputTwinClass?.name,
+            (g) =>
+              g.inputTwinClass && (
+                <TwinClassResourceLink data={g.inputTwinClass} withTooltip />
+              )
+          ),
+        },
+        flagGrouping("active", "Active", (g) => g.active, [
+          "Active",
+          "Inactive",
+        ]),
+        flagGrouping("async", "Async", (g) => g.async, ["Async", "Sync"]),
+        flagGrouping(
+          "twinFactoryConditionInvert",
+          "Condition invert",
+          (g) => g.twinFactoryConditionInvert,
+          ["Inverted", "Not inverted"]
+        ),
+      ];
+
+      // Scoped to one twin trigger, that column is a constant and carries no
+      // information — same reason it is dropped from the filters.
+      if (!isTruthy(twinTriggerId)) {
+        groupings.push({
+          key: "twinTriggerId",
+          label: "Twin trigger",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countFactoryTriggers({
+                filters: resolved,
+                groupField: "twinTriggerId",
+                offset,
+                limit,
+              }),
+            (g) => g.twinTriggerId,
+            (g) => g.twinTrigger?.name,
+            (g) =>
+              g.twinTrigger && (
+                <TwinTriggerResourceLink data={g.twinTrigger} withTooltip />
+              )
+          ),
+        });
+      }
+
+      return groupings;
+    },
+    [resolveFilters, countFactoryTriggers, twinTriggerId]
+  );
 
   const triggersForm = useForm<TriggersFormValues>({
     resolver: zodResolver(FACTORY_TRIGGER_SCHEMA),
@@ -306,6 +461,7 @@ export function FactoryTriggersTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
+        chartGroupings={buildChartGroupings}
         getRowId={(row) => row.id!}
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)
