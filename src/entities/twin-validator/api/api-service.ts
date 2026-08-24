@@ -4,8 +4,10 @@ import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
 import {
   TwinValidatorCountGroupField,
+  TwinValidatorCreateRq,
   TwinValidatorFilters,
   TwinValidatorSortField,
+  TwinValidatorUpdateRq,
 } from "./types";
 
 export function createTwinValidatorApi(settings: ApiSettings) {
@@ -74,7 +76,21 @@ export function createTwinValidatorApi(settings: ApiSettings) {
     });
   }
 
-  return { search, count };
+  function create({ body }: { body: TwinValidatorCreateRq }) {
+    return settings.client.POST("/private/twin_validator/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  function update({ body }: { body: TwinValidatorUpdateRq }) {
+    return settings.client.PUT("/private/twin_validator/v1", {
+      params: { header: getApiDomainHeaders(settings) },
+      body,
+    });
+  }
+
+  return { search, count, create, update };
 }
 
 export type TwinValidatorApi = ReturnType<typeof createTwinValidatorApi>;

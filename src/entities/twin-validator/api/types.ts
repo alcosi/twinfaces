@@ -35,6 +35,12 @@ export type TwinValidatorSortField = NonNullable<
   TwinValidatorSearchRq["sortField"]
 >;
 
+export type TwinValidatorCreateRq =
+  components["schemas"]["TwinValidatorCreateRqV1"];
+
+export type TwinValidatorUpdateRq =
+  components["schemas"]["TwinValidatorUpdateRqV1"];
+
 export type TwinValidatorCountRq =
   components["schemas"]["TwinValidatorCountRqV1"];
 

@@ -1,16 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
 import {
+  TWIN_VALIDATOR_SCHEMA,
   TwinValidatorFilterKeys,
   TwinValidatorFilters,
   TwinValidator_DETAILED,
   useTwinValidatorCount,
+  useTwinValidatorCreate,
   useTwinValidatorFilters,
   useTwinValidatorSearch,
 } from "@/entities/twin-validator";
@@ -18,6 +24,7 @@ import { ValidatorSet_DETAILED } from "@/entities/validator-set";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { ValidatorSetResourceLink } from "@/features/validator-set/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
+import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
@@ -29,6 +36,7 @@ import {
   SortableHeader,
   buildCountGroupingLoad,
 } from "../../crud-data-table";
+import { TwinValidatorFormFields } from "./form-fields";
 
 const colDefs: Record<
   keyof Pick<
@@ -122,7 +130,9 @@ export function TwinValidatorsTable({
   twinValidatorSetId?: string;
   title?: string;
 }) {
+  const router = useRouter();
   const { searchTwinValidators } = useTwinValidatorSearch();
+  const { createTwinValidator } = useTwinValidatorCreate();
   const { countTwinValidators } = useTwinValidatorCount();
   const { buildFilterFields, mapFiltersToPayload } = useTwinValidatorFilters({
     enabledFilters: isTruthy(twinValidatorSetId)
@@ -283,6 +293,24 @@ export function TwinValidatorsTable({
     [resolveFilters, countTwinValidators, showValidatorSetColumn]
   );
 
+  const twinValidatorForm = useForm<z.infer<typeof TWIN_VALIDATOR_SCHEMA>>({
+    resolver: zodResolver(TWIN_VALIDATOR_SCHEMA),
+    defaultValues: {
+      twinValidatorSetId: twinValidatorSetId || "",
+      description: undefined,
+      invert: false,
+      active: true,
+      order: 0,
+    },
+  });
+
+  async function handleOnCreateSubmit(
+    formValues: z.infer<typeof TWIN_VALIDATOR_SCHEMA>
+  ) {
+    await createTwinValidator({ body: { validators: [formValues] } });
+    toast.success("Validator created successfully!");
+  }
+
   const columns = [
     colDefs.id,
     ...(showValidatorSetColumn ? [colDefs.twinValidatorSet] : []),
@@ -302,8 +330,18 @@ export function TwinValidatorsTable({
       fetcher={fetchTwinValidators}
       filters={{ filtersInfo: buildFilterFields() }}
       chartGroupings={buildChartGroupings}
-      // A validator has no page of its own, so a row is not a link.
-      disableRowClick
+      onRowClick={(row) =>
+        router.push(`/${PlatformArea.core}/validators/${row.id}`)
+      }
+      getRowHref={(row) => `/${PlatformArea.core}/validators/${row.id}`}
+      dialogForm={twinValidatorForm}
+      onCreateSubmit={handleOnCreateSubmit}
+      renderFormFields={() => (
+        <TwinValidatorFormFields
+          control={twinValidatorForm.control}
+          twinValidatorSetId={twinValidatorSetId}
+        />
+      )}
       title={title}
     />
   );
