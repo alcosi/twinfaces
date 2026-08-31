@@ -1,6 +1,10 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  FeaturerTypes,
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -24,13 +28,19 @@ export function useTwinTriggerFilters({
 }: {
   enabledFilters?: TwinTriggerFilterKeys[];
 }): FilterFeature<TwinTriggerFilterKeys, TwinTriggerFilters> {
-  const featurerAdapter = useFeaturerSelectAdapter(FeaturerTypes.trigger);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(
+    FeaturerTypes.trigger
+  );
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
 
   const {
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<TwinTriggerFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -38,10 +48,14 @@ export function useTwinTriggerFilters({
       label: "ID",
     },
     triggerFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Trigger featurer",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     jobTwinClassIdList: {
       type: AutoFormValueType.complexCombobox,

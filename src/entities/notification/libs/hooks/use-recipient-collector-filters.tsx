@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   RecipientCollectorsFilterKeys,
   RecipientCollectorsFilters,
@@ -22,7 +25,12 @@ export function useRecipientCollectorFilters({
   enabledFilters?: RecipientCollectorsFilterKeys[];
 }): FilterFeature<RecipientCollectorsFilterKeys, RecipientCollectorsFilters> {
   const recipientSelectAdapter = useRecipientSelectAdapter();
-  const featurerAdapter = useFeaturerSelectAdapter(47);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(47);
+
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<RecipientCollectorsFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -38,10 +46,14 @@ export function useRecipientCollectorFilters({
       ...recipientSelectAdapter,
     },
     recipientResolverFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Recipient resolver featurer",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     exclude: {
       type: AutoFormValueType.boolean,

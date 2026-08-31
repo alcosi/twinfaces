@@ -14,7 +14,10 @@ import {
   useFactoryPipelineFilters,
   useFactoryPipelineSelectAdapterWithFilters,
 } from "@/entities/factory-pipeline";
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -34,7 +37,7 @@ export function usePipelineStepFilters({
 }): FilterFeature<PipelineStepFilterKeys, PipelineStepFilters> {
   const fAdapter = useFactorySelectAdapterWithFilters();
   const fpAdapter = useFactoryPipelineSelectAdapterWithFilters();
-  const featurerAdapter = useFeaturerSelectAdapter(23);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(23);
   const fcsAdapter = useFactoryConditionSetSelectAdapterWithFilters();
 
   const {
@@ -49,6 +52,10 @@ export function usePipelineStepFilters({
     buildFilterFields: buildFactoryConditionSetFilters,
     mapFiltersToPayload: mapFactoryConditionSetFilters,
   } = useFactoryConditionSetFilters();
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<PipelineStepFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -106,10 +113,14 @@ export function usePipelineStepFilters({
       defaultValue: "indeterminate",
     },
     fillerFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Filler featurer",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     descriptionLikeList: {
       type: AutoFormValueType.tag,

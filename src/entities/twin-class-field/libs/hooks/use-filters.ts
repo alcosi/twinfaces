@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   usePermissionFilters,
   usePermissionSelectAdapterWithFilters,
@@ -42,9 +45,13 @@ export function useTwinClassFieldFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
-  const fieldTyperAdapter = useFeaturerSelectAdapter(13);
-  const twinSorterAdapter = useFeaturerSelectAdapter(41);
-  const fieldInitializerAdapter = useFeaturerSelectAdapter(53);
+  const fieldTyperAdapter = useFeaturerSelectAdapterWithFilters(13);
+  const twinSorterAdapter = useFeaturerSelectAdapterWithFilters(41);
+  const fieldInitializerAdapter = useFeaturerSelectAdapterWithFilters(53);
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<TwinClassFieldV2FilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -76,16 +83,24 @@ export function useTwinClassFieldFilters({
       label: "Description",
     },
     fieldTyperIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Field typer",
+      adapter: fieldTyperAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...fieldTyperAdapter,
     },
     twinSorterIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Twin sorter",
+      adapter: twinSorterAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...twinSorterAdapter,
     },
     viewPermissionIdList: {
       type: AutoFormValueType.complexCombobox,
@@ -144,10 +159,14 @@ export function useTwinClassFieldFilters({
       defaultValue: "indeterminate",
     },
     fieldInitiatorIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Field initializer",
+      adapter: fieldInitializerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...fieldInitializerAdapter,
     },
   };
 
