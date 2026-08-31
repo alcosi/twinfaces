@@ -4,6 +4,8 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 
+import { AutoFormValueInfo } from "@/components/auto-field";
+
 import { Featurer } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui";
@@ -15,6 +17,7 @@ type Props = {
     pagination: PaginationState,
     options: FiltersState
   ) => Promise<PagedResponse<Featurer>>;
+  filtersInfo: Record<string, AutoFormValueInfo>;
 };
 
 const colDefs: Record<
@@ -51,7 +54,7 @@ const colDefs: Record<
   },
 };
 
-export function FeaturerTypeTable({ title, fetcher }: Props) {
+export function FeaturerTypeTable({ title, fetcher, filtersInfo }: Props) {
   return (
     <CrudDataTable
       title={title}
@@ -69,6 +72,7 @@ export function FeaturerTypeTable({ title, fetcher }: Props) {
         colDefs.deprecated,
       ]}
       fetcher={fetcher}
+      filters={{ filtersInfo }}
     />
   );
 }

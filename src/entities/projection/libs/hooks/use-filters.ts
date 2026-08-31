@@ -2,7 +2,10 @@ import z from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   useTwinClassFilters,
   useTwinClassSelectAdapterWithFilters,
@@ -27,7 +30,7 @@ export function useProjectionFilters({
 }: {
   enabledFilters?: ProjectionFilterKeys[];
 }): FilterFeature<ProjectionFilterKeys, ProjectionFilters> {
-  const featurerAdapter = useFeaturerSelectAdapter(44);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(44);
   const projectionTypeAdapter = useProjectionTypeSelectAdapter();
 
   const {
@@ -39,6 +42,11 @@ export function useProjectionFilters({
     buildFilterFields: buildTwinClassFilters,
     mapFiltersToPayload: mapTwinClassFilters,
   } = useTwinClassFilters();
+
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
   const twinClassAdapter = useTwinClassSelectAdapterWithFilters();
@@ -67,10 +75,14 @@ export function useProjectionFilters({
       multi: true,
     },
     fieldProjectorIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Projector",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     srcTwinClassFieldIdList: {
       type: AutoFormValueType.complexCombobox,

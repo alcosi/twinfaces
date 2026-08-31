@@ -2,7 +2,11 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { FeaturerTypes, useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  FeaturerTypes,
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   useValidatorSetFilters,
   useValidatorSetSelectAdapterWithFilters,
@@ -24,12 +28,18 @@ export function useTwinValidatorFilters({
   enabledFilters?: TwinValidatorFilterKeys[];
 } = {}): FilterFeature<TwinValidatorFilterKeys, TwinValidatorFilters> {
   const validatorSetAdapter = useValidatorSetSelectAdapterWithFilters();
-  const featurerAdapter = useFeaturerSelectAdapter(FeaturerTypes.validator);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(
+    FeaturerTypes.validator
+  );
 
   const {
     buildFilterFields: buildValidatorSetFilters,
     mapFiltersToPayload: mapValidatorSetFilters,
   } = useValidatorSetFilters();
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<TwinValidatorFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -49,10 +59,14 @@ export function useTwinValidatorFilters({
       multi: true,
     },
     validatorFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Featurer",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     descriptionLikeList: {
       type: AutoFormValueType.tag,

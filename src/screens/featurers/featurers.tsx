@@ -29,7 +29,7 @@ const FEATURER_TYPES: FeaturerType[] = [
 
 export function FeaturersScreen() {
   const { searchFeaturers } = useFeaturerSearch();
-  const { mapFiltersToPayload } = useFeaturerFilters();
+  const { buildFilterFields, mapFiltersToPayload } = useFeaturerFilters();
 
   function createFetcher(typeIdList: number[]) {
     return async function fetchFeaturers(
@@ -59,6 +59,7 @@ export function FeaturersScreen() {
           key={typeIdList[0]}
           title={title}
           fetcher={createFetcher(typeIdList)}
+          filtersInfo={buildFilterFields()}
         />
       ))}
     </div>

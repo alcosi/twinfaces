@@ -1,6 +1,9 @@
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   useTwinClassFieldFilters,
   useTwinClassFieldSelectAdapterWithFilters,
@@ -21,12 +24,16 @@ export function useRulesFilters({
   enabledFilters?: RuleFilterKeys[];
 }): FilterFeature<RuleFilterKeys, RuleFilters> {
   const twinClassFieldAdapter = useTwinClassFieldSelectAdapterWithFilters();
-  const featurerAdapter = useFeaturerSelectAdapter(46);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(46);
 
   const {
     buildFilterFields: buildTwinClassFieldFilters,
     mapFiltersToPayload: mapTwinClassFieldFilters,
   } = useTwinClassFieldFilters({});
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
   const allFilters: Record<RuleFilterKeys, AutoFormValueInfo> = {
     idList: {
       type: AutoFormValueType.tag,
@@ -43,10 +50,14 @@ export function useRulesFilters({
       multi: true,
     },
     fieldOverwriterFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Overwriter",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
   };
 

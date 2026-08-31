@@ -2,38 +2,61 @@ import { z } from "zod";
 
 import { AutoFormValueInfo, AutoFormValueType } from "@/components/auto-field";
 
-import { type FilterFeature, toArrayOfString } from "@/shared/libs";
+import {
+  type FilterFeature,
+  extractEnabledFilters,
+  isPopulatedArray,
+  mapToChoice,
+  toArrayOfString,
+  wrapWithPercent,
+} from "@/shared/libs";
 
 import { FeaturerFilterKeys, FeaturerFilters } from "../../api";
 
-export function useFeaturerFilters(): FilterFeature<
-  FeaturerFilterKeys,
-  FeaturerFilters
-> {
+export function useFeaturerFilters({
+  enabledFilters,
+}: {
+  enabledFilters?: FeaturerFilterKeys[];
+} = {}): FilterFeature<FeaturerFilterKeys, FeaturerFilters> {
+  const allFilters: Record<FeaturerFilterKeys, AutoFormValueInfo> = {
+    idList: {
+      type: AutoFormValueType.tag,
+      label: "Id",
+      schema: z.string().regex(/^\d+$/, "Please enter a valid ID"),
+      placeholder: "Enter ID",
+    },
+    nameLikeList: {
+      type: AutoFormValueType.tag,
+      label: "Name",
+    },
+    descriptionLikeList: {
+      type: AutoFormValueType.tag,
+      label: "Description",
+    },
+    deprecated: {
+      type: AutoFormValueType.boolean,
+      label: "Deprecated",
+      hasIndeterminate: true,
+      defaultValue: "indeterminate",
+    },
+  };
+
   function buildFilterFields(): Record<FeaturerFilterKeys, AutoFormValueInfo> {
-    return {
-      idList: {
-        type: AutoFormValueType.tag,
-        label: "Id",
-        schema: z.string().uuid("Please enter a valid UUID"),
-        placeholder: "Enter UUID",
-      },
-      typeIdList: {
-        type: AutoFormValueType.string,
-        label: "Type",
-      },
-      nameLikeList: {
-        type: AutoFormValueType.string,
-        label: "Name",
-      },
-    };
+    return isPopulatedArray(enabledFilters)
+      ? extractEnabledFilters(enabledFilters, allFilters)
+      : allFilters;
   }
 
   function mapFiltersToPayload(
     filters: Record<FeaturerFilterKeys, unknown>
   ): FeaturerFilters {
     return {
-      typeIdList: toArrayOfString(filters.typeIdList, "id").map(Number),
+      idList: toArrayOfString(filters.idList).map(Number),
+      nameLikeList: toArrayOfString(filters.nameLikeList).map(wrapWithPercent),
+      descriptionLikeList: toArrayOfString(filters.descriptionLikeList).map(
+        wrapWithPercent
+      ),
+      deprecated: mapToChoice(filters.deprecated),
     };
   }
 

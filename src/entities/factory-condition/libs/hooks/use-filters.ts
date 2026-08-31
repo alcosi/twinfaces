@@ -6,7 +6,10 @@ import {
   useFactoryConditionSetFilters,
   useFactoryConditionSetSelectAdapterWithFilters,
 } from "@/entities/factory-condition-set";
-import { useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import {
   FilterFeature,
   extractEnabledFilters,
@@ -24,12 +27,16 @@ export function useFactoryConditionFilters({
   enabledFilters?: FactoryConditionFilterKeys[];
 }): FilterFeature<FactoryConditionFilterKeys, FactoryConditionFilters> {
   const conditionSetAdapter = useFactoryConditionSetSelectAdapterWithFilters();
-  const featurerAdapter = useFeaturerSelectAdapter(24);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(24);
 
   const {
     buildFilterFields: buildFactoryConditionSetFilters,
     mapFiltersToPayload: mapFactoryConditionSetFilters,
   } = useFactoryConditionSetFilters();
+  const {
+    buildFilterFields: buildFeaturerFilters,
+    mapFiltersToPayload: mapFeaturerFilters,
+  } = useFeaturerFilters();
 
   const allFilters: Record<FactoryConditionFilterKeys, AutoFormValueInfo> = {
     idList: {
@@ -49,10 +56,14 @@ export function useFactoryConditionFilters({
       multi: true,
     },
     conditionerFeaturerIdList: {
-      type: AutoFormValueType.combobox,
+      type: AutoFormValueType.complexCombobox,
       label: "Conditioner featurer",
+      adapter: featurerAdapter,
+      extraFilters: buildFeaturerFilters(),
+      mapExtraFilters: (filters) => mapFeaturerFilters(filters),
+      searchPlaceholder: "Search...",
+      selectPlaceholder: "Select...",
       multi: true,
-      ...featurerAdapter,
     },
     descriptionLikeList: {
       type: AutoFormValueType.tag,
