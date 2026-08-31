@@ -8,5 +8,5 @@ export type FeaturerParam = components["schemas"]["FeaturerParamV1"];
 
 export type FeaturerFilterKeys = "idList" | "typeIdList" | "nameLikeList";
 export type FeaturerFilters = Partial<
-  Pick<components["schemas"]["FeaturerSearchRqV1"], FeaturerFilterKeys>
+  Pick<components["schemas"]["FeaturerSearchV1"], FeaturerFilterKeys>
 >;
