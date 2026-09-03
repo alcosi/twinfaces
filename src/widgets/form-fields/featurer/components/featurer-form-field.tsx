@@ -1,9 +1,19 @@
 import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
 
-import { ComboboxFormField, FormFieldProps } from "@/components/form-fields";
+import {
+  AutoFormComplexComboboxValueInfo,
+  AutoFormValueType,
+} from "@/components/auto-field";
+import { ComplexComboboxFormItem } from "@/components/complex-combobox";
+import { FormFieldProps } from "@/components/form-fields";
 
-import { FeaturerParam, useFeaturerSelectAdapter } from "@/entities/featurer";
+import {
+  FeaturerParam,
+  useFeaturerFilters,
+  useFeaturerSelectAdapterWithFilters,
+} from "@/entities/featurer";
 import { isPopulatedArray } from "@/shared/libs";
+import { FormField } from "@/shared/ui";
 
 import { FeaturerFieldProps } from "../types";
 import { FeaturerParamFormField } from "./featurer-param/featurer-param-form";
@@ -21,31 +31,49 @@ export function FeaturerFormField<T extends FieldValues>({
 }: Props<T>) {
   const methods = useFormContext();
   const featureIdWatched = useWatch({ control, name });
-  const featurerAdapter = useFeaturerSelectAdapter(typeId);
+  const featurerAdapter = useFeaturerSelectAdapterWithFilters(typeId);
+  const { buildFilterFields, mapFiltersToPayload } = useFeaturerFilters();
 
   const featurerParams: FeaturerParam[] = isPopulatedArray(featureIdWatched)
     ? featureIdWatched[0].params
     : [];
 
+  const featurerInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label,
+    description,
+    adapter: featurerAdapter,
+    extraFilters: buildFilterFields(),
+    mapExtraFilters: (filters) => mapFiltersToPayload(filters),
+    selectPlaceholder: props.selectPlaceholder ?? "Select featurer",
+    searchPlaceholder: props.searchPlaceholder ?? "Search featurer...",
+    noItemsText: props.noItemsText ?? "No featurers found",
+  };
+
   return (
     <>
-      <ComboboxFormField
+      <FormField
         control={control}
         name={name}
-        label={label}
-        description={description}
-        required={required}
-        selectPlaceholder="Select featurer"
-        searchPlaceholder="Search featurer..."
-        noItemsText="No featurers found"
-        onSelect={(_) => {
-          methods.unregister(props.paramsFieldName);
-        }}
-        {...featurerAdapter}
+        render={({ field }) => (
+          <ComplexComboboxFormItem
+            value={field.value}
+            onChange={(value) => {
+              // Params belong to the previously picked featurer — drop them so
+              // the new one starts from its own set.
+              methods.unregister(props.paramsFieldName);
+              field.onChange(value);
+            }}
+            info={featurerInfo}
+            inForm
+            required={required}
+            filterKey={name}
+          />
+        )}
       />
 
       {isPopulatedArray(featurerParams) && (
-        <fieldset className="px-1.5 py-2.5 rounded-md border border-dashed">
+        <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
           <legend className="text-sm font-medium italic">Params</legend>
           <div className="space-y-2">
             {featurerParams.map((param) => (

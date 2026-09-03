@@ -123,12 +123,14 @@ export function ComplexComboboxFormItem({
           <ComboboxFormItem
             key={info.adapter.version}
             label={info.label}
+            description={info.description}
             {...info.adapter}
             fieldValue={value}
             onSelect={onChange}
             inForm={inForm}
             selectPlaceholder={info.selectPlaceholder}
             searchPlaceholder={info.searchPlaceholder}
+            noItemsText={info.noItemsText}
             multi={info.multi}
             disabled={info.disabled}
             required={required}

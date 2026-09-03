@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Control, FieldPath } from "react-hook-form";
 
 import { SelectAdapterWithFilters } from "@/shared/libs";
@@ -46,13 +47,15 @@ export enum AutoFormValueType {
 
 export interface AutoFormComplexComboboxValueInfo {
   type: AutoFormValueType.complexCombobox;
-  label?: string;
-  description?: string;
+  // Rendered as-is, so a form field may hand over its own `ReactNode` label.
+  label?: ReactNode;
+  description?: ReactNode;
   adapter: SelectAdapterWithFilters<any, any>;
   extraFilters: Record<string, AutoFormValueInfo>;
   mapExtraFilters?: (filters: Record<string, any>) => any;
   selectPlaceholder?: string;
   searchPlaceholder?: string;
+  noItemsText?: string;
   multi?: boolean;
   disabled?: boolean;
 }
