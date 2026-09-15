@@ -4,18 +4,26 @@ import {
   FilterX,
   SlidersHorizontal,
 } from "lucide-react";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
-
-import { cn, isPopulatedString } from "@/shared/libs";
-
 import {
-  AutoField,
-  AutoFormComplexComboboxValueInfo,
-  AutoFormValueInfo,
-  AutoFormValueType,
-} from "../auto-field";
+  buildInitialFilterValues,
+  countAppliedFilters,
+  normalizeFilterValue,
+  stripIndeterminateFilters,
+} from "@/components/advanced-filters/filter-values";
+
+import { cn } from "@/shared/libs";
+
+import { AutoField, AutoFormComplexComboboxValueInfo } from "../auto-field";
 import { ComboboxFormItem } from "../form-fields";
 
 export function ComplexComboboxFormItem({
@@ -48,19 +56,7 @@ export function ComplexComboboxFormItem({
   );
 
   const [extraFilters, setExtraFilters] = useState<Record<string, any>>(() =>
-    Object.fromEntries(
-      Object.entries(info.extraFilters)
-        .filter(([, filter]) => filter !== undefined)
-        .map(([key, filter]) => [
-          key,
-          filter!.type === AutoFormValueType.tag
-            ? []
-            : filter!.type === AutoFormValueType.boolean &&
-                filter!.hasIndeterminate
-              ? "indeterminate"
-              : "",
-        ])
-    )
+    buildInitialFilterValues(info.extraFilters)
   );
 
   const mappedFilters = useMemo(
@@ -69,11 +65,19 @@ export function ComplexComboboxFormItem({
     [extraFilters, info]
   );
 
-  const hasFilters = hasActiveFilters(extraFilters);
+  // In sidebar mode the values live in the panel stack, so that they survive
+  // the panel being closed — the badge has to read the count from there.
+  const appliedCount = useSidebar
+    ? (sidebarCtx.appliedCounts[filterKey] ?? 0)
+    : countAppliedFilters(extraFilters);
+  const hasFilters = appliedCount > 0;
+  const isPanelOpen = useSidebar && sidebarCtx.openKeys.includes(filterKey);
 
   const prevFiltersRef = useRef<string | null>(null);
 
   useEffect(() => {
+    if (useSidebar) return;
+
     const sanitizedFilters = stripIndeterminateFilters(
       mappedFilters,
       info.extraFilters,
@@ -87,28 +91,25 @@ export function ComplexComboboxFormItem({
 
     info.adapter.setFilters?.(sanitizedFilters);
     info.adapter.invalidate?.();
-  }, [mappedFilters, touchedFilters, info.adapter]);
+  }, [useSidebar, mappedFilters, touchedFilters, info.adapter]);
 
   function resetFilters() {
-    const cleared = Object.fromEntries(
-      Object.entries(info.extraFilters)
-        .filter(([, filter]) => filter !== undefined)
-        .map(([key, filter]) => [
-          key,
-          filter!.type === AutoFormValueType.tag
-            ? []
-            : filter!.type === AutoFormValueType.boolean &&
-                filter!.hasIndeterminate
-              ? "indeterminate"
-              : "",
-        ])
-    );
-
-    setExtraFilters(cleared);
+    setExtraFilters(buildInitialFilterValues(info.extraFilters));
+    setTouchedFilters({});
     setFiltersVersion((v) => v + 1);
     info.adapter.setFilters?.({});
     info.adapter.invalidate?.();
   }
+
+  const label: ReactNode =
+    info.label != null ? (
+      <span className="inline-flex flex-wrap items-center gap-2">
+        {info.label}
+        <AppliedFiltersBadge count={appliedCount} />
+      </span>
+    ) : (
+      info.label
+    );
 
   return (
     <div
@@ -122,7 +123,7 @@ export function ComplexComboboxFormItem({
         <div className={cn(useSidebar && "min-w-0 flex-1")}>
           <ComboboxFormItem
             key={info.adapter.version}
-            label={info.label}
+            label={label}
             description={info.description}
             {...info.adapter}
             fieldValue={value}
@@ -140,22 +141,19 @@ export function ComplexComboboxFormItem({
         {!info.disabled && useSidebar && hasExtraFilters && (
           <button
             type="button"
+            aria-pressed={isPanelOpen}
+            aria-label={`Advanced filters for ${typeof info.label === "string" ? info.label : "field"}`}
             className={cn(
-              "mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition-colors",
-              hasFilters
-                ? "text-link-enabled"
-                : "text-muted-foreground hover:bg-muted hover:text-primary"
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-md border transition-colors",
+              isPanelOpen
+                ? "border-brand-500 bg-brand-500 text-primary-foreground"
+                : hasFilters
+                  ? "border-brand-500/50 text-link-enabled hover:bg-muted"
+                  : "border-input text-muted-foreground hover:bg-muted hover:text-primary"
             )}
-            onClick={() => sidebarCtx.openAdvancedFilters(filterKey!, info)}
+            onClick={() => sidebarCtx.openAdvancedFilters(filterKey, info)}
           >
-            <div className="relative">
-              <SlidersHorizontal size={16} />
-              {hasFilters && (
-                <span className="bg-ons-blue-100 text-ons-blue-700 absolute -top-1 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-medium">
-                  ●
-                </span>
-              )}
-            </div>
+            <SlidersHorizontal size={16} />
           </button>
         )}
       </div>
@@ -172,11 +170,6 @@ export function ComplexComboboxFormItem({
         >
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           {open ? "Hide advanced filters" : "Advanced filters"}
-          {hasFilters && (
-            <span className="bg-ons-blue-100 text-ons-blue-700 ml-1 rounded-full px-1.5 text-[10px] font-medium">
-              ●
-            </span>
-          )}
         </button>
       )}
 
@@ -196,6 +189,7 @@ export function ComplexComboboxFormItem({
                 <AutoField
                   key={`${filtersVersion}-${key}`}
                   info={filterInfo!}
+                  layout="inline"
                   value={extraFilters[key]}
                   onChange={(v) => {
                     setTouchedFilters((prev) => ({
@@ -229,40 +223,13 @@ export function ComplexComboboxFormItem({
   );
 }
 
-function hasActiveFilters(filters: Record<string, any>) {
-  return Object.values(filters).some((v) => {
-    if (Array.isArray(v)) return v.length > 0;
-    if (v === "indeterminate") return false;
-    if (typeof v === "string") return isPopulatedString(v);
-    if (typeof v === "object" && v !== null) return true;
-    return false;
-  });
-}
+/** Marks a field whose advanced filters are in effect, panel open or not. */
+function AppliedFiltersBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
 
-function normalizeFilterValue(value: unknown, filter: AutoFormValueInfo) {
-  if (filter.type === AutoFormValueType.boolean && filter.hasIndeterminate) {
-    return value === undefined ? "indeterminate" : value;
-  }
-
-  return value;
-}
-
-function stripIndeterminateFilters(
-  filters: Record<string, any>,
-  filterInfos: Record<string, AutoFormValueInfo | undefined>,
-  touched: Record<string, boolean>
-) {
-  return Object.fromEntries(
-    Object.entries(filters).filter(([key, value]) => {
-      const info = filterInfos[key];
-
-      if (info?.type === AutoFormValueType.boolean && info.hasIndeterminate) {
-        if (!touched[key]) return false;
-
-        return value !== "indeterminate";
-      }
-
-      return true;
-    })
+  return (
+    <span className="bg-brand-500/15 text-brand-600 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-medium">
+      {count} applied
+    </span>
   );
 }

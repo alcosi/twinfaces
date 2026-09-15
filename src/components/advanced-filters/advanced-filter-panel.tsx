@@ -1,17 +1,26 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
+import {
+  AdvancedFiltersContext,
+  AdvancedFiltersContextValue,
+} from "@/components/advanced-filters-context";
 import {
   AutoField,
   AutoFormComplexComboboxValueInfo,
-  AutoFormValueInfo,
-  AutoFormValueType,
 } from "@/components/auto-field";
 
 import { Button } from "@/shared/ui";
+
+import {
+  AdvancedFilterTouched,
+  AdvancedFilterValues,
+  hasAppliedFilters,
+  normalizeFilterValue,
+  stripIndeterminateFilters,
+} from "./filter-values";
 
 export interface AdvancedFilterLevel {
   key: string;
@@ -20,31 +29,38 @@ export interface AdvancedFilterLevel {
 
 export function AdvancedFilterPanel({
   level,
+  values,
+  touched,
+  openKeys,
+  appliedCounts,
+  onValueChange,
+  onReset,
   onOpenNext,
   onClose,
 }: {
   level: AdvancedFilterLevel;
+  values: AdvancedFilterValues;
+  touched: AdvancedFilterTouched;
+  openKeys: string[];
+  appliedCounts: Record<string, number>;
+  onValueChange: (name: string, value: unknown) => void;
+  onReset: () => void;
   onOpenNext: (key: string, info: AutoFormComplexComboboxValueInfo) => void;
   onClose: () => void;
 }) {
   const { info } = level;
-  const [filterValues, setFilterValues] = useState<Record<string, any>>(() =>
-    buildInitialFilterValues(info.extraFilters)
-  );
-  const [touchedFilters, setTouchedFilters] = useState<Record<string, boolean>>(
-    {}
-  );
   const prevAppliedRef = useRef<string | null>(null);
+  // Some inputs (tag boxes) only read their value on mount, so a reset has to
+  // remount the fields for the cleared values to show up.
+  const [resetVersion, setResetVersion] = useState(0);
 
   // Apply filters to adapter in real-time
   useEffect(() => {
-    const mapped = info.mapExtraFilters
-      ? info.mapExtraFilters(filterValues)
-      : filterValues;
+    const mapped = info.mapExtraFilters ? info.mapExtraFilters(values) : values;
     const sanitized = stripIndeterminateFilters(
       mapped,
       info.extraFilters,
-      touchedFilters
+      touched
     );
 
     const serialized = JSON.stringify(sanitized);
@@ -53,18 +69,23 @@ export function AdvancedFilterPanel({
 
     info.adapter.setFilters?.(sanitized);
     info.adapter.invalidate?.();
-  }, [filterValues, touchedFilters, info]);
+  }, [values, touched, info]);
 
   function handleReset() {
-    setFilterValues(buildInitialFilterValues(info.extraFilters));
-    setTouchedFilters({});
+    onReset();
+    setResetVersion((v) => v + 1);
     prevAppliedRef.current = null;
     info.adapter.setFilters?.({});
     info.adapter.invalidate?.();
   }
 
+  const contextValue: AdvancedFiltersContextValue = useMemo(
+    () => ({ openAdvancedFilters: onOpenNext, openKeys, appliedCounts }),
+    [onOpenNext, openKeys, appliedCounts]
+  );
+
   return (
-    <div className="flex w-[400px] shrink-0 flex-col">
+    <div className="border-border flex w-[400px] shrink-0 flex-col border-l">
       <div className="flex items-center gap-2 px-6 py-4">
         <Button
           type="button"
@@ -81,9 +102,7 @@ export function AdvancedFilterPanel({
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-        <AdvancedFiltersContext.Provider
-          value={{ openAdvancedFilters: onOpenNext }}
-        >
+        <AdvancedFiltersContext.Provider value={contextValue}>
           <div className="text-muted-foreground text-xs">
             Filters for&nbsp;
             <span className="text-foreground font-medium">{info.label}</span>
@@ -93,83 +112,40 @@ export function AdvancedFilterPanel({
             .filter(([, filterInfo]) => filterInfo !== undefined)
             .map(([key, filterInfo]) => (
               <AutoField
-                key={key}
+                key={`${resetVersion}-${key}`}
                 info={filterInfo!}
                 name={key}
-                value={filterValues[key]}
-                onChange={(v) => {
-                  setTouchedFilters((prev) => ({ ...prev, [key]: true }));
-                  setFilterValues((prev) => ({
-                    ...prev,
-                    [key]: normalizeFilterValue(v, filterInfo!),
-                  }));
-                }}
+                layout="inline"
+                value={values[key]}
+                onChange={(v) =>
+                  onValueChange(key, normalizeFilterValue(v, filterInfo!))
+                }
               />
             ))}
-
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <button
-              type="button"
-              className="text-muted-foreground hover:bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
-              onClick={handleReset}
-              disabled={!hasActiveFilters(filterValues)}
-            >
-              Reset
-            </button>
-          </div>
         </AdvancedFiltersContext.Provider>
       </div>
+
+      <div className="flex items-center justify-end gap-2 px-6 py-4">
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="text-link-enabled"
+          onClick={onClose}
+        >
+          Close
+        </Button>
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="text-link-enabled"
+          onClick={handleReset}
+          disabled={!hasAppliedFilters(values)}
+        >
+          Reset
+        </Button>
+      </div>
     </div>
-  );
-}
-
-function buildInitialFilterValues(
-  extraFilters: Record<string, AutoFormValueInfo>
-): Record<string, any> {
-  return Object.fromEntries(
-    Object.entries(extraFilters)
-      .filter(([, f]) => f !== undefined)
-      .map(([k, f]) => [
-        k,
-        f!.type === AutoFormValueType.tag
-          ? []
-          : f!.type === AutoFormValueType.boolean && f!.hasIndeterminate
-            ? "indeterminate"
-            : "",
-      ])
-  );
-}
-
-function hasActiveFilters(filters: Record<string, any>) {
-  return Object.values(filters).some((v) => {
-    if (Array.isArray(v)) return v.length > 0;
-    if (v === "indeterminate") return false;
-    if (typeof v === "string") return v.length > 0;
-    if (typeof v === "object" && v !== null) return true;
-    return false;
-  });
-}
-
-function normalizeFilterValue(value: unknown, filter: AutoFormValueInfo) {
-  if (filter.type === AutoFormValueType.boolean && filter.hasIndeterminate) {
-    return value === undefined ? "indeterminate" : value;
-  }
-  return value;
-}
-
-function stripIndeterminateFilters(
-  filters: Record<string, any>,
-  filterInfos: Record<string, AutoFormValueInfo | undefined>,
-  touched: Record<string, boolean>
-) {
-  return Object.fromEntries(
-    Object.entries(filters).filter(([key, value]) => {
-      const info = filterInfos[key];
-      if (info?.type === AutoFormValueType.boolean && info.hasIndeterminate) {
-        if (!touched[key]) return false;
-        return value !== "indeterminate";
-      }
-      return true;
-    })
   );
 }
