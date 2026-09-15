@@ -12,8 +12,9 @@ export function CheckboxFormField<T extends FieldValues>({
   label,
   description,
   hasIndeterminate,
+  inline,
   ...props
-}: FormFieldProps<T> & { hasIndeterminate?: boolean } & Omit<
+}: FormFieldProps<T> & { hasIndeterminate?: boolean; inline?: boolean } & Omit<
     CheckboxProps,
     "checked" | "onCheckedChange" | "type" | "onChange"
   >) {
@@ -28,6 +29,7 @@ export function CheckboxFormField<T extends FieldValues>({
           label={label}
           description={description}
           hasIndeterminate={hasIndeterminate}
+          inline={inline}
           inForm={true}
           {...props}
         />

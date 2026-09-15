@@ -121,6 +121,11 @@ export interface AutoFormFieldProps {
   control?: Control<any>;
   autoFocus?: boolean;
   onCancel?: () => any;
+  /**
+   * `inline` renders compact single-row controls (currently checkboxes) and is
+   * what the filter panels use; everything else keeps the stacked form layout.
+   */
+  layout?: "default" | "inline";
 }
 
 export interface AutoFormColorValueInfo {
@@ -147,7 +152,10 @@ export function AutoField({
   control,
   autoFocus,
   onCancel,
+  layout = "default",
 }: AutoFormFieldProps) {
+  const inline = layout === "inline";
+
   function setValue(newValue: any) {
     onChange?.(newValue);
   }
@@ -161,6 +169,7 @@ export function AutoField({
             name={name}
             control={control}
             autoFocus={autoFocus}
+            inline={inline}
           />
         ) : (
           <CheckboxFormItem
@@ -168,6 +177,7 @@ export function AutoField({
             fieldValue={value}
             onChange={setValue}
             autoFocus={autoFocus}
+            inline={inline}
           />
         );
 

@@ -32,15 +32,8 @@ export function FiltersSidebar({
 }: FiltersSidebarProps) {
   const [open, setOpen] = useState(false);
 
-  const {
-    renderedLevels,
-    scrollRef,
-    visibleWidth,
-    openAdvancedFilters,
-    openAdvancedFiltersFromLevel,
-    closeFrom,
-    reset,
-  } = useAdvancedFilterLevels();
+  const advancedFilters = useAdvancedFilterLevels();
+  const { scrollRef, visibleWidth, contextValue, reset } = advancedFilters;
 
   const keys = useMemo(
     () => Object.keys(filtersInfo).filter((key) => isTruthy(filtersInfo[key])),
@@ -109,15 +102,14 @@ export function FiltersSidebar({
                 </SheetHeader>
 
                 <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                  <AdvancedFiltersContext.Provider
-                    value={{ openAdvancedFilters }}
-                  >
+                  <AdvancedFiltersContext.Provider value={contextValue}>
                     {keys.map((filterKey) => (
                       <AutoField
                         key={filterKey}
                         info={filtersInfo[filterKey]!}
                         name={filterKey}
                         control={form.control}
+                        layout="inline"
                       />
                     ))}
                   </AdvancedFiltersContext.Provider>
@@ -139,11 +131,7 @@ export function FiltersSidebar({
               </form>
 
               {/* Advanced filter panels (stack-based, supports N levels) */}
-              <AdvancedFilterPanels
-                renderedLevels={renderedLevels}
-                openAdvancedFiltersFromLevel={openAdvancedFiltersFromLevel}
-                closeFrom={closeFrom}
-              />
+              <AdvancedFilterPanels {...advancedFilters} />
             </div>
           </Form>
         </SheetContent>

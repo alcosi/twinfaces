@@ -61,15 +61,13 @@ function Component(
 ) {
   const defaultValues = useRef(dialogForm?.formState.defaultValues).current;
 
+  const advancedFilters = useAdvancedFilterLevels();
   const {
-    renderedLevels,
     scrollRef,
     visibleWidth,
-    openAdvancedFilters,
-    openAdvancedFiltersFromLevel,
-    closeFrom,
+    contextValue,
     reset: resetAdvancedFilters,
-  } = useAdvancedFilterLevels();
+  } = advancedFilters;
 
   const [dialogState, updateDialogState] = useReducer(
     (state: DialogState, updates: Partial<DialogState>) => ({
@@ -145,9 +143,7 @@ function Component(
               </SheetHeader>
 
               <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                <AdvancedFiltersContext.Provider
-                  value={{ openAdvancedFilters }}
-                >
+                <AdvancedFiltersContext.Provider value={contextValue}>
                   {renderFormFields && renderFormFields()}
                 </AdvancedFiltersContext.Provider>
               </div>
@@ -166,11 +162,7 @@ function Component(
             </form>
 
             {/* Advanced filter panels (stack-based, supports N levels) */}
-            <AdvancedFilterPanels
-              renderedLevels={renderedLevels}
-              openAdvancedFiltersFromLevel={openAdvancedFiltersFromLevel}
-              closeFrom={closeFrom}
-            />
+            <AdvancedFilterPanels {...advancedFilters} />
           </div>
         </Form>
       </SheetContent>
