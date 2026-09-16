@@ -80,8 +80,13 @@ export function AdvancedFilterPanel({
   }
 
   const contextValue: AdvancedFiltersContextValue = useMemo(
-    () => ({ openAdvancedFilters: onOpenNext, openKeys, appliedCounts }),
-    [onOpenNext, openKeys, appliedCounts]
+    () => ({
+      openAdvancedFilters: onOpenNext,
+      path: level.key,
+      openKeys,
+      appliedCounts,
+    }),
+    [onOpenNext, level.key, openKeys, appliedCounts]
   );
 
   return (

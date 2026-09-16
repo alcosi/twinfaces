@@ -150,7 +150,11 @@ export function useHistoryNotificationFilters({
         defaultValue: true,
       }),
       twinClassFieldIdList: toArrayOfString(filters.twinClassFieldIdList, "id"),
-      historyTypeIdList: toArrayOfString(filters.historyTypeIdList),
+      // Typed as a closed set of history types by the schema, but entered as
+      // free text here — see the TODO on the filter above.
+      historyTypeIdList: toArrayOfString(
+        filters.historyTypeIdList
+      ) as HistoryNotificationFilters["historyTypeIdList"],
       notificationSchemaIdList: toArrayOfString(
         filters.notificationSchemaIdList,
         "id"

@@ -5,7 +5,6 @@ import {
   BackgroundVariant,
   Controls,
   type Edge,
-  MarkerType,
   ReactFlow,
   type ReactFlowInstance,
 } from "@xyflow/react";
@@ -31,17 +30,13 @@ import {
   Diagram,
   EDGE_PATH_OPTIONS,
   FactoryCreateTarget,
-  FactoryGraphSelection,
   SOLID_EDGE_WIDTH,
-  isSameSelection,
 } from "../model";
 import { DiagramLayout, layoutDiagram } from "./layout";
 import { DiagramFlowNode, diagramNodeTypes } from "./nodes";
 
 type Props = {
   diagram: Diagram;
-  selection?: FactoryGraphSelection;
-  onSelect: (selection: FactoryGraphSelection) => void;
   onCreate: (target: FactoryCreateTarget) => void;
   className?: string;
   emptyMessage?: string;
@@ -54,8 +49,6 @@ type Props = {
  */
 export function FactoryDiagram({
   diagram,
-  selection,
-  onSelect,
   onCreate,
   className,
   emptyMessage = "Nothing to show yet.",
@@ -73,7 +66,7 @@ export function FactoryDiagram({
       })
       .catch((error) => {
         console.error("Failed to lay out the factory diagram:", error);
-        if (!cancelled) setLayout({ nodes: [], isEmpty: true });
+        if (!cancelled) setLayout({ nodes: [], groups: [], isEmpty: true });
       });
 
     return () => {
@@ -81,25 +74,32 @@ export function FactoryDiagram({
     };
   }, [diagram]);
 
-  const nodes = useMemo<DiagramFlowNode[]>(
-    () =>
-      (layout?.nodes ?? []).map((node) => ({
-        id: node.id,
-        type: "diagramNode" as const,
-        position: { x: node.x, y: node.y },
-        // Placeholders and chips are click targets, not drag handles — dragging
-        // a node would only desynchronise it from the computed layout.
-        draggable: false,
-        data: {
-          ...node,
-          isSelected: isSameSelection(node.selection, selection),
-          currentSelection: selection,
-          onSelect,
-          onCreate,
-        },
-      })),
-    [layout, selection, onSelect, onCreate]
-  );
+  const nodes = useMemo<DiagramFlowNode[]>(() => {
+    // Group boxes come first and sit a layer below: they are backdrops, and a
+    // card dropped behind one would be unreachable.
+    const groups = (layout?.groups ?? []).map((group) => ({
+      id: group.id,
+      type: "diagramGroup" as const,
+      position: { x: group.x, y: group.y },
+      draggable: false,
+      selectable: false,
+      zIndex: 0,
+      data: group,
+    }));
+
+    const cards = (layout?.nodes ?? []).map((node) => ({
+      id: node.id,
+      type: "diagramNode" as const,
+      position: { x: node.x, y: node.y },
+      // Cards are click targets, not drag handles — dragging one would only
+      // desynchronise it from the computed layout.
+      draggable: false,
+      zIndex: 1,
+      data: { ...node, mode: diagram.mode, onCreate },
+    }));
+
+    return [...groups, ...cards];
+  }, [layout, diagram.mode, onCreate]);
 
   const edges = useMemo<Edge[]>(
     () =>
@@ -116,16 +116,10 @@ export function FactoryDiagram({
         style: {
           // Dashed edges carry the very stroke the create affordances outline
           // themselves with, so an edge and the dashed node it arrives at read
-          // as one line. Solid ones are heavier — see SOLID_EDGE_WIDTH.
+          // as one line.
           stroke: DIAGRAM_STROKE,
           strokeWidth: edge.dashed ? DASHED_STROKE.width : SOLID_EDGE_WIDTH,
           strokeDasharray: edge.dashed ? DASHED_STROKE.dashArray : undefined,
-        },
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          width: 18,
-          height: 18,
-          color: DIAGRAM_STROKE,
         },
       })),
     [diagram.edges]
@@ -133,15 +127,16 @@ export function FactoryDiagram({
 
   const handleNodeClick = useCallback(
     (_event: MouseEvent, node: DiagramFlowNode) => {
-      if (node.data.create) return onCreate(node.data.create);
-      if (node.data.selection) return onSelect(node.data.selection);
+      if (node.type === "diagramNode" && node.data.create) {
+        onCreate(node.data.create);
+      }
     },
-    [onCreate, onSelect]
+    [onCreate]
   );
 
-  // `fitView` only runs on mount, but this canvas is resized whenever the Node
-  // view opens or closes and takes half the width. Without re-fitting, the
-  // diagram keeps its old zoom and gets clipped.
+  // `fitView` only runs on mount, but this canvas is resized whenever the tab's
+  // own layout changes. Without re-fitting, the diagram keeps its old zoom and
+  // gets clipped.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -181,7 +176,7 @@ export function FactoryDiagram({
     <div
       ref={containerRef}
       className={cn("h-full w-full", className)}
-      // Inherited by the edges and by every node's dashed outline.
+      // Inherited by the edges and by every dashed outline.
       style={{ [DIAGRAM_STROKE_VAR]: DIAGRAM_STROKE_COLOR } as CSSProperties}
     >
       <ReactFlow

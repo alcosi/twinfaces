@@ -13,7 +13,10 @@ import {
   useState,
 } from "react";
 
-import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
+import {
+  AdvancedFiltersContext,
+  scopeFilterKey,
+} from "@/components/advanced-filters-context";
 import {
   buildInitialFilterValues,
   countAppliedFilters,
@@ -43,6 +46,11 @@ export function ComplexComboboxFormItem({
 }) {
   const sidebarCtx = useContext(AdvancedFiltersContext);
   const useSidebar = sidebarCtx !== null && filterKey !== undefined;
+  // The same field name appears in several nested filter sets, so the panel it
+  // belongs to is part of its key.
+  const scopedKey = useSidebar
+    ? scopeFilterKey(sidebarCtx.path, filterKey)
+    : undefined;
 
   const hasExtraFilters = Object.values(info.extraFilters).some(
     (filter) => filter !== undefined
@@ -67,11 +75,13 @@ export function ComplexComboboxFormItem({
 
   // In sidebar mode the values live in the panel stack, so that they survive
   // the panel being closed — the badge has to read the count from there.
-  const appliedCount = useSidebar
-    ? (sidebarCtx.appliedCounts[filterKey] ?? 0)
-    : countAppliedFilters(extraFilters);
+  const appliedCount =
+    useSidebar && scopedKey
+      ? (sidebarCtx.appliedCounts[scopedKey] ?? 0)
+      : countAppliedFilters(extraFilters);
   const hasFilters = appliedCount > 0;
-  const isPanelOpen = useSidebar && sidebarCtx.openKeys.includes(filterKey);
+  const isPanelOpen =
+    useSidebar && scopedKey ? sidebarCtx.openKeys.includes(scopedKey) : false;
 
   const prevFiltersRef = useRef<string | null>(null);
 
@@ -151,7 +161,7 @@ export function ComplexComboboxFormItem({
                   ? "border-brand-500/50 text-link-enabled hover:bg-muted"
                   : "border-input text-muted-foreground hover:bg-muted hover:text-primary"
             )}
-            onClick={() => sidebarCtx.openAdvancedFilters(filterKey, info)}
+            onClick={() => sidebarCtx.openAdvancedFilters(scopedKey!, info)}
           >
             <SlidersHorizontal size={16} />
           </button>
