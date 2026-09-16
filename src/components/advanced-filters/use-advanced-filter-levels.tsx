@@ -155,7 +155,7 @@ export function useAdvancedFilterLevels() {
   );
 
   const contextValue: AdvancedFiltersContextValue = useMemo(
-    () => ({ openAdvancedFilters, openKeys, appliedCounts }),
+    () => ({ openAdvancedFilters, path: "", openKeys, appliedCounts }),
     [openAdvancedFilters, openKeys, appliedCounts]
   );
 

@@ -1,8 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
 import {
-  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -15,16 +13,15 @@ import { toast } from "sonner";
 import { FactoryCascade, useFetchFactoryCascade } from "@/entities/factory";
 import { FactoryContext } from "@/features/factory";
 import { cn } from "@/shared/libs";
-import { Button } from "@/shared/ui";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 import {
   FactoryCreateTarget,
-  FactoryGraphSelection,
-  buildFactoryTreeDiagram,
-  buildNodeViewDiagram,
-  getNodeViewTitle,
+  GraphMode,
+  buildFactoryGraph,
   indexCascade,
+  mergeCallers,
+  useFactoryCallers,
 } from "./model";
 import {
   FactoryCreateSheets,
@@ -32,19 +29,22 @@ import {
   FactoryDiagram,
 } from "./ui";
 
+const MODES: { value: GraphMode; label: string }[] = [
+  { value: "simple", label: "Simple" },
+  { value: "advanced", label: "Advanced" },
+];
+
 /**
- * The factory Graph tab. Two side-by-side panels: the Factory tree on the left
- * always shows the current factory's cascade, and the Node view on the right
- * expands whatever element is selected in it — splitting the space in half
- * while it is open.
+ * The factory Graph tab. One canvas, drawn at the level of detail the mode
+ * switch picks: `Simple` is the skeleton of factories, multipliers, pipelines
+ * and branches, `Advanced` unfolds every card into the entities it is made of.
  */
 export function FactoryGraph() {
   const { factoryId } = useContext(FactoryContext);
   const { fetchFactoryCascade, loading } = useFetchFactoryCascade();
   const [cascade, setCascade] = useState<FactoryCascade | undefined>(undefined);
-  const [selection, setSelection] = useState<FactoryGraphSelection | undefined>(
-    undefined
-  );
+  const [mode, setMode] = useState<GraphMode>("simple");
+  const { callers, fetchCallers } = useFactoryCallers();
   const createSheetsRef = useRef<FactoryCreateSheetsRef>(null);
 
   const refresh = useCallback(async () => {
@@ -65,98 +65,74 @@ export function FactoryGraph() {
     [cascade]
   );
 
-  const treeDiagram = useMemo(
-    () => (index ? buildFactoryTreeDiagram(index) : undefined),
-    [index]
-  );
+  // The cascade knows the callers of the factories it descends into, but never
+  // those of the factory itself — they live upstream of it. Asked for once the
+  // cascade has named every factory on the canvas.
+  useEffect(() => {
+    if (!index) return;
 
-  const nodeViewDiagram = useMemo(
+    fetchCallers([...index.factories.keys()]).catch((error) => {
+      // A missing "Called From" block is not worth failing the whole graph over.
+      console.error("Failed to fetch the factories' callers:", error);
+    });
+  }, [index, fetchCallers]);
+
+  const indexWithCallers = useMemo(() => {
+    if (!index || !callers) return index;
+
+    return {
+      ...index,
+      callersByFactoryId: mergeCallers(index.callersByFactoryId, callers),
+    };
+  }, [index, callers]);
+
+  const diagram = useMemo(
     () =>
-      index && selection ? buildNodeViewDiagram(index, selection) : undefined,
-    [index, selection]
+      indexWithCallers ? buildFactoryGraph(indexWithCallers, mode) : undefined,
+    [indexWithCallers, mode]
   );
 
   const handleCreate = useCallback((target: FactoryCreateTarget) => {
     createSheetsRef.current?.open(target);
   }, []);
 
-  const handleSelect = useCallback((next: FactoryGraphSelection) => {
-    setSelection(next);
-  }, []);
-
-  const isNodeViewOpen = Boolean(nodeViewDiagram && selection);
-
   return (
     // The tab body is not height-constrained by TabsLayout, and React Flow needs
     // a real height — so the canvas area is sized off the viewport, the same way
-    // the twin class Graph tab does it. `relative` anchors the refresh overlay.
-    <div className="relative flex h-[calc(100vh-240px)] min-h-[680px] w-full flex-row gap-2 py-2">
-      {(loading || !index || !treeDiagram) && <LoadingOverlay />}
+    // the twin class Graph tab does it. `relative` anchors the mode switch and
+    // the refresh overlay.
+    <div className="border-border relative h-[calc(100vh-240px)] min-h-[680px] w-full overflow-hidden rounded-md border">
+      {(loading || !diagram) && <LoadingOverlay />}
 
-      {index && treeDiagram && (
-        <>
-          {/* Both panels are flex-1, so opening the Node view splits the width
-              in half and closing it hands the space back to the tree. */}
-          <Panel title="Factory tree" className="flex-1">
-            <FactoryDiagram
-              diagram={treeDiagram}
-              selection={selection}
-              onSelect={handleSelect}
-              onCreate={handleCreate}
-            />
-          </Panel>
-
-          {isNodeViewOpen && selection && nodeViewDiagram && (
-            <Panel
-              title={`Node view — ${getNodeViewTitle(index, selection)}`}
-              className="flex-1"
-              onClose={() => setSelection(undefined)}
-            >
-              <FactoryDiagram
-                diagram={nodeViewDiagram}
-                onSelect={handleSelect}
-                onCreate={handleCreate}
-                emptyMessage="This element has nothing to expand yet."
-              />
-            </Panel>
-          )}
-        </>
+      {diagram && (
+        <FactoryDiagram
+          diagram={diagram}
+          onCreate={handleCreate}
+          emptyMessage="This factory has nothing to draw yet."
+        />
       )}
+
+      {/* Floats over the canvas rather than sitting above it: the graph is the
+          whole tab, and a toolbar row would eat height it needs. */}
+      <div className="bg-card border-border absolute top-3 right-3 z-10 flex gap-1 rounded-lg border p-1 shadow-sm">
+        {MODES.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => setMode(item.value)}
+            className={cn(
+              "rounded-md px-3 py-1 text-xs font-medium transition-colors",
+              mode === item.value
+                ? "bg-muted text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
 
       <FactoryCreateSheets ref={createSheetsRef} onCreated={refresh} />
     </div>
-  );
-}
-
-function Panel({
-  title,
-  className,
-  onClose,
-  children,
-}: {
-  title: string;
-  className?: string;
-  onClose?: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <section
-      className={cn(
-        // `min-w-0` lets the panel shrink past its content inside the row, so
-        // two open panels really do split the width instead of overflowing.
-        "border-border flex min-h-0 min-w-0 flex-col overflow-hidden rounded-md border",
-        className
-      )}
-    >
-      <header className="border-border bg-muted/40 flex shrink-0 items-center justify-between border-b px-3 py-2">
-        <h3 className="truncate text-sm font-medium">{title}</h3>
-        {onClose && (
-          <Button variant="ghost" size="iconS6" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </header>
-      <div className="min-h-0 flex-1">{children}</div>
-    </section>
   );
 }

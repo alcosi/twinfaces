@@ -311,6 +311,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_class_field_validator/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Twin class field validator batch update */
+        put: operations["twinClassFieldValidatorUpdateV1"];
+        /** Twin class field validator batch create */
+        post: operations["twinClassFieldValidatorCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_class_field_condition/v1": {
         parameters: {
             query?: never;
@@ -581,6 +599,24 @@ export interface paths {
         put: operations["spaceRoleUpdateV1"];
         /** Create batch space role */
         post: operations["spaceRoleCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/projection_type_group/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Projection type group update */
+        put: operations["projectionTypeGroupUpdateV1"];
+        /** Projection type group create */
+        post: operations["projectionTypeGroupCreateV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1106,6 +1142,24 @@ export interface paths {
         post?: never;
         /** Delete businessAccount */
         delete: operations["businessAccountDeleteV1"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/attachment_restriction/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Attachment restriction update */
+        put: operations["attachmentRestrictionUpdateV1"];
+        /** Attachment restriction create */
+        post: operations["attachmentRestrictionCreateV1"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1991,6 +2045,74 @@ export interface paths {
         put?: never;
         /** Returns twin class field count grouped by specified fields */
         post: operations["twinClassFieldCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class_field_validator/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Twin class field validator search */
+        post: operations["twinClassFieldValidatorSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class_field_validator/search/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of twin class field validators grouped by specified fields */
+        post: operations["twinClassFieldValidatorCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class_field_validator/export/sql/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exports twin class field validators as SQL INSERT statements */
+        post: operations["twinClassFieldValidatorExportSqlV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/twin_class_field_validator/delete/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Twin class field validator batch delete */
+        post: operations["twinClassFieldValidatorDeleteV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3147,6 +3269,40 @@ export interface paths {
         put?: never;
         /** Returns scheduler search result */
         post: operations["schedulerSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/projection_type_group/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Projection type group search */
+        post: operations["projectionTypeGroupSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/projection_type_group/delete/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Projection type group delete */
+        post: operations["projectionTypeGroupDeleteV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4786,6 +4942,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/attachment_restriction/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attachment restriction search */
+        post: operations["attachmentRestrictionSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/attachment_restriction/delete/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attachment restriction delete */
+        post: operations["attachmentRestrictionDeleteV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/attachment/validate_cud/v1": {
         parameters: {
             query?: never;
@@ -5370,6 +5560,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin_class_field_validator/{twinClassFieldValidatorId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Twin class field validator view by id */
+        get: operations["twinClassFieldValidatorViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin_class_by_key/{twinClassKey}/v1": {
         parameters: {
             query?: never;
@@ -5637,6 +5844,23 @@ export interface paths {
         };
         /** Returns user list by selected space and role */
         get: operations["spaceRoleByUserListV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/projection_type_group/{projectionTypeGroupId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Projection type group view */
+        get: operations["projectionTypeGroupViewV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6303,6 +6527,23 @@ export interface paths {
         };
         /** Returns list data */
         get: operations["dataListByKeyViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/attachment_restriction/{attachmentRestrictionId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Attachment restriction view */
+        get: operations["attachmentRestrictionViewV1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7730,6 +7971,12 @@ export interface components {
              * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             dstTwinClassId?: string;
+            /**
+             * Format: uuid
+             * @description Relation twin class id — when set, each twin_link of this link gets a shadow twin of that class carrying the relation's extra attributes
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            relationTwinClassId?: string;
             /**
              * @description name
              * @example Serial number
@@ -9292,32 +9539,44 @@ export interface components {
         TwinLinkListV1: {
             /** @description forward links from current twin to other twins */
             forwardLinks?: {
-                [key: string]: components["schemas"]["TwinLinkViewV1"];
+                [key: string]: components["schemas"]["TwinLinkV1"];
             };
             /** @description links */
             backwardLinks?: {
-                [key: string]: components["schemas"]["TwinLinkViewV1"];
+                [key: string]: components["schemas"]["TwinLinkV1"];
             };
         };
-        TwinLinkViewV1: {
+        TwinLinkV1: {
             /**
              * Format: uuid
              * @description id
-             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
              */
             id?: string;
             /**
              * Format: uuid
-             * @description Link id
+             * @description source twin id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            srcTwinId?: string;
+            /**
+             * Format: uuid
+             * @description destination twin id
+             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
+             */
+            dstTwinId?: string;
+            /**
+             * Format: uuid
+             * @description link id
              * @example f6606fa2-c047-4ba9-a92c-84051df681ab
              */
             linkId?: string;
             /**
              * Format: uuid
-             * @description Destination twin id
+             * @description shadow relation-twin id carrying this link's relation attributes (present only if link.relation_twin_class_id is set; equals the twin_link id)
              * @example 1b2091e3-971a-41bc-b343-1f980227d02f
              */
-            dstTwinId?: string;
+            relationTwinId?: string;
             /**
              * Format: date-time
              * @description created at
@@ -9326,7 +9585,7 @@ export interface components {
             createdAt?: string;
             /**
              * Format: uuid
-             * @description createdByUser
+             * @description created by user id
              * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             createdByUserId?: string;
@@ -10619,6 +10878,84 @@ export interface components {
             /** @description twin class freeze list */
             twinClassFreezes?: components["schemas"]["TwinClassFreezeV1"][];
         };
+        TwinClassFieldValidatorUpdateRqV1: {
+            /** @description twin class field validator list */
+            validators?: components["schemas"]["TwinClassFieldValidatorUpdateV1"][];
+        };
+        TwinClassFieldValidatorUpdateV1: {
+            /**
+             * Format: uuid
+             * @description twin class field id this validator belongs to
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description field validator featurer id
+             */
+            fieldValidatorFeaturerId?: number;
+            /** @description field validator featurer params */
+            fieldValidatorParams?: {
+                [key: string]: string;
+            };
+            /** @description backend validation error i18n */
+            beValidationErrorI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id: string;
+        };
+        TwinClassFieldValidatorListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin class field validator list */
+            validators?: components["schemas"]["TwinClassFieldValidatorV1"][];
+        };
+        TwinClassFieldValidatorV1: {
+            /**
+             * Format: uuid
+             * @description id
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description twin class field id
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description field validator featurer id
+             */
+            fieldValidatorFeaturerId?: number;
+            /** @description field validator featurer params */
+            fieldValidatorParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: uuid
+             * @description backend validation error i18n id
+             */
+            beValidationErrorI18nId?: string;
+            /** @description backend validation error (resolved translation) */
+            beValidationError?: string;
+        };
         TwinClassFieldConditionUpdateRqV1: {
             /** @description conditions */
             conditions?: components["schemas"]["TwinClassFieldConditionUpdateV1"][];
@@ -11393,6 +11730,10 @@ export interface components {
              * @example 1b2091e3-971a-41bc-b343-1f980227d02f
              */
             dstTwinId?: string;
+            /** @description Initial field values for the relation twin (relation attributes). Only applicable when the link has relation_twin_class_id configured; keys are relation-twin-class field ids or keys, same format as TwinCreate fields */
+            relationTwinFields?: {
+                [key: string]: string;
+            };
         };
         TwinLinkUpdateV1: {
             /**
@@ -11407,6 +11748,10 @@ export interface components {
              * @example 1b2091e3-971a-41bc-b343-1f980227d02f
              */
             dstTwinId?: string;
+            /** @description New field values for the relation twin carrying this link's relation attributes (the relation twin id equals this link id). Only applicable when the link has relation_twin_class_id configured; keys are relation-twin-class field ids or keys, same format as TwinCreate fields */
+            relationTwinFields?: {
+                [key: string]: string;
+            };
         };
         TwinTagManageV1: {
             /**
@@ -11976,6 +12321,45 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description space roles */
             spaceRoles?: components["schemas"]["SpaceRoleV1"][];
+        };
+        ProjectionTypeGroupUpdateRqV1: {
+            /** @description projection type groups */
+            projectionTypeGroups?: components["schemas"]["ProjectionTypeGroupUpdateV1"][];
+        };
+        ProjectionTypeGroupUpdateV1: {
+            /**
+             * @description key
+             * @example media
+             */
+            key: string;
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+        };
+        ProjectionTypeGroupListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description projection type group list */
+            projectionTypeGroups?: components["schemas"]["ProjectionTypeV1"][];
         };
         ProjectionTypeUpdateRqV1: {
             /** @description Projection type list */
@@ -12566,6 +12950,11 @@ export interface components {
             srcTwinClassInheritable?: boolean;
             /** @description [optional] destination twin class inheritable */
             dstTwinClassInheritable?: boolean;
+            /**
+             * Format: uuid
+             * @description [optional] relation twin class id. When set, creating a twin_link of this link auto-creates a shadow twin of that class carrying the relation's extra attributes
+             */
+            relationTwinClassId?: string;
             /** @description [optional] should be filled on change source twin class id of link */
             srcTwinClassUpdate?: components["schemas"]["BasicUpdateOperationDTOv1"];
             /** @description [optional] should be filled on change destination twin class id of link */
@@ -14063,6 +14452,59 @@ export interface components {
              * @example BuildmeUp Const.
              */
             name?: string;
+        };
+        AttachmentRestrictionUpdateRqV1: {
+            /** @description attachment restrictions */
+            attachmentRestrictions?: components["schemas"]["AttachmentRestrictionUpdateV1"][];
+        };
+        AttachmentRestrictionUpdateV1: {
+            /**
+             * Format: int32
+             * @description Min amount of files
+             */
+            minCount?: number;
+            /**
+             * Format: int32
+             * @description Max amount of files
+             */
+            maxCount?: number;
+            /**
+             * Format: int32
+             * @description File size limit
+             */
+            fileSizeMbLimit?: number;
+            /** @description List of possible file extensions */
+            fileExtensionLimit?: string;
+            /** @description Regexp for file name */
+            fileNameRegexp?: string;
+            /**
+             * Format: uuid
+             * @description attachment restriction id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+        };
+        AttachmentRestrictionListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description attachment restriction list */
+            attachmentRestrictions?: components["schemas"]["AttachmentRestrictionV1"][];
         };
         ActionRestrictionReasonUpdateRqV1: {
             /** @description action restriction reason list */
@@ -16640,7 +17082,7 @@ export interface components {
              * @description Sort field. Default: createdAt
              * @enum {string}
              */
-            sortField?: "createdAt" | "createdByUserName" | "srcTwinName" | "dstTwinName" | "linkName";
+            sortField?: "createdAt" | "createdByUserName" | "srcTwinName" | "dstTwinName" | "linkName" | "relationTwinName";
             /**
              * @description Sort direction: ASC or DESC. Default: ASC
              * @enum {string}
@@ -16671,49 +17113,11 @@ export interface components {
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
         };
-        TwinLinkV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example be44e826-ce24-4881-a227-f3f72d915a20
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description source twin id
-             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-             */
-            srcTwinId?: string;
-            /**
-             * Format: uuid
-             * @description destination twin id
-             * @example 1b2091e3-971a-41bc-b343-1f980227d02f
-             */
-            dstTwinId?: string;
-            /**
-             * Format: uuid
-             * @description link id
-             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
-             */
-            linkId?: string;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * Format: uuid
-             * @description created by user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            createdByUserId?: string;
-        };
         TwinLinkCountRqV1: {
             /** @description search params */
             search?: components["schemas"]["TwinLinkSearchDTOv1"];
             /** @description Group by fields */
-            groupFields?: ("srcTwinId" | "dstTwinId" | "linkId" | "createdByUserId")[];
+            groupFields?: ("srcTwinId" | "dstTwinId" | "linkId" | "createdByUserId" | "relationTwinId")[];
         };
         TwinLinkCountRsV1: {
             /**
@@ -17470,6 +17874,135 @@ export interface components {
              * @example be44e826-ce24-4881-a227-f3f72d915a20
              */
             editPermissionId?: string;
+        };
+        TwinClassFieldValidatorCreateRqV1: {
+            /** @description twin class field validator list */
+            validators?: components["schemas"]["TwinClassFieldValidatorCreateV1"][];
+        };
+        TwinClassFieldValidatorCreateV1: {
+            /**
+             * Format: uuid
+             * @description twin class field id this validator belongs to
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description field validator featurer id
+             */
+            fieldValidatorFeaturerId?: number;
+            /** @description field validator featurer params */
+            fieldValidatorParams?: {
+                [key: string]: string;
+            };
+            /** @description backend validation error i18n */
+            beValidationErrorI18n?: components["schemas"]["I18nSaveV1"];
+        };
+        TwinClassFieldValidatorSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["TwinClassFieldValidatorSearchV1"];
+            /**
+             * @description Sort field. Default: twinClassFieldId
+             * @enum {string}
+             */
+            sortField?: "twinClassFieldName" | "twinClassFieldKey" | "fieldValidatorFeaturerName";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        TwinClassFieldValidatorSearchV1: {
+            /** @description id list */
+            idList?: string[];
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description twin class field id list */
+            twinClassFieldIdList?: string[];
+            /** @description twin class field id exclude list */
+            twinClassFieldIdExcludeList?: string[];
+            /** @description field validator featurer id list */
+            fieldValidatorFeaturerIdList?: number[];
+            /** @description field validator featurer id exclude list */
+            fieldValidatorFeaturerIdExcludeList?: number[];
+        };
+        TwinClassFieldValidatorSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin class field validator list */
+            validators?: components["schemas"]["TwinClassFieldValidatorV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        TwinClassFieldValidatorCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["TwinClassFieldValidatorSearchV1"];
+            /** @description Group by fields */
+            groupFields?: ("twinClassFieldId" | "fieldValidatorFeaturerId")[];
+        };
+        TwinClassFieldValidatorCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["TwinClassFieldValidatorCountV1"][];
+        };
+        TwinClassFieldValidatorCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description twin class field id
+             */
+            twinClassFieldId?: string;
+            /**
+             * Format: int32
+             * @description field validator featurer id
+             */
+            fieldValidatorFeaturerId?: number;
+        };
+        TwinClassFieldValidatorExportSqlRqV1: {
+            /** @description twin class field validator ids to export SQL for */
+            twinClassFieldValidatorIds?: string[];
+        };
+        TwinClassFieldValidatorDeleteRqV1: {
+            /** @description twin class field validator id list to delete */
+            twinClassFieldValidatorIdList?: string[];
         };
         TwinClassFieldConditionTreeCreateV1: {
             /**
@@ -19254,6 +19787,10 @@ export interface components {
              * @example 1b2091e3-971a-41bc-b343-1f980227d02f
              */
             dstTwinId?: string;
+            /** @description Initial field values for the relation twin (relation attributes); values may reference temporalId:XXX twins from the same batch. Only applicable when the link has relation_twin_class_id configured; keys are relation-twin-class field ids or keys, same format as TwinCreate fields */
+            relationTwinFields?: {
+                [key: string]: string;
+            };
         };
         TwinTagAddV1: {
             /**
@@ -20901,6 +21438,69 @@ export interface components {
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
         };
+        ProjectionTypeGroupCreateRqV1: {
+            /** @description projection type groups */
+            projectionTypeGroups?: components["schemas"]["ProjectionTypeGroupCreateV1"][];
+        };
+        ProjectionTypeGroupCreateV1: {
+            /**
+             * @description key
+             * @example media
+             */
+            key: string;
+        };
+        ProjectionTypeGroupSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["ProjectionTypeGroupSearchV1"];
+            /**
+             * @description Sort field. Default: key
+             * @enum {string}
+             */
+            sortField?: "key";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        ProjectionTypeGroupSearchV1: {
+            /** @description projection type group id list */
+            idList?: string[];
+            /** @description projection type group id exclude list */
+            idExcludeList?: string[];
+            /** @description projection type group key like list */
+            keyLikeList?: string[];
+            /** @description projection type group key not like list */
+            keyNotLikeList?: string[];
+        };
+        ProjectionTypeGroupSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description projection type group list */
+            projectionTypeGroups?: components["schemas"]["ProjectionTypeV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        ProjectionTypeGroupDeleteRqV1: {
+            /** @description projection type group id list to delete */
+            projectionTypeGroupIdList?: string[];
+        };
         ProjectionTypeCreateRqV1: {
             /** @description data list projections */
             projectionTypes?: components["schemas"]["ProjectionTypeCreateV1"][];
@@ -21844,6 +22444,11 @@ export interface components {
             dstTwinClassInheritable?: boolean;
             /**
              * Format: uuid
+             * @description [optional] relation twin class id. When set, creating a twin_link of this link auto-creates a shadow twin of that class carrying the relation's extra attributes
+             */
+            relationTwinClassId?: string;
+            /**
+             * Format: uuid
              * @description Source twin class id
              */
             srcTwinClassId?: string;
@@ -21928,7 +22533,7 @@ export interface components {
              * @description Sort field. Default: createdAt
              * @enum {string}
              */
-            sortField?: "createdAt" | "createdByUser" | "type" | "linkStrength" | "srcTwinClassName" | "dstTwinClassName" | "forwardName" | "backwardName";
+            sortField?: "createdAt" | "createdByUser" | "type" | "linkStrength" | "srcTwinClassName" | "dstTwinClassName" | "forwardName" | "backwardName" | "relationTwinClassName";
             /**
              * @description Sort direction: ASC or DESC. Default: ASC
              * @enum {string}
@@ -22035,7 +22640,7 @@ export interface components {
             /** @description search params */
             search?: components["schemas"]["LinkSearchDTOv1"];
             /** @description Group by fields */
-            groupFields?: ("srcTwinClassId" | "dstTwinClassId" | "type" | "linkStrength" | "createdByUserId" | "srcTwinClassInheritable" | "dstTwinClassInheritable")[];
+            groupFields?: ("srcTwinClassId" | "dstTwinClassId" | "type" | "linkStrength" | "createdByUserId" | "srcTwinClassInheritable" | "dstTwinClassInheritable" | "relationTwinClassId")[];
         };
         LinkCountRsV1: {
             /**
@@ -22319,9 +22924,9 @@ export interface components {
             /** @description id exclude list */
             idExcludeList?: string[];
             /** @description history type id list */
-            historyTypeIdList?: string[];
+            historyTypeIdList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeAssigned" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description history type id exclude list */
-            historyTypeIdExcludeList?: string[];
+            historyTypeIdExcludeList?: ("twinCreated" | "headChanged" | "statusChanged" | "nameChanged" | "descriptionChanged" | "createdByChanged" | "assigneeChanged" | "assigneeAssigned" | "assigneeUnassigned" | "ownerChanged" | "externalIdChanged" | "fieldCreated" | "fieldCreatedOnCreate" | "fieldChanged" | "fieldDeleted" | "markerChanged" | "tagChanged" | "attachmentCreate" | "attachmentCreateOnCreate" | "attachmentDelete" | "attachmentUpdate" | "commentCreate" | "linkCreated" | "linkCreatedOnCreate" | "linkUpdated" | "linkDeleted" | "twinDeleted" | "spaceRoleUserAdded" | "spaceRoleUserAddedOnCreate" | "spaceRoleUserRemoved" | "unknown")[];
             /** @description twin class id map (key=classId, value=includeExtendsHierarchy) */
             twinClassIdMap?: {
                 [key: string]: boolean;
@@ -25375,6 +25980,93 @@ export interface components {
              */
             userId?: string;
         };
+        AttachmentRestrictionCreateRqV1: {
+            /** @description attachment restrictions */
+            attachmentRestrictions?: components["schemas"]["AttachmentRestrictionCreateV1"][];
+        };
+        AttachmentRestrictionCreateV1: {
+            /**
+             * Format: int32
+             * @description Min amount of files
+             */
+            minCount?: number;
+            /**
+             * Format: int32
+             * @description Max amount of files
+             */
+            maxCount?: number;
+            /**
+             * Format: int32
+             * @description File size limit
+             */
+            fileSizeMbLimit?: number;
+            /** @description List of possible file extensions */
+            fileExtensionLimit?: string;
+            /** @description Regexp for file name */
+            fileNameRegexp?: string;
+        };
+        AttachmentRestrictionSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["AttachmentRestrictionSearchV1"];
+            /**
+             * @description Sort field. Default: minCount
+             * @enum {string}
+             */
+            sortField?: "minCount" | "maxCount" | "fileSizeMbLimit";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        AttachmentRestrictionSearchV1: {
+            /** @description attachment restriction id list */
+            idList?: string[];
+            /** @description attachment restriction id exclude list */
+            idExcludeList?: string[];
+            /** @description min count range */
+            minCountRange?: components["schemas"]["IntegerRangeV1"];
+            /** @description max count range */
+            maxCountRange?: components["schemas"]["IntegerRangeV1"];
+            /** @description file size mb limit range */
+            fileSizeMbLimitRange?: components["schemas"]["IntegerRangeV1"];
+            /** @description file extension list like list */
+            fileExtensionLimitLikeList?: string[];
+            /** @description file extension list not like list */
+            fileExtensionLimitNotLikeList?: string[];
+            /** @description file name regexp like list */
+            fileNameRegexpLikeList?: string[];
+            /** @description file name regexp not like list */
+            fileNameRegexpNotLikeList?: string[];
+        };
+        AttachmentRestrictionSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description attachment restriction list */
+            attachmentRestrictions?: components["schemas"]["AttachmentRestrictionV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        AttachmentRestrictionDeleteRqV1: {
+            /** @description attachment restriction id list to delete */
+            attachmentRestrictionIdList?: string[];
+        };
         AttachmentCUDValidateRqV1: {
             /**
              * Format: uuid
@@ -26415,6 +27107,28 @@ export interface components {
             /** @description result - twin link */
             twinLink?: components["schemas"]["TwinLinkV1"];
         };
+        TwinClassFieldValidatorViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description twin class field validator */
+            validator?: components["schemas"]["TwinClassFieldValidatorV1"];
+        };
         TwinClassLinkListRsV1: {
             /**
              * Format: int32
@@ -26610,6 +27324,28 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description space roles */
             userRefSpaceRoles?: components["schemas"]["UserWithinSpaceRolesRsV1"];
+        };
+        ProjectionTypeGroupViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - projection type group */
+            projectionTypeGroup?: components["schemas"]["ProjectionTypeV1"];
         };
         PermissionSchemaViewRsV1: {
             /**
@@ -28376,6 +29112,28 @@ export interface components {
             /** @description comment data */
             comments?: components["schemas"]["CommentV1"][];
         };
+        AttachmentRestrictionViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - attachment restriction */
+            attachmentRestriction?: components["schemas"]["AttachmentRestrictionV1"];
+        };
         AttachmentViewRsV1: {
             /**
              * Format: int32
@@ -28511,7 +29269,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28554,7 +29312,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28686,7 +29444,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28818,7 +29576,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28863,7 +29621,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28908,7 +29666,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28951,7 +29709,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -28986,7 +29744,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29026,7 +29784,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29062,7 +29820,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29101,7 +29859,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29228,7 +29986,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29359,7 +30117,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29541,7 +30299,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29723,7 +30481,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29766,7 +30524,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29809,7 +30567,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29856,7 +30614,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -29903,7 +30661,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30030,7 +30788,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30157,7 +30915,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30298,7 +31056,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30422,7 +31180,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30550,7 +31308,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30679,7 +31437,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30808,7 +31566,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -30936,7 +31694,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -31064,7 +31822,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -31241,7 +31999,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -31418,7 +32176,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -31543,7 +32301,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -31668,7 +32426,261 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldValidatorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFlavor2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin class field validator batch update */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldValidatorListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldValidatorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFlavor2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin class field validator batch create */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldValidatorListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -31793,7 +32805,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -31918,7 +32930,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32042,7 +33054,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32170,7 +33182,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32210,7 +33222,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32335,7 +33347,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32463,7 +33475,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -32591,7 +33603,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -32714,7 +33726,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32841,7 +33853,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -32894,7 +33906,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -33031,7 +34043,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -33162,7 +34174,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -33206,7 +34218,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -33247,7 +34259,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -33373,7 +34385,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -33501,7 +34513,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -33629,7 +34641,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -33757,7 +34769,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -33886,7 +34898,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34015,7 +35027,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34201,7 +35213,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34387,7 +35399,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34441,7 +35453,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34480,7 +35492,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34607,7 +35619,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34734,7 +35746,91 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    projectionTypeGroupUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectionTypeGroupUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Projection type groups updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectionTypeGroupListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    projectionTypeGroupCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectionTypeGroupCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Projection type groups created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectionTypeGroupListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34861,7 +35957,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -34988,7 +36084,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35119,7 +36215,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -35250,7 +36346,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -35290,7 +36386,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35424,7 +36520,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35463,7 +36559,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35643,7 +36739,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35682,7 +36778,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35816,7 +36912,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35855,7 +36951,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -35991,7 +37087,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36030,7 +37126,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36073,7 +37169,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36116,7 +37212,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36242,7 +37338,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36372,7 +37468,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36416,7 +37512,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36465,7 +37561,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36514,7 +37610,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36559,7 +37655,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36604,7 +37700,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36740,7 +37836,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -36876,7 +37972,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -37056,7 +38152,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -37236,7 +38332,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -37413,7 +38509,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -37590,7 +38686,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -37767,7 +38863,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -37944,7 +39040,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -38120,7 +39216,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -38300,7 +39396,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -38476,7 +39572,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -38656,7 +39752,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -38836,7 +39932,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39016,7 +40112,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39060,7 +40156,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39212,7 +40308,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39265,7 +40361,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39404,7 +40500,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39444,7 +40540,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39574,7 +40670,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39704,7 +40800,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39748,7 +40844,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39796,7 +40892,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39836,7 +40932,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39881,7 +40977,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39926,7 +41022,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -39972,7 +41068,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40097,7 +41193,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40229,7 +41325,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -40268,7 +41364,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40307,7 +41403,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40342,7 +41438,91 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    attachmentRestrictionUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentRestrictionUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Attachment restrictions updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentRestrictionListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    attachmentRestrictionCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentRestrictionCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Attachment restrictions created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentRestrictionListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40385,7 +41565,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40428,7 +41608,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40467,7 +41647,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40515,7 +41695,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40559,7 +41739,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40604,7 +41784,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40649,7 +41829,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40696,7 +41876,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40831,7 +42011,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40879,7 +42059,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40925,7 +42105,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -40971,7 +42151,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41017,7 +42197,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41057,7 +42237,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41107,7 +42287,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41154,7 +42334,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41203,7 +42383,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41334,7 +42514,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41519,7 +42699,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41704,7 +42884,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41750,7 +42930,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41796,7 +42976,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41846,7 +43026,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41926,7 +43106,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -41976,7 +43156,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42111,7 +43291,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42246,7 +43426,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42376,7 +43556,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42506,7 +43686,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42638,7 +43818,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42770,7 +43950,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -42898,7 +44078,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43026,7 +44206,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43191,7 +44371,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43318,7 +44498,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43449,7 +44629,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43579,7 +44759,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43659,7 +44839,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43685,6 +44865,7 @@ export interface operations {
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showLinkRelationTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -43790,7 +44971,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -43816,6 +44997,7 @@ export interface operations {
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showLinkRelationTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -43921,7 +45103,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44051,7 +45233,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44231,7 +45413,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44411,7 +45593,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44456,7 +45638,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44584,7 +45766,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44715,7 +45897,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44843,7 +46025,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -44971,7 +46153,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45098,7 +46280,347 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldValidatorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFlavor2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twin class field validator search */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldValidatorSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldValidatorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFlavor2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldValidatorCountRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorExportSqlV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorExportSqlRqV1"];
+            };
+        };
+        responses: {
+            /** @description SQL file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/sql;charset=UTF-8": string;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinClassFieldValidatorDeleteRqV1"];
+            };
+        };
+        responses: {
+            /** @description Deletion result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45223,7 +46745,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45351,7 +46873,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45479,7 +47001,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45604,7 +47126,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45735,7 +47257,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45866,7 +47388,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -45997,7 +47519,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46138,7 +47660,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46266,7 +47788,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46315,7 +47837,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46449,7 +47971,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46577,7 +48099,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46701,7 +48223,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46831,7 +48353,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -46958,7 +48480,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47085,7 +48607,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47249,7 +48771,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47376,7 +48898,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47419,7 +48941,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -47550,7 +49072,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47689,7 +49211,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47822,7 +49344,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47865,7 +49387,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -47993,7 +49515,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48037,7 +49559,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48161,7 +49683,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48206,7 +49728,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48252,7 +49774,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -48292,7 +49814,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -48335,7 +49857,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -48375,7 +49897,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -48503,7 +50025,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48634,7 +50156,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48674,7 +50196,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48805,7 +50327,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -48933,7 +50455,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49061,7 +50583,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49189,7 +50711,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49229,7 +50751,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49274,7 +50796,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49319,7 +50841,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49447,7 +50969,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49579,7 +51101,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49713,7 +51235,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -49842,7 +51364,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -49976,7 +51498,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -50105,7 +51627,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50152,7 +51674,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50199,7 +51721,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50244,7 +51766,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50378,7 +51900,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -50507,7 +52029,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50641,7 +52163,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -50770,7 +52292,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50817,7 +52339,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -50864,7 +52386,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51053,7 +52575,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51104,7 +52626,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51158,7 +52680,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51288,7 +52810,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51418,7 +52940,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51552,7 +53074,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51600,7 +53122,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51648,7 +53170,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51697,7 +53219,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51746,7 +53268,92 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    projectionTypeGroupSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectionTypeGroupSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Projection type group data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectionTypeGroupSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    projectionTypeGroupDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectionTypeGroupDeleteRqV1"];
+            };
+        };
+        responses: {
+            /** @description Projection type groups deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -51876,7 +53483,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52010,7 +53617,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52059,7 +53666,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52187,7 +53794,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52318,7 +53925,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52452,7 +54059,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52581,7 +54188,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52758,7 +54365,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -52891,7 +54498,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53022,7 +54629,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53156,7 +54763,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53289,7 +54896,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53425,7 +55032,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53549,7 +55156,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53676,7 +55283,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53800,7 +55407,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -53928,7 +55535,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54055,7 +55662,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54101,7 +55708,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54228,7 +55835,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54358,7 +55965,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54488,7 +56095,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54618,7 +56225,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54665,7 +56272,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54717,7 +56324,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54765,7 +56372,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54904,7 +56511,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54950,7 +56557,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -54998,7 +56605,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -55044,7 +56651,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -55261,7 +56868,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -55441,7 +57048,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -55658,7 +57265,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -55840,7 +57447,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56020,7 +57627,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56237,7 +57844,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56419,7 +58026,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56599,7 +58206,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56776,7 +58383,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -56957,7 +58564,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -57137,7 +58744,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -57354,7 +58961,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -57535,7 +59142,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -57715,7 +59322,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -57932,7 +59539,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -58113,7 +59720,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -58293,7 +59900,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -58470,7 +60077,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -58651,7 +60258,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -58831,7 +60438,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59008,7 +60615,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59189,7 +60796,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59369,7 +60976,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59586,7 +61193,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59767,7 +61374,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -59947,7 +61554,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60127,7 +61734,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60307,7 +61914,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60346,7 +61953,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60526,7 +62133,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60703,7 +62310,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -60883,7 +62490,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61063,7 +62670,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61102,7 +62709,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61319,7 +62926,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61367,7 +62974,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61406,7 +63013,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61447,7 +63054,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61486,7 +63093,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61535,7 +63142,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61585,7 +63192,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61634,7 +63241,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61694,7 +63301,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61753,7 +63360,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -61886,7 +63493,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62019,7 +63626,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62064,7 +63671,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62115,7 +63722,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62163,7 +63770,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62211,7 +63818,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62255,7 +63862,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62303,7 +63910,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62346,7 +63953,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62391,7 +63998,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62439,7 +64046,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62568,7 +64175,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62614,7 +64221,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -62744,7 +64351,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -62874,7 +64481,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63004,7 +64611,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63043,7 +64650,92 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    attachmentRestrictionSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentRestrictionSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Attachment restriction data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentRestrictionSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    attachmentRestrictionDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachmentRestrictionDeleteRqV1"];
+            };
+        };
+        responses: {
+            /** @description Attachment restrictions deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63174,7 +64866,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -63220,7 +64912,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -63350,7 +65042,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63480,7 +65172,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63607,7 +65299,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63653,7 +65345,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63699,7 +65391,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63737,7 +65429,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63773,7 +65465,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63811,7 +65503,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63849,7 +65541,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63887,7 +65579,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63925,7 +65617,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -63965,7 +65657,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64003,7 +65695,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64037,7 +65729,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64072,7 +65764,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
             /** @description File is not exist */
@@ -64081,7 +65773,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64115,7 +65807,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64149,7 +65841,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64183,7 +65875,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64227,7 +65919,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64269,7 +65961,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64311,7 +66003,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64346,7 +66038,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
             /** @description File is not exist */
@@ -64355,7 +66047,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64397,7 +66089,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64521,7 +66213,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64645,7 +66337,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64766,7 +66458,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64887,7 +66579,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -64923,7 +66615,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65103,7 +66795,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65149,7 +66841,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65276,7 +66968,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65302,6 +66994,7 @@ export interface operations {
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showLinkRelationTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showLinkSrc2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -65403,7 +67096,133 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinClassFieldValidatorViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showAttachment2CommentModeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showAttachment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showAttachmentModificationMode?: "HIDE" | "SHOW";
+                showComment2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showCommentActionMode?: "HIDE" | "SHOW";
+                showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                showPermissionGroup2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2AttachmentCollectionMode?: "DIRECT" | "FROM_TRANSITIONS" | "FROM_COMMENTS" | "FROM_FIELDS" | "ALL";
+                showTwin2AttachmentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2TransitionMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwin2TwinLinkMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwin2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinActionMode?: "HIDE" | "SHOW";
+                showTwinActionRestrictionMode?: "HIDE" | "SHOW";
+                showTwinAliasMode?: "HIDE" | "D" | "C" | "B" | "S" | "T" | "K" | "ALL";
+                showTwinAttachmentActionMode?: "HIDE" | "SHOW";
+                showTwinAttachmentCountMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinByFieldMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByHeadMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinByLinkMode?: "WHITE" | "GREEN" | "FOREST_GREEN" | "LIGHT_GREEN" | "DARK_GREEN" | "YELLOW" | "YELLOW_LIGHT" | "BLUE" | "BLACK" | "RED" | "GRAY" | "ORANGE" | "MAGENTA" | "PINK" | "LAVENDER";
+                showTwinClass2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClass2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClass2TwinClassFreezeMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassExtends2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2PermissionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassField2TwinClassFieldRuleMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassField2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinClassFieldCollectionMode?: "HIDE" | "SHOW";
+                showTwinClassFieldCondition2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldDescriptor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldDescriptor2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldRule2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFieldValidator2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFieldValidatorMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassFlavor2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassFreeze2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassHead2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMarker2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinClassPage2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinClassSegmentMode?: "HIDE" | "SHOW";
+                showTwinClassTag2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinCreatableChild2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinField2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2StatusMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinField2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinFieldAttributeMode?: "HIDE" | "SHOW";
+                showTwinFieldCollectionFilterEmptyMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterFieldScope?: "ANY" | "ONLY_DECLARED" | "ONLY_INHERITED";
+                showTwinFieldCollectionFilterRequiredMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionFilterSystemMode?: "ANY" | "ONLY_NOT" | "ONLY";
+                showTwinFieldCollectionMapMode?: "KEY" | "ID";
+                showTwinFieldCollectionMode?: "HIDE" | "SHOW" | "NO_FIELDS" | "NOT_EMPTY_FIELDS" | "ALL_FIELDS" | "NOT_EMPTY_FIELDS_WITH_ATTACHMENTS" | "ALL_FIELDS_WITH_ATTACHMENTS";
+                showTwinFlavor2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinLink2LinkMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinLink2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinMarker2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldConditionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinRule2TwinClassFieldMode?: "HIDE" | "SHORT" | "DETAILED";
+                showTwinSegmentMode?: "HIDE" | "SHOW";
+                showTwinStatus2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showTwinTag2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example be44e826-ce24-4881-a227-f3f72d915a20 */
+                twinClassFieldValidatorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Twin class field validator details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinClassFieldValidatorViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65526,7 +67345,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65652,7 +67471,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65776,7 +67595,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -65900,7 +67719,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66024,7 +67843,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66209,7 +68028,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66245,7 +68064,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66283,7 +68102,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66319,7 +68138,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66358,7 +68177,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66399,7 +68218,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66435,7 +68254,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66471,7 +68290,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66600,7 +68419,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66730,7 +68549,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66774,7 +68593,48 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    projectionTypeGroupViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example be44e826-ce24-4881-a227-f3f72d915a20 */
+                projectionTypeGroupId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Projection type group data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectionTypeGroupViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66819,7 +68679,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -66943,7 +68803,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67067,7 +68927,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67197,7 +69057,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67327,7 +69187,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67459,7 +69319,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67590,7 +69450,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67714,7 +69574,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67755,7 +69615,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67799,7 +69659,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -67975,7 +69835,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68151,7 +70011,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68327,7 +70187,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68503,7 +70363,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68682,7 +70542,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68858,7 +70718,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68900,7 +70760,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68943,7 +70803,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -68988,7 +70848,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69115,7 +70975,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69241,7 +71101,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69367,7 +71227,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69494,7 +71354,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69621,7 +71481,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69748,7 +71608,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -69875,7 +71735,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70003,7 +71863,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70046,7 +71906,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70092,7 +71952,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70137,7 +71997,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70265,7 +72125,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70308,7 +72168,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70446,7 +72306,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70491,7 +72351,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70533,7 +72393,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70671,7 +72531,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70707,7 +72567,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70763,7 +72623,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70808,7 +72668,48 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    attachmentRestrictionViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example be44e826-ce24-4881-a227-f3f72d915a20 */
+                attachmentRestrictionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attachment restriction data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentRestrictionViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70934,7 +72835,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -70973,7 +72874,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71011,7 +72912,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71049,7 +72950,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71083,7 +72984,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71122,7 +73023,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71161,7 +73062,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71205,7 +73106,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71242,7 +73143,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71278,7 +73179,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };
@@ -71315,7 +73216,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": unknown;
+                    "*/*": Record<string, never>;
                 };
             };
         };

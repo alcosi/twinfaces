@@ -201,11 +201,6 @@ function Component(
             factoryConditionSetId: target.conditionSetId,
           });
 
-        case "nextFactory":
-          return toast.info(
-            "Set the next factory by editing the pipeline or branch."
-          );
-
         default:
           return toast.info(
             `Creating a ${labelOf(target)} is not supported yet.`
