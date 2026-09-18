@@ -1,8 +1,8 @@
 import {
-  Copy,
+  Asterisk,
+  Eraser,
   Factory as FactoryIcon,
-  Filter,
-  Trash2,
+  SquareAsterisk,
   Zap,
 } from "lucide-react";
 import { ElementType } from "react";
@@ -44,15 +44,16 @@ type NodeKindStyle = {
 };
 
 /**
- * One source of truth for how each element of the graph looks. Both the card
- * headers and the chips inside a card read from it, so an eraser is the same
- * red trash can wherever it shows up.
+ * One source of truth for how each element of the graph looks, read by the card
+ * headers — the chips inside a card are the app's own resource links and bring
+ * their own icons, which is exactly why these have to match them.
  *
- * Icons are the app's own entity icons wherever one exists, so a pipeline in the
- * graph is the pipeline of every table and resource link; the rest come from
- * lucide. Tints are fixed palette colours rather than theme tokens — the cards
- * are the one place where colour carries meaning (which element is which) and
- * has to survive both themes, so each pairs a 10% wash with a mid-tone icon.
+ * So each is the icon that entity already carries in its resource link and in
+ * the sidebar: the app's own for the entities that have one, the same lucide
+ * icon for the rest. Tints are fixed palette colours rather than theme tokens —
+ * the cards are the one place where colour carries meaning (which element is
+ * which) and has to survive both themes, so each pairs a 10% wash with a
+ * mid-tone icon.
  */
 export const NODE_KIND_STYLES: Record<GraphNodeKind, NodeKindStyle> = {
   factory: {
@@ -86,13 +87,13 @@ export const NODE_KIND_STYLES: Record<GraphNodeKind, NodeKindStyle> = {
     label: "Branch",
   },
   multiplier: {
-    Icon: Copy,
+    Icon: Asterisk,
     tint: "bg-emerald-500/10",
     accent: "text-emerald-600 dark:text-emerald-400",
     label: "Multiplier",
   },
   multiplierFilter: {
-    Icon: Filter,
+    Icon: SquareAsterisk,
     tint: "bg-emerald-500/10",
     accent: "text-emerald-600 dark:text-emerald-400",
     label: "Multiplier filter",
@@ -104,7 +105,7 @@ export const NODE_KIND_STYLES: Record<GraphNodeKind, NodeKindStyle> = {
     label: "Condition set",
   },
   eraser: {
-    Icon: Trash2,
+    Icon: Eraser,
     tint: "bg-rose-500/10",
     accent: "text-rose-600 dark:text-rose-400",
     label: "Eraser",

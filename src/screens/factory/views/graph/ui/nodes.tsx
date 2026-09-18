@@ -5,6 +5,17 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { MouseEvent, ReactNode, useEffect, useRef, useState } from "react";
 
+import { FactoryBranchResourceLink } from "@/features/factory-branch/ui";
+import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
+import { FactoryEraserResourceLink } from "@/features/factory-eraser/ui";
+import { FactoryMultiplierFilterResourceLink } from "@/features/factory-multiplier-filter/ui";
+import { FactoryMultiplierResourceLink } from "@/features/factory-multiplier/ui";
+import { FactoryPipelineStepResourceLink } from "@/features/factory-pipeline-step/ui";
+import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
+import { FactoryTriggerResourceLink } from "@/features/factory-trigger/ui";
+import { FactoryResourceLink } from "@/features/factory/ui";
+import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { cn, isPopulatedString } from "@/shared/libs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui";
 
@@ -194,38 +205,120 @@ function NodeIcon({ kind }: { kind: DiagramNode["kind"] }) {
   );
 }
 
-/** One related entity inside a card — styled as the app's resource links are. */
+/**
+ * One related entity inside a card, drawn by the app's own resource link for its
+ * kind: same icon and colours as in the tables, the same hover card — down to
+ * the copy buttons and the duplicate/export menu — and the same disabled state
+ * for an entity that is switched off.
+ *
+ * `withTooltip` is asked for everywhere, because a chip is all the card shows of
+ * that entity: without the hover card there would be nowhere to read its details
+ * or act on it short of opening its page.
+ */
+function ChipResourceLink({ chip }: { chip: GraphChip }) {
+  const disabled = chip.inactive;
+
+  switch (chip.kind) {
+    case "factory":
+      return (
+        <FactoryResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "pipeline":
+      return (
+        <FactoryPipelineResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "branch":
+      return (
+        <FactoryBranchResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "step":
+      return (
+        <FactoryPipelineStepResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "multiplier":
+      return (
+        <FactoryMultiplierResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "multiplierFilter":
+      return (
+        <FactoryMultiplierFilterResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "conditionSet":
+      return (
+        <FactoryConditionSetResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "eraser":
+      return (
+        <FactoryEraserResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "trigger":
+      return (
+        <FactoryTriggerResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "twinClass":
+      return (
+        <TwinClassResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "status":
+      return (
+        <TwinClassStatusResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+  }
+}
+
+/**
+ * The chip's slot in a card. Fixed to {@link CARD.chipHeight} — the height a
+ * resource link draws itself at — because the card's own height was computed
+ * from it before anything rendered.
+ */
 function ChipView({ chip }: { chip: GraphChip }) {
-  const { Icon } = getNodeKindStyle(chip.kind);
-
-  const body = (
-    <>
-      <Icon className="h-3 w-3 shrink-0" />
-      <TruncatedText text={chip.label} className="min-w-0" />
-    </>
-  );
-
-  const className = cn(
-    "border-border flex w-full items-center gap-1.5 rounded-lg border px-2 text-[11px] transition-colors",
-    chip.inactive
-      ? "text-link-disabled border-link-disabled/50"
-      : "text-link-enabled hover:border-link-enabled"
-  );
-
   return (
-    <div style={{ height: CARD.chipHeight }}>
-      {isPopulatedString(chip.href) ? (
-        <Link
-          href={chip.href}
-          prefetch={false}
-          className={cn(className, "h-full")}
-          onClick={(event) => event.stopPropagation()}
-        >
-          {body}
-        </Link>
-      ) : (
-        <div className={cn(className, "h-full")}>{body}</div>
-      )}
+    <div className="flex min-w-0" style={{ height: CARD.chipHeight }}>
+      <ChipResourceLink chip={chip} />
     </div>
   );
 }

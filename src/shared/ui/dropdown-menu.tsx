@@ -5,8 +5,29 @@ import { Check, ChevronRight, Circle } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/shared/libs";
+import { useTooltipLock } from "@/shared/ui/tooltip";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+/**
+ * A menu rendered inside a tooltip pins that tooltip open while it is open —
+ * otherwise reaching for one of its items dismisses the tooltip, and the menu
+ * inside it, before the click lands. See {@link useTooltipLock}.
+ */
+function DropdownMenu({
+  onOpenChange,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  const lockTooltip = useTooltipLock();
+
+  return (
+    <DropdownMenuPrimitive.Root
+      onOpenChange={(open) => {
+        lockTooltip?.(open);
+        onOpenChange?.(open);
+      }}
+      {...props}
+    />
+  );
+}
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 

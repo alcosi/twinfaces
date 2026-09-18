@@ -2,8 +2,7 @@ import { useCallback, useState } from "react";
 
 import { useFactoryBranchesSearch } from "@/entities/factory-branch";
 import { useFactoryPipelineSearch } from "@/entities/factory-pipeline";
-import { PlatformArea } from "@/shared/config";
-import { isPopulatedString } from "@/shared/libs";
+import { isFalsy, isPopulatedString } from "@/shared/libs";
 
 import { GraphChip } from "./types";
 
@@ -51,15 +50,14 @@ export function useFactoryCallers() {
         next.set(factoryId, [...(next.get(factoryId) ?? []), chip]);
       }
 
+      // The searches hydrate their results, so a caller chip carries the same
+      // entity the cascade's own chips do — and renders the same resource link.
       pipelines.data.forEach((pipeline) =>
         add(pipeline.nextFactoryId, {
           id: `caller:pipeline:${pipeline.id}`,
           kind: "pipeline",
-          label: isPopulatedString(pipeline.description)
-            ? pipeline.description
-            : "Pipeline",
-          href: `/${PlatformArea.core}/pipelines/${pipeline.id}`,
-          inactive: pipeline.active === false,
+          entity: pipeline,
+          inactive: isFalsy(pipeline.active),
         })
       );
 
@@ -67,11 +65,8 @@ export function useFactoryCallers() {
         add(branch.nextFactoryId, {
           id: `caller:branch:${branch.id}`,
           kind: "branch",
-          label: isPopulatedString(branch.description)
-            ? branch.description
-            : "Branch",
-          href: `/${PlatformArea.core}/branches/${branch.id}`,
-          inactive: branch.active === false,
+          entity: branch,
+          inactive: isFalsy(branch.active),
         })
       );
 

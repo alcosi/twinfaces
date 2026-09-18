@@ -1,6 +1,15 @@
 import { Factory, FactoryCascade } from "@/entities/factory";
-import { PlatformArea } from "@/shared/config";
-import { isPopulatedString } from "@/shared/libs";
+import { hydrateFactoryBranchFromMap } from "@/entities/factory-branch";
+import { hydrateFactoryConditionSetFromMap } from "@/entities/factory-condition-set";
+import { hydrateFactoryEraserFromMap } from "@/entities/factory-eraser";
+import { hydrateFactoryMultiplierFromMap } from "@/entities/factory-multiplier";
+import { hydrateFactoryMultiplierFilterFromMap } from "@/entities/factory-multiplier-filter";
+import { hydrateFactoryPipelineFromMap } from "@/entities/factory-pipeline";
+import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
+import { hydrateFactoryTriggerFromMap } from "@/entities/factory-trigger";
+import { hydrateTwinClassFromMap } from "@/entities/twin-class";
+import { hydrateTwinStatusFromMap } from "@/entities/twin-status";
+import { isFalsy, isPopulatedString } from "@/shared/libs";
 
 import { FactoryCascadeIndex, GraphChip } from "./types";
 
@@ -9,30 +18,18 @@ function toMap<T>(source: Record<string, T> | undefined): Map<string, T> {
 }
 
 /**
- * Display names by id. Falls back to `key` because several cascade entities
- * come back keyed but unnamed, and a key still reads better than an id.
+ * Same, but each entity is run through its own hydrator on the way in, so the
+ * nested objects the resource links read — a branch's next factory, a step's
+ * featurer, a filter's multiplier — are filled from the cascade's related maps
+ * rather than left as bare ids.
  */
-function toNameMap(
-  source:
-    | Record<string, { id?: string; name?: string; key?: string }>
-    | undefined
-): Map<string, string> {
-  const entries = Object.values(source ?? {}).reduce<[string, string][]>(
-    (acc, item) => {
-      const label = isPopulatedString(item.name)
-        ? item.name
-        : isPopulatedString(item.key)
-          ? item.key
-          : undefined;
-
-      if (isPopulatedString(item.id) && label) acc.push([item.id, label]);
-
-      return acc;
-    },
-    []
+function toHydratedMap<D, H>(
+  source: Record<string, D> | undefined,
+  hydrate: (dto: D) => H
+): Map<string, H> {
+  return new Map(
+    Object.entries(source ?? {}).map(([id, dto]) => [id, hydrate(dto)])
   );
-
-  return new Map(entries);
 }
 
 /** Turns one cascade response into id-keyed lookups the builders read from. */
@@ -48,23 +45,44 @@ export function indexCascade({
     factories.set(factory.id, factory);
   }
 
-  const pipelines = toMap(relatedObjects.factoryPipelineMap);
-  const branches = toMap(relatedObjects.factoryBranchMap);
+  const pipelines = toHydratedMap(relatedObjects.factoryPipelineMap, (dto) =>
+    hydrateFactoryPipelineFromMap(dto, relatedObjects)
+  );
+  const branches = toHydratedMap(relatedObjects.factoryBranchMap, (dto) =>
+    hydrateFactoryBranchFromMap(dto, relatedObjects)
+  );
 
   return {
     root: factory,
     factories,
     pipelines,
-    steps: toMap(relatedObjects.factoryPipelineStepMap),
+    steps: toHydratedMap(relatedObjects.factoryPipelineStepMap, (dto) =>
+      hydratePipelineStepFromMap(dto, relatedObjects)
+    ),
     branches,
-    multipliers: toMap(relatedObjects.factoryMultiplierMap),
-    multiplierFilters: toMap(relatedObjects.factoryMultiplierFilterMap),
-    erasers: toMap(relatedObjects.factoryEraserMap),
-    conditionSets: toMap(relatedObjects.factoryConditionSetMap),
+    multipliers: toHydratedMap(relatedObjects.factoryMultiplierMap, (dto) =>
+      hydrateFactoryMultiplierFromMap(dto, relatedObjects)
+    ),
+    multiplierFilters: toHydratedMap(
+      relatedObjects.factoryMultiplierFilterMap,
+      (dto) => hydrateFactoryMultiplierFilterFromMap(dto, relatedObjects)
+    ),
+    erasers: toHydratedMap(relatedObjects.factoryEraserMap, (dto) =>
+      hydrateFactoryEraserFromMap(dto, relatedObjects)
+    ),
+    conditionSets: toHydratedMap(relatedObjects.factoryConditionSetMap, (dto) =>
+      hydrateFactoryConditionSetFromMap(dto, relatedObjects)
+    ),
     conditions: toMap(relatedObjects.factoryConditionMap),
-    triggers: toMap(relatedObjects.factoryTriggerMap),
-    twinClassNameById: toNameMap(relatedObjects.twinClassMap),
-    statusNameById: toNameMap(relatedObjects.statusMap),
+    triggers: toHydratedMap(relatedObjects.factoryTriggerMap, (dto) =>
+      hydrateFactoryTriggerFromMap(dto, relatedObjects)
+    ),
+    twinClasses: toHydratedMap(relatedObjects.twinClassMap, (dto) =>
+      hydrateTwinClassFromMap(dto, relatedObjects)
+    ),
+    statuses: toHydratedMap(relatedObjects.statusMap, (dto) =>
+      hydrateTwinStatusFromMap(dto, relatedObjects)
+    ),
     callersByFactoryId: indexCallers(pipelines, branches),
   };
 }
@@ -90,10 +108,8 @@ function indexCallers(
     const chip: GraphChip = {
       id: `caller:pipeline:${id}`,
       kind: "pipeline",
-      label: isPopulatedString(pipeline.description)
-        ? pipeline.description
-        : "Pipeline",
-      href: `/${PlatformArea.core}/pipelines/${id}`,
+      entity: pipeline,
+      inactive: isFalsy(pipeline.active),
     };
 
     add(pipeline.nextFactoryId, chip);
@@ -106,10 +122,8 @@ function indexCallers(
     add(branch.nextFactoryId, {
       id: `caller:branch:${id}`,
       kind: "branch",
-      label: isPopulatedString(branch.description)
-        ? branch.description
-        : "Branch",
-      href: `/${PlatformArea.core}/branches/${id}`,
+      entity: branch,
+      inactive: isFalsy(branch.active),
     });
   });
 
@@ -162,10 +176,10 @@ export function getFactoryLabel(factory: Factory | undefined): string {
 }
 
 /**
- * Entities of the cascade carry `inputTwinClassId` while the name lives in
- * `twinClassMap`. When the class was not delivered the label is dropped rather
- * than falling back to the raw id — an unreadable uuid under every node is
- * worse than no second line at all.
+ * Entities of the cascade carry `inputTwinClassId` while the class itself lives
+ * in `twinClassMap`. When it was not delivered the label is dropped rather than
+ * falling back to the raw id — an unreadable uuid under every node is worse than
+ * no second line at all.
  */
 export function getTwinClassLabel(
   index: FactoryCascadeIndex,
@@ -173,5 +187,7 @@ export function getTwinClassLabel(
 ): string | undefined {
   if (!isPopulatedString(twinClassId)) return undefined;
 
-  return index.twinClassNameById.get(twinClassId);
+  const twinClass = index.twinClasses.get(twinClassId);
+
+  return isPopulatedString(twinClass?.name) ? twinClass.name : undefined;
 }

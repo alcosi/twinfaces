@@ -113,15 +113,12 @@ export function buildFactoryGraph(
     id: string,
     twinClassId: string | undefined
   ): GraphChip | undefined {
-    const label = getTwinClassLabel(index, twinClassId);
-    if (!label) return undefined;
+    if (!isPopulatedString(twinClassId)) return undefined;
 
-    return {
-      id,
-      kind: "twinClass",
-      label,
-      href: `/${PlatformArea.core}/twinclass/${twinClassId}`,
-    };
+    const twinClass = index.twinClasses.get(twinClassId);
+    if (!twinClass) return undefined;
+
+    return { id, kind: "twinClass", entity: twinClass };
   }
 
   function conditionSetChip(
@@ -133,14 +130,7 @@ export function buildFactoryGraph(
     const conditionSet = index.conditionSets.get(conditionSetId);
     if (!conditionSet) return undefined;
 
-    return {
-      id,
-      kind: "conditionSet",
-      label: isPopulatedString(conditionSet.name)
-        ? conditionSet.name
-        : "Condition set",
-      href: `/${PlatformArea.core}/condition-sets/${conditionSetId}`,
-    };
+    return { id, kind: "conditionSet", entity: conditionSet };
   }
 
   function statusChip(
@@ -149,15 +139,10 @@ export function buildFactoryGraph(
   ): GraphChip | undefined {
     if (!isPopulatedString(statusId)) return undefined;
 
-    const label = index.statusNameById.get(statusId);
-    if (!label) return undefined;
+    const status = index.statuses.get(statusId);
+    if (!status) return undefined;
 
-    return {
-      id,
-      kind: "status",
-      label,
-      href: `/${PlatformArea.core}/statuses/${statusId}`,
-    };
+    return { id, kind: "status", entity: status };
   }
 
   function nextFactoryChip(
@@ -166,12 +151,10 @@ export function buildFactoryGraph(
   ): GraphChip | undefined {
     if (!isPopulatedString(nextFactoryId)) return undefined;
 
-    return {
-      id,
-      kind: "factory",
-      label: getFactoryLabel(index.factories.get(nextFactoryId)),
-      href: `/${PlatformArea.core}/factories/${nextFactoryId}`,
-    };
+    const factory = index.factories.get(nextFactoryId);
+    if (!factory) return undefined;
+
+    return { id, kind: "factory", entity: factory };
   }
 
   function buildFactorySections(
@@ -182,10 +165,7 @@ export function buildFactoryGraph(
       (eraser) => ({
         id: `eraser:${eraser.id}`,
         kind: "eraser" as const,
-        label: isPopulatedString(eraser.description)
-          ? eraser.description
-          : "Eraser",
-        href: `/${PlatformArea.core}/erasers/${eraser.id}`,
+        entity: eraser,
         inactive: isFalsy(eraser.active),
       })
     );
@@ -194,10 +174,7 @@ export function buildFactoryGraph(
       (trigger) => ({
         id: `trigger:${trigger.id}`,
         kind: "trigger" as const,
-        label: isPopulatedString(trigger.description)
-          ? trigger.description
-          : "Trigger",
-        href: `/${PlatformArea.core}/factory-triggers/${trigger.id}`,
+        entity: trigger,
         inactive: isFalsy(trigger.active),
       })
     );
@@ -258,10 +235,7 @@ export function buildFactoryGraph(
         ).map((filter) => ({
           id: `multiplier-filter:${filter.id}`,
           kind: "multiplierFilter" as const,
-          label: isPopulatedString(filter.description)
-            ? filter.description
-            : "Filter",
-          href: `/${PlatformArea.core}/multiplier-filters/${filter.id}`,
+          entity: filter,
           inactive: isFalsy(filter.active),
         }));
 
@@ -321,10 +295,7 @@ export function buildFactoryGraph(
         (step) => ({
           id: `step:${step.id}`,
           kind: "step" as const,
-          label: isPopulatedString(step.description)
-            ? step.description
-            : "Step",
-          href: `/${PlatformArea.core}/pipeline-steps/${step.id}`,
+          entity: step,
           inactive: isFalsy(step.active),
         })
       );
