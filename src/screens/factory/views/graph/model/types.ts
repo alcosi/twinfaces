@@ -1,13 +1,15 @@
 import { Factory } from "@/entities/factory";
-import { FactoryBranch } from "@/entities/factory-branch";
+import { FactoryBranch_DETAILED } from "@/entities/factory-branch";
 import { FactoryCondition } from "@/entities/factory-condition";
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
-import { FactoryEraser } from "@/entities/factory-eraser";
-import { FactoryMultiplier } from "@/entities/factory-multiplier";
-import { FactoryMultiplierFilter } from "@/entities/factory-multiplier-filter";
-import { FactoryPipeline } from "@/entities/factory-pipeline";
-import { PipelineStep } from "@/entities/factory-pipeline-step";
-import { FactoryTrigger } from "@/entities/factory-trigger";
+import { FactoryEraser_DETAILED } from "@/entities/factory-eraser";
+import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
+import { FactoryMultiplierFilter_DETAILED } from "@/entities/factory-multiplier-filter";
+import { FactoryPipeline_DETAILED } from "@/entities/factory-pipeline";
+import { PipelineStep_DETAILED } from "@/entities/factory-pipeline-step";
+import { FactoryTrigger_DETAILED } from "@/entities/factory-trigger";
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinStatus } from "@/entities/twin-status";
 
 import { GraphNodeKind } from "./node-kinds";
 
@@ -36,15 +38,34 @@ export type FactoryCreateTarget =
   | { entity: "pipelineStep"; pipelineId: string; order?: number }
   | { entity: "multiplierFilter"; multiplierId: string };
 
+/**
+ * The entity a chip stands for, paired with its kind. Chips carry the entity
+ * itself rather than a flattened label because they are drawn by the app's own
+ * resource link for that kind — which needs the entity to build its hover card,
+ * its "Copy UUID" button and its duplicate/export menu.
+ */
+export type GraphChipEntity =
+  | { kind: "factory"; entity: Factory }
+  | { kind: "pipeline"; entity: FactoryPipeline_DETAILED }
+  | { kind: "branch"; entity: FactoryBranch_DETAILED }
+  | { kind: "step"; entity: PipelineStep_DETAILED }
+  | { kind: "multiplier"; entity: FactoryMultiplier_DETAILED }
+  | { kind: "multiplierFilter"; entity: FactoryMultiplierFilter_DETAILED }
+  | { kind: "conditionSet"; entity: FactoryConditionSet }
+  | { kind: "eraser"; entity: FactoryEraser_DETAILED }
+  | { kind: "trigger"; entity: FactoryTrigger_DETAILED }
+  | { kind: "twinClass"; entity: TwinClass_DETAILED }
+  | { kind: "status"; entity: TwinStatus };
+
 /** A chip inside an advanced card's section — one related entity. */
 export type GraphChip = {
   id: string;
-  kind: GraphNodeKind;
-  label: string;
-  href?: string;
-  /** Dimmed, like the inactive cards: the entity is there but switched off. */
+  /**
+   * `active: false` entities are drawn as disabled resource links: still
+   * readable, with their hover card intact, but no longer a way in.
+   */
   inactive?: boolean;
-};
+} & GraphChipEntity;
 
 /**
  * One block of an advanced card: a caption and the chips under it. `handover`
@@ -145,21 +166,25 @@ export type Diagram = {
  * Flat view of one cascade response. The API hands back id lists on the
  * entities and the entities themselves in `relatedObjects`, so every builder
  * resolves through these maps.
+ *
+ * Entries are hydrated on the way in — each entity's own `hydrate*FromMap`
+ * folds the related maps back into it — so a chip can hand a whole entity to a
+ * resource link instead of the bare DTO the cascade delivered.
  */
 export type FactoryCascadeIndex = {
   root: Factory;
   factories: Map<string, Factory>;
-  pipelines: Map<string, FactoryPipeline>;
-  steps: Map<string, PipelineStep>;
-  branches: Map<string, FactoryBranch>;
-  multipliers: Map<string, FactoryMultiplier>;
-  multiplierFilters: Map<string, FactoryMultiplierFilter>;
-  erasers: Map<string, FactoryEraser>;
+  pipelines: Map<string, FactoryPipeline_DETAILED>;
+  steps: Map<string, PipelineStep_DETAILED>;
+  branches: Map<string, FactoryBranch_DETAILED>;
+  multipliers: Map<string, FactoryMultiplier_DETAILED>;
+  multiplierFilters: Map<string, FactoryMultiplierFilter_DETAILED>;
+  erasers: Map<string, FactoryEraser_DETAILED>;
   conditionSets: Map<string, FactoryConditionSet>;
   conditions: Map<string, FactoryCondition>;
-  triggers: Map<string, FactoryTrigger>;
-  twinClassNameById: Map<string, string>;
-  statusNameById: Map<string, string>;
+  triggers: Map<string, FactoryTrigger_DETAILED>;
+  twinClasses: Map<string, TwinClass_DETAILED>;
+  statuses: Map<string, TwinStatus>;
   /**
    * Which pipelines and branches hand over to a given factory — the "Called
    * From" block. Built by reversing `nextFactoryId` across the cascade, so it

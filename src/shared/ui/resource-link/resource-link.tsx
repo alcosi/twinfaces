@@ -3,11 +3,12 @@
 import { css } from "@emotion/css";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import Link from "next/link";
-import { ElementType, ReactNode } from "react";
+import { ElementType, ReactNode, useCallback, useState } from "react";
 
 import { cn, isFalsy, usePermissionsAccess } from "@/shared/libs";
 import {
   TooltipContent,
+  TooltipLockProvider,
   TooltipProvider,
   TooltipTrigger,
 } from "@/shared/ui/tooltip";
@@ -107,6 +108,19 @@ export function ResourceLink<T>({
   const { canForRoute } = usePermissionsAccess();
   const displayName = getDisplayName(data);
 
+  // The tooltip is controlled only so that a menu inside it can hold it open:
+  // Radix dismisses a tooltip as soon as the pointer heads anywhere but back to
+  // the trigger, which is exactly where that menu's items are.
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+
+  const handleLockChange = useCallback((locked: boolean) => {
+    setIsLocked(locked);
+    // Nothing closed the tooltip while the menu held the pointer events, so
+    // there is no hover state left to fall back to once the menu is gone.
+    if (!locked) setIsOpen(false);
+  }, []);
+
   // Disable the link when the user lacks the *_MANAGE permission for the route
   // it points to. An explicit `disabled` prop still wins.
   const isDisabled = disabled || !canForRoute(link, "MANAGE");
@@ -143,12 +157,14 @@ export function ResourceLink<T>({
       delayDuration={RESOURCE_LINK_TOOLTIP_DELAY_MS}
       skipDelayDuration={0}
     >
-      <TooltipPrimitive.Root>
+      <TooltipPrimitive.Root open={isOpen || isLocked} onOpenChange={setIsOpen}>
         <TooltipTrigger asChild>
           <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
         </TooltipTrigger>
         <TooltipContent className="overflow-visible p-0">
-          {renderTooltip(data)}
+          <TooltipLockProvider onLockChange={handleLockChange}>
+            {renderTooltip(data)}
+          </TooltipLockProvider>
         </TooltipContent>
       </TooltipPrimitive.Root>
     </TooltipProvider>

@@ -5,6 +5,41 @@ import * as React from "react";
 
 import { cn } from "@/shared/libs";
 
+/**
+ * Lets a layer opened *inside* a tooltip — a dropdown menu, in practice — hold
+ * that tooltip open for as long as it is itself open.
+ *
+ * Without it the two fight each other. On leaving the tooltip's own box Radix
+ * builds a "grace area": a polygon between the point the pointer left at and
+ * the trigger, and the first pointer move outside it closes the tooltip. A menu
+ * hanging below or beside the tooltip is in the opposite direction, so reaching
+ * for one of its items leaves that polygon and takes the menu down with the
+ * tooltip it was rendered in. Whether it happens at all depends on which way
+ * Radix flipped the menu, which is why it looks intermittent.
+ */
+const TooltipLockContext = React.createContext<
+  ((locked: boolean) => void) | undefined
+>(undefined);
+
+function TooltipLockProvider({
+  onLockChange,
+  children,
+}: {
+  onLockChange: (locked: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <TooltipLockContext.Provider value={onLockChange}>
+      {children}
+    </TooltipLockContext.Provider>
+  );
+}
+
+/** The lock of the tooltip this subtree is rendered in, if it is in one. */
+function useTooltipLock() {
+  return React.useContext(TooltipLockContext);
+}
+
 function TooltipProvider({
   delayDuration = 0,
   ...props
@@ -58,4 +93,11 @@ function TooltipContent({
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+  TooltipLockProvider,
+  useTooltipLock,
+};
