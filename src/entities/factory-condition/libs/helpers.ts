@@ -25,7 +25,8 @@ export const hydrateFactoryConditionFromMap = (
   if (hydrated.conditionerParams && hydrated.conditionerFeaturer?.params) {
     hydrated.conditionerDetailedParams = extendFeaturerParams(
       hydrated.conditionerParams,
-      hydrated.conditionerFeaturer?.params
+      hydrated.conditionerFeaturer?.params,
+      relatedObjects
     );
   }
 

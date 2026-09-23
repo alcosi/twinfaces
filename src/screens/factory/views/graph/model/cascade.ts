@@ -1,4 +1,9 @@
-import { Factory, FactoryCascade } from "@/entities/factory";
+import {
+  Factory,
+  FactoryCascade,
+  FactoryUsage,
+  FactoryUsages,
+} from "@/entities/factory";
 import { hydrateFactoryBranchFromMap } from "@/entities/factory-branch";
 import { hydrateFactoryConditionSetFromMap } from "@/entities/factory-condition-set";
 import { hydrateFactoryEraserFromMap } from "@/entities/factory-eraser";
@@ -8,7 +13,9 @@ import { hydrateFactoryPipelineFromMap } from "@/entities/factory-pipeline";
 import { hydratePipelineStepFromMap } from "@/entities/factory-pipeline-step";
 import { hydrateFactoryTriggerFromMap } from "@/entities/factory-trigger";
 import { hydrateTwinClassFromMap } from "@/entities/twin-class";
+import { hydrateTwinFlowTransitionFromMap } from "@/entities/twin-flow-transition";
 import { hydrateTwinStatusFromMap } from "@/entities/twin-status";
+import { hydrateTwinFlowFactoryFromMap } from "@/entities/twinflow-factory";
 import { isFalsy, isPopulatedString } from "@/shared/libs";
 
 import { FactoryCascadeIndex, GraphChip } from "./types";
@@ -51,6 +58,13 @@ export function indexCascade({
   const branches = toHydratedMap(relatedObjects.factoryBranchMap, (dto) =>
     hydrateFactoryBranchFromMap(dto, relatedObjects)
   );
+  const transitions = toHydratedMap(relatedObjects.transitionsMap, (dto) =>
+    hydrateTwinFlowTransitionFromMap(dto, relatedObjects)
+  );
+  const twinflowFactories = toHydratedMap(
+    relatedObjects.twinflowFactoryMap,
+    (dto) => hydrateTwinFlowFactoryFromMap(dto, relatedObjects)
+  );
 
   return {
     root: factory,
@@ -83,57 +97,83 @@ export function indexCascade({
     statuses: toHydratedMap(relatedObjects.statusMap, (dto) =>
       hydrateTwinStatusFromMap(dto, relatedObjects)
     ),
-    callersByFactoryId: indexCallers(pipelines, branches),
+    transitions,
+    twinflowFactories,
+    callersByFactoryId: buildCallers(factories.values(), {
+      pipelines,
+      branches,
+      transitions,
+      twinflowFactories,
+    }),
   };
 }
 
 /**
- * Reverses the hand-over links: for each factory, the pipelines and branches
- * that lead into it. The cascade only walks downwards, so the factory the tab is
- * opened on has no callers of its own here — its "Called From" block is simply
- * left out rather than shown empty.
+ * The "Called From" block of every factory, read off its `usages`.
+ *
+ * A factory can be entered in ways the canvas has no line for — a pipeline of a
+ * factory that is not in this cascade at all, a transition that runs it in-built,
+ * a twinflow that launches it — and only the backend knows about those. Each
+ * usage names the referencing entity by id and kind; the entity itself arrives
+ * in the related maps, already hydrated here.
  */
-function indexCallers(
-  pipelines: FactoryCascadeIndex["pipelines"],
-  branches: FactoryCascadeIndex["branches"]
+export function buildCallers(
+  factories: Iterable<Factory>,
+  sources: Pick<
+    FactoryCascadeIndex,
+    "pipelines" | "branches" | "transitions" | "twinflowFactories"
+  >
 ): Map<string, GraphChip[]> {
   const callers = new Map<string, GraphChip[]>();
 
-  function add(factoryId: string | undefined, chip: GraphChip) {
-    if (!isPopulatedString(factoryId)) return;
-    callers.set(factoryId, [...(callers.get(factoryId) ?? []), chip]);
+  for (const factory of factories) {
+    const factoryId = factory.id;
+    if (!isPopulatedString(factoryId)) continue;
+
+    const chips = (factory.usages ?? []).reduce<GraphChip[]>((acc, usage) => {
+      const chip = usageChip(usage, sources);
+      // Two usages of the same kind can name the same entity — a pipeline that
+      // both hands over and hands over after commit, say. It is one way in.
+      if (chip && !acc.some((existing) => existing.id === chip.id)) {
+        acc.push(chip);
+      }
+
+      return acc;
+    }, []);
+
+    if (chips.length > 0) callers.set(factoryId, chips);
   }
-
-  pipelines.forEach((pipeline, id) => {
-    const chip: GraphChip = {
-      id: `caller:pipeline:${id}`,
-      kind: "pipeline",
-      entity: pipeline,
-      inactive: isFalsy(pipeline.active),
-    };
-
-    add(pipeline.nextFactoryId, chip);
-    // A pipeline can also hand a twin over after commit — a second way into a
-    // factory, and one the tree itself does not draw.
-    add(pipeline.afterCommitFactoryId, chip);
-  });
-
-  branches.forEach((branch, id) => {
-    add(branch.nextFactoryId, {
-      id: `caller:branch:${id}`,
-      kind: "branch",
-      entity: branch,
-      inactive: isFalsy(branch.active),
-    });
-  });
 
   return callers;
 }
 
 /**
- * Folds separately-fetched callers into the ones the cascade already implies,
- * keeping each caller once — a pipeline reachable both ways would otherwise be
- * listed twice on the same card.
+ * The same, from a usages search rather than from an indexed cascade: the
+ * referencing entities come in that response's own related objects.
+ */
+export function buildCallersFromUsages({
+  factories,
+  relatedObjects,
+}: FactoryUsages): Map<string, GraphChip[]> {
+  return buildCallers(factories, {
+    pipelines: toHydratedMap(relatedObjects.factoryPipelineMap, (dto) =>
+      hydrateFactoryPipelineFromMap(dto, relatedObjects)
+    ),
+    branches: toHydratedMap(relatedObjects.factoryBranchMap, (dto) =>
+      hydrateFactoryBranchFromMap(dto, relatedObjects)
+    ),
+    transitions: toHydratedMap(relatedObjects.transitionsMap, (dto) =>
+      hydrateTwinFlowTransitionFromMap(dto, relatedObjects)
+    ),
+    twinflowFactories: toHydratedMap(relatedObjects.twinflowFactoryMap, (dto) =>
+      hydrateTwinFlowFactoryFromMap(dto, relatedObjects)
+    ),
+  });
+}
+
+/**
+ * Folds the searched-for callers into the ones the cascade already delivered,
+ * keeping each caller once — the root factory is in both answers.
  */
 export function mergeCallers(
   base: Map<string, GraphChip[]>,
@@ -151,6 +191,76 @@ export function mergeCallers(
   });
 
   return merged;
+}
+
+/** Resolves one usage into the chip for the entity that holds the reference. */
+function usageChip(
+  usage: FactoryUsage,
+  {
+    pipelines,
+    branches,
+    transitions,
+    twinflowFactories,
+  }: Pick<
+    FactoryCascadeIndex,
+    "pipelines" | "branches" | "transitions" | "twinflowFactories"
+  >
+): GraphChip | undefined {
+  const id = usage.id;
+  if (!isPopulatedString(id)) return undefined;
+
+  switch (usage.usageType) {
+    case "FACTORY_PIPELINE_NEXT_FACTORY":
+    case "FACTORY_PIPELINE_AFTER_COMMIT_FACTORY": {
+      const pipeline = pipelines.get(id);
+
+      return pipeline
+        ? {
+            id: `caller:pipeline:${id}`,
+            kind: "pipeline",
+            entity: pipeline,
+            inactive: isFalsy(pipeline.active),
+          }
+        : undefined;
+    }
+    case "FACTORY_BRANCH_NEXT_FACTORY": {
+      const branch = branches.get(id);
+
+      return branch
+        ? {
+            id: `caller:branch:${id}`,
+            kind: "branch",
+            entity: branch,
+            inactive: isFalsy(branch.active),
+          }
+        : undefined;
+    }
+    case "TWINFLOW_TRANSITION_INBUILT_FACTORY": {
+      const transition = transitions.get(id);
+
+      return transition
+        ? {
+            id: `caller:transition:${id}`,
+            kind: "transition",
+            entity: transition,
+          }
+        : undefined;
+    }
+    case "TWINFLOW_FACTORY_LAUNCHER": {
+      const twinflowFactory = twinflowFactories.get(id);
+
+      return twinflowFactory
+        ? {
+            id: `caller:twinflow-factory:${id}`,
+            kind: "twinflowFactory",
+            entity: twinflowFactory,
+          }
+        : undefined;
+    }
+    default:
+      // A usage kind this build does not know yet: nothing to draw it with.
+      return undefined;
+  }
 }
 
 /** Resolves a list of ids against a map, dropping anything not delivered. */

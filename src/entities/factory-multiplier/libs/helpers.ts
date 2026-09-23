@@ -31,7 +31,8 @@ export const hydrateFactoryMultiplierFromMap = (
   if (hydrated.multiplierParams && hydrated.multiplierFeaturer?.params) {
     hydrated.multiplierDetailedParams = extendFeaturerParams(
       hydrated.multiplierParams,
-      hydrated.multiplierFeaturer.params
+      hydrated.multiplierFeaturer.params,
+      relatedObjects
     );
   }
 

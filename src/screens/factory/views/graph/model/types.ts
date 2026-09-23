@@ -9,7 +9,9 @@ import { FactoryPipeline_DETAILED } from "@/entities/factory-pipeline";
 import { PipelineStep_DETAILED } from "@/entities/factory-pipeline-step";
 import { FactoryTrigger_DETAILED } from "@/entities/factory-trigger";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { TwinFlowTransition_DETAILED } from "@/entities/twin-flow-transition";
 import { TwinStatus } from "@/entities/twin-status";
+import { TwinFlowFactory_DETAILED } from "@/entities/twinflow-factory";
 
 import { GraphNodeKind } from "./node-kinds";
 
@@ -55,7 +57,11 @@ export type GraphChipEntity =
   | { kind: "eraser"; entity: FactoryEraser_DETAILED }
   | { kind: "trigger"; entity: FactoryTrigger_DETAILED }
   | { kind: "twinClass"; entity: TwinClass_DETAILED }
-  | { kind: "status"; entity: TwinStatus };
+  | { kind: "status"; entity: TwinStatus }
+  /** A transition whose in-built factory is this one. */
+  | { kind: "transition"; entity: TwinFlowTransition_DETAILED }
+  /** A twinflow launching this factory. */
+  | { kind: "twinflowFactory"; entity: TwinFlowFactory_DETAILED };
 
 /** A chip inside an advanced card's section — one related entity. */
 export type GraphChip = {
@@ -185,11 +191,13 @@ export type FactoryCascadeIndex = {
   triggers: Map<string, FactoryTrigger_DETAILED>;
   twinClasses: Map<string, TwinClass_DETAILED>;
   statuses: Map<string, TwinStatus>;
+  transitions: Map<string, TwinFlowTransition_DETAILED>;
+  twinflowFactories: Map<string, TwinFlowFactory_DETAILED>;
   /**
-   * Which pipelines and branches hand over to a given factory — the "Called
-   * From" block. Built by reversing `nextFactoryId` across the cascade, so it
-   * only ever knows about callers the cascade itself delivered: the root factory
-   * has no callers in its own downward cascade and shows no such block.
+   * Everything that leads into a given factory — the "Called From" block. Read
+   * straight off each factory's `usages`, so it covers the ways in that the
+   * canvas cannot draw: a pipeline of an unrelated factory, a transition's
+   * in-built factory, a twinflow launcher.
    */
   callersByFactoryId: Map<string, GraphChip[]>;
 };

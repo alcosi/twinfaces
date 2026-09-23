@@ -1,7 +1,6 @@
 "use client";
 
 import { Play } from "lucide-react";
-import Link from "next/link";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
 import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
@@ -14,6 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
+// eslint-disable-next-line fsd-import/layer-imports
+import { FeaturerParamValueLink } from "@/widgets/featurer-params";
 
 import { ExtendedFeaturerParam, getFeaturerLinks } from "../../utils/helpers";
 
@@ -52,7 +53,12 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
                 </TableHeader>
                 <TableBody>
                   {params.map((param, idx) => {
+                    // The href a bare uuid still falls back to, for a reference
+                    // the response did not decode.
                     const links = getFeaturerLinks(param.type, param.value);
+                    const hrefById = new Map(
+                      links.map((link) => [link.id, link.href])
+                    );
 
                     return (
                       <TableRow key={idx} className="hover:bg-muted/50">
@@ -63,18 +69,14 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
                           {param.key}
                         </TableCell>
                         <TableCell className="px-2 py-1 break-all">
-                          {links.length > 0 ? (
-                            <div className="space-y-1">
-                              {links.map((link, linkIdx) => (
-                                <div key={linkIdx}>
-                                  <Link
-                                    href={link.href}
-                                    className="text-blue-500 hover:text-blue-700 hover:underline"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {link.id}
-                                  </Link>
-                                </div>
+                          {isPopulatedArray(param.values) ? (
+                            <div className="flex flex-col items-start gap-1">
+                              {param.values.map((value) => (
+                                <FeaturerParamValueLink
+                                  key={value.id}
+                                  value={value}
+                                  href={hrefById.get(value.id)}
+                                />
                               ))}
                             </div>
                           ) : (

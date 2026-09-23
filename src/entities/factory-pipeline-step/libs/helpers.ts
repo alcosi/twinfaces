@@ -42,7 +42,8 @@ export const hydratePipelineStepFromMap = (
   if (hydrated.fillerParams && hydrated.fillerFeaturer?.params) {
     hydrated.fillerDetailedParams = extendFeaturerParams(
       hydrated.fillerParams,
-      hydrated.fillerFeaturer.params
+      hydrated.fillerFeaturer.params,
+      relatedObjects
     );
   }
 

@@ -37,6 +37,10 @@ export const useFetchFactoryCascade = () => {
             // Pulls the transitively reachable factories into `factoryMap`, so
             // a pipeline's "next factory" can be expanded in place.
             showFactoryCascadeMode: "SHOW",
+            // Every place each factory of the cascade is referenced from — the
+            // "Called From" block. Only the backend can know these: they point
+            // *into* the cascade from outside it.
+            showFactoryUsagesMode: "DETAILED",
             showFactory2UserMode: "DETAILED",
             showFactory2FactoryPipelineMode: "DETAILED",
             showFactoryPipeline2FactoryPipelineStepMode: "DETAILED",

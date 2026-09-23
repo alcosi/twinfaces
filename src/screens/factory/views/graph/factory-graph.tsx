@@ -10,18 +10,23 @@ import {
 } from "react";
 import { toast } from "sonner";
 
-import { FactoryCascade, useFetchFactoryCascade } from "@/entities/factory";
+import {
+  FactoryCascade,
+  useFetchFactoryCascade,
+  useFetchFactoryUsages,
+} from "@/entities/factory";
 import { FactoryContext } from "@/features/factory";
 import { cn } from "@/shared/libs";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 import {
   FactoryCreateTarget,
+  GraphChip,
   GraphMode,
+  buildCallersFromUsages,
   buildFactoryGraph,
   indexCascade,
   mergeCallers,
-  useFactoryCallers,
 } from "./model";
 import {
   FactoryCreateSheets,
@@ -42,13 +47,20 @@ const MODES: { value: GraphMode; label: string }[] = [
 export function FactoryGraph() {
   const { factoryId } = useContext(FactoryContext);
   const { fetchFactoryCascade, loading } = useFetchFactoryCascade();
+  const { fetchFactoryUsages } = useFetchFactoryUsages();
   const [cascade, setCascade] = useState<FactoryCascade | undefined>(undefined);
+  const [callers, setCallers] = useState<Map<string, GraphChip[]> | undefined>(
+    undefined
+  );
   const [mode, setMode] = useState<GraphMode>("simple");
-  const { callers, fetchCallers } = useFactoryCallers();
   const createSheetsRef = useRef<FactoryCreateSheetsRef>(null);
 
   const refresh = useCallback(async () => {
     try {
+      // Dropped rather than kept across a reload: they belong to the cascade
+      // that is being replaced, and a caller that has just been deleted would
+      // otherwise stay on the card until the new usages arrive.
+      setCallers(undefined);
       setCascade(await fetchFactoryCascade(factoryId));
     } catch (error) {
       console.error("Failed to fetch the factory cascade:", error);
@@ -65,17 +77,27 @@ export function FactoryGraph() {
     [cascade]
   );
 
-  // The cascade knows the callers of the factories it descends into, but never
-  // those of the factory itself — they live upstream of it. Asked for once the
-  // cascade has named every factory on the canvas.
+  // A factory view reports the usages of the factory it was asked for and of no
+  // other, so the cascade can only fill the root card's "Called From". The rest
+  // of the canvas is covered by one search over every factory it draws.
   useEffect(() => {
     if (!index) return;
 
-    fetchCallers([...index.factories.keys()]).catch((error) => {
-      // A missing "Called From" block is not worth failing the whole graph over.
-      console.error("Failed to fetch the factories' callers:", error);
-    });
-  }, [index, fetchCallers]);
+    let cancelled = false;
+
+    fetchFactoryUsages([...index.factories.keys()])
+      .then((usages) => {
+        if (!cancelled) setCallers(buildCallersFromUsages(usages));
+      })
+      .catch((error) => {
+        // A missing "Called From" block is not worth failing the graph over.
+        console.error("Failed to fetch the factories' usages:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [index, fetchFactoryUsages]);
 
   const indexWithCallers = useMemo(() => {
     if (!index || !callers) return index;

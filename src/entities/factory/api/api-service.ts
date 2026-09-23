@@ -18,11 +18,18 @@ export function createFactoryApi(settings: ApiSettings) {
     filters,
     sortField,
     sortDirection,
+    showUsages,
   }: {
     pagination: PaginationState;
     filters: FactoryFilters;
     sortField?: FactorySortField;
     sortDirection?: "ASC" | "DESC";
+    /**
+     * Every place each factory is referenced from, with the referencing
+     * entities in `relatedObjects`. Off by default: it is a second payload the
+     * size of the result, and only the graph's "Called From" block reads it.
+     */
+    showUsages?: boolean;
   }) {
     return settings.client.POST("/private/factory/search/v1", {
       params: {
@@ -32,6 +39,7 @@ export function createFactoryApi(settings: ApiSettings) {
           showFactoryMode: "DETAILED",
           showFactory2UserMode: "DETAILED",
           showFactoryUsagesCountMode: "SHOW",
+          showFactoryUsagesMode: showUsages ? "DETAILED" : "HIDE",
           showFactoryBranchesCountMode: "SHOW",
           showFactoryErasersCountMode: "SHOW",
           showFactoryMultipliersCountMode: "SHOW",
