@@ -25,7 +25,8 @@ export const hydrateTwinValidatorFromMap = (
   if (hydrated.validatorParams && hydrated.validatorFeaturer?.params) {
     hydrated.validatorDetailedParams = extendFeaturerParams(
       hydrated.validatorParams,
-      hydrated.validatorFeaturer.params
+      hydrated.validatorFeaturer.params,
+      relatedObjects
     );
   }
 

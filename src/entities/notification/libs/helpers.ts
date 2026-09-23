@@ -116,7 +116,8 @@ export const hydrateHistoryNotificationRecipientCollectorFromMap = (
   ) {
     hydrated.recipientResolverParams = extendFeaturerParams(
       dto.recipientResolverParams,
-      hydrated.recipientResolverFeaturer.params
+      hydrated.recipientResolverFeaturer.params,
+      relatedObjects
     );
   }
 

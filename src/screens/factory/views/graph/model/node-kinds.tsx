@@ -1,4 +1,5 @@
 import {
+  Activity,
   Asterisk,
   Eraser,
   Factory as FactoryIcon,
@@ -12,6 +13,7 @@ import { FactoryConditionSetIcon } from "@/features/factory-condition-set/ui";
 import { FactoryPipelineStepIcon } from "@/features/factory-pipeline-step/ui";
 import { FactoryPipelineIcon } from "@/features/factory-pipeline/ui";
 import { TwinClassIcon } from "@/features/twin-class/ui";
+import { TwinFlowTransitionIcon } from "@/features/twin-flow-transition/ui";
 import { TwinStatusIcon } from "@/features/twin-status/ui";
 
 /** Every element the graph draws as a card, plus the chips inside those cards. */
@@ -28,7 +30,11 @@ export type GraphNodeKind =
   /** Not an element of its own — the twin class a node reads or writes. */
   | "twinClass"
   /** Likewise: the status a pipeline hands its twin over in. */
-  | "status";
+  | "status"
+  /** A transition that runs this factory as its in-built one. */
+  | "transition"
+  /** A twinflow that launches this factory. */
+  | "twinflowFactory";
 
 type NodeKindStyle = {
   Icon: ElementType;
@@ -121,6 +127,18 @@ export const NODE_KIND_STYLES: Record<GraphNodeKind, NodeKindStyle> = {
     tint: "bg-slate-500/10",
     accent: "text-slate-600 dark:text-slate-400",
     label: "Status",
+  },
+  transition: {
+    Icon: TwinFlowTransitionIcon,
+    tint: "bg-indigo-500/10",
+    accent: "text-indigo-600 dark:text-indigo-400",
+    label: "Transition",
+  },
+  twinflowFactory: {
+    Icon: Activity,
+    tint: "bg-indigo-500/10",
+    accent: "text-indigo-600 dark:text-indigo-400",
+    label: "Twinflow launcher",
   },
 };
 

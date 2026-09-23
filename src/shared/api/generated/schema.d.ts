@@ -1032,6 +1032,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/data_list_subset/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Data list subset update */
+        put: operations["dataListSubsetUpdateV1"];
+        /** Data list subset create */
+        post: operations["dataListSubsetCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/data_list_option_projection/v1": {
         parameters: {
             query?: never;
@@ -4651,6 +4669,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/data_list_subset/search/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Data list subset search */
+        post: operations["dataListSubsetSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/data_list_subset/delete/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Data list subset delete
+         * @description Deletes data list subsets. Rejected with DATALIST_SUBSET_IS_ALREADY_IN_USE when a subset still has options linked — remove the options first. Consumers that filter options by subset key have to be updated separately, the delete does not track them.
+         */
+        post: operations["dataListSubsetDeleteV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/data_list_subset/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of data list subsets grouped by specified fields */
+        post: operations["dataListSubsetCountV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/data_list_option_projection/search/v1": {
         parameters: {
             query?: never;
@@ -6518,6 +6590,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/data_list_subset/{dataListSubsetId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Data list subset view */
+        get: operations["dataListSubsetViewV1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/data_list_by_key/{dataListKey}/v1": {
         parameters: {
             query?: never;
@@ -7104,6 +7193,35 @@ export interface components {
              */
             createdAt?: string;
         };
+        DataListSubsetV1: {
+            /**
+             * Format: uuid
+             * @description data list subset id
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description data list id
+             */
+            dataListId?: string;
+            /** @description data list subset name */
+            name?: string;
+            /** @description data list subset description */
+            description?: string;
+            /** @description data list subset key */
+            key?: string;
+            /**
+             * Format: date-time
+             * @description creation time
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description created by user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            createdByUserId?: string;
+        };
         DataListV1: {
             /**
              * Format: uuid
@@ -7150,6 +7268,12 @@ export interface components {
             attribute5?: components["schemas"]["DataListAttributeV1"];
             /** @description external id */
             externalId?: string;
+            /**
+             * Format: uuid
+             * @description created by user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            createdByUserId?: string;
         };
         DomainBusinessAccountV1: {
             /**
@@ -7826,6 +7950,8 @@ export interface components {
             eraserIdList?: string[];
             /** @description trigger id list. */
             triggerIdList?: string[];
+            /** @description factory usages list (places where the factory is referenced from) */
+            usages?: components["schemas"]["UsageV1"][];
         };
         FeaturerParamV1: {
             /**
@@ -8311,6 +8437,13 @@ export interface components {
                 [key: string]: components["schemas"]["TwinflowBaseV1"];
             };
             /**
+             * @description related twinflow factory map
+             * @example {twinflow factory map}
+             */
+            twinflowFactoryMap?: {
+                [key: string]: components["schemas"]["TwinflowFactoryV1"];
+            };
+            /**
              * @description related twinflow schema map
              * @example {twinflow schema map}
              */
@@ -8529,6 +8662,20 @@ export interface components {
             /** @description related business account user map */
             businessAccountUserMap?: {
                 [key: string]: components["schemas"]["BusinessAccountUserV1"];
+            };
+            /**
+             * @description related twin pointer map
+             * @example {twin pointer map}
+             */
+            twinPointerMap?: {
+                [key: string]: components["schemas"]["TwinPointerV1"];
+            };
+            /**
+             * @description related datalist subset map
+             * @example {datalist subset map}
+             */
+            dataListSubsetMap?: {
+                [key: string]: components["schemas"]["DataListSubsetV1"];
             };
         };
         SchedulerV1: {
@@ -9590,6 +9737,56 @@ export interface components {
              */
             createdByUserId?: string;
         };
+        TwinPointerV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description twin class id. null means the pointer is shared / global
+             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            twinClassId?: string;
+            /**
+             * Format: int32
+             * @description pointer featurer id
+             * @example 1000
+             */
+            pointerFeaturerId?: number;
+            /**
+             * @description pointer params (hstore)
+             * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
+             *     "GTEvalue"=>"2"}
+             */
+            pointerParams?: {
+                [key: string]: string;
+            };
+            /**
+             * @description name
+             * @example Some name
+             */
+            name?: string;
+            /**
+             * @description optional. When true, a pointer resolution failure is swallowed (log + cached null) instead of failing the recompute batch. Default: false
+             * @example true
+             */
+            optional?: boolean;
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: uuid
+             * @description created by user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            createdByUserId?: string;
+        };
         TwinStatusV1: {
             /**
              * Format: uuid
@@ -9857,6 +10054,28 @@ export interface components {
              */
             initialSketchStatusId?: string;
         };
+        TwinflowFactoryV1: {
+            /**
+             * Format: uuid
+             * @example 471a6baa-b215-40ae-8a7f-1a78e0925d76
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
+             */
+            twinflowId?: string;
+            /**
+             * @example onSketchCreate
+             * @enum {string}
+             */
+            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
+            /**
+             * Format: uuid
+             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
+             */
+            factoryId?: string;
+        };
         TwinflowSchemaV1: {
             /**
              * Format: uuid
@@ -9922,6 +10141,20 @@ export interface components {
             allowComment?: boolean;
             allowAttachments?: boolean;
             allowLinks?: boolean;
+        };
+        UsageV1: {
+            /**
+             * @description usage type (where the object is used)
+             * @example TWINFLOW_TRANSITION_INBUILT_FACTORY
+             * @enum {string}
+             */
+            usageType?: "FACTORY_PIPELINE_NEXT_FACTORY" | "FACTORY_PIPELINE_AFTER_COMMIT_FACTORY" | "FACTORY_BRANCH_NEXT_FACTORY" | "TWINFLOW_TRANSITION_INBUILT_FACTORY" | "TWINFLOW_FACTORY_LAUNCHER";
+            /**
+             * Format: uuid
+             * @description id of the entity that uses the object
+             * @example f6606fa2-c047-4ba9-a92c-84051df681ab
+             */
+            id?: string;
         };
         UserGroupListRsV1: {
             /**
@@ -10264,28 +10497,6 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description results - twinflow factories */
             twinflowFactories?: components["schemas"]["TwinflowFactoryV1"][];
-        };
-        TwinflowFactoryV1: {
-            /**
-             * Format: uuid
-             * @example 471a6baa-b215-40ae-8a7f-1a78e0925d76
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @example 34618b09-e8dc-4712-a433-2e18915ee70d
-             */
-            twinflowId?: string;
-            /**
-             * @example onSketchCreate
-             * @enum {string}
-             */
-            twinFactoryLauncherId?: "transition" | "factoryPipeline" | "targetDeletion" | "cascadeDeletion" | "onTwinCreate" | "onTwinUpdate" | "onSketchCreate" | "onSketchUpdate" | "onSketchFinalize" | "afterTwinCreate" | "afterTwinUpdate" | "afterSketchCreate" | "afterSketchUpdate" | "afterSketchFinalize" | "afterSketchFinalizeRestricted" | "afterTransitionPerform";
-            /**
-             * Format: uuid
-             * @example 5d956a15-6858-40ba-b0aa-b123c54e250d
-             */
-            factoryId?: string;
         };
         TwinValidatorSetUpdateRqV1: {
             /** @description twin validator set list */
@@ -10714,56 +10925,6 @@ export interface components {
             /** @description results - twin pointer list */
             twinPointers?: components["schemas"]["TwinPointerV1"][];
         };
-        TwinPointerV1: {
-            /**
-             * Format: uuid
-             * @description id
-             * @example be44e826-ce24-4881-a227-f3f72d915a20
-             */
-            id?: string;
-            /**
-             * Format: uuid
-             * @description twin class id. null means the pointer is shared / global
-             * @example 458c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            twinClassId?: string;
-            /**
-             * Format: int32
-             * @description pointer featurer id
-             * @example 1000
-             */
-            pointerFeaturerId?: number;
-            /**
-             * @description pointer params (hstore)
-             * @example {"linkId"=>"6e42ef74-3015-4400-946e-1326bcb4cf48",
-             *     "GTEvalue"=>"2"}
-             */
-            pointerParams?: {
-                [key: string]: string;
-            };
-            /**
-             * @description name
-             * @example Some name
-             */
-            name?: string;
-            /**
-             * @description optional. When true, a pointer resolution failure is swallowed (log + cached null) instead of failing the recompute batch. Default: false
-             * @example true
-             */
-            optional?: boolean;
-            /**
-             * Format: date-time
-             * @description created at
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /**
-             * Format: uuid
-             * @description created by user id
-             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
-             */
-            createdByUserId?: string;
-        };
         TwinFactoryTriggerUpdateRqV1: {
             /** @description twin factory triggers */
             twinFactoryTriggers?: components["schemas"]["TwinFactoryTriggerUpdateV1"][];
@@ -10897,6 +11058,8 @@ export interface components {
             fieldValidatorParams?: {
                 [key: string]: string;
             };
+            /** @description active */
+            active?: boolean;
             /** @description backend validation error i18n */
             beValidationErrorI18n?: components["schemas"]["I18nSaveV1"];
             /**
@@ -10948,6 +11111,8 @@ export interface components {
             fieldValidatorParams?: {
                 [key: string]: string;
             };
+            /** @description active */
+            active?: boolean;
             /**
              * Format: uuid
              * @description backend validation error i18n id
@@ -14195,6 +14360,51 @@ export interface components {
              * @example 9a3f6075-f175-41cd-a804-934201ec969c
              */
             navbarFaceId?: string;
+        };
+        DataListSubsetUpdateRqV1: {
+            /** @description data list subsets */
+            dataListSubsets?: components["schemas"]["DataListSubsetUpdateV1"][];
+        };
+        DataListSubsetUpdateV1: {
+            /**
+             * Format: uuid
+             * @description Data list id. Immutable after creation
+             */
+            dataListId: string;
+            /** @description Data list subset key. Unique within the data list */
+            key: string;
+            /** @description Name translations */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description Description translations */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+            /**
+             * Format: uuid
+             * @description data list subset id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id: string;
+        };
+        DataListSubsetListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description data list subset list */
+            dataListSubsets?: components["schemas"]["DataListSubsetV1"][];
         };
         DataListOptionProjectionUpdateRqV1: {
             /** @description data list option projections */
@@ -17894,6 +18104,8 @@ export interface components {
             fieldValidatorParams?: {
                 [key: string]: string;
             };
+            /** @description active */
+            active?: boolean;
             /** @description backend validation error i18n */
             beValidationErrorI18n?: components["schemas"]["I18nSaveV1"];
         };
@@ -17904,7 +18116,7 @@ export interface components {
              * @description Sort field. Default: twinClassFieldId
              * @enum {string}
              */
-            sortField?: "twinClassFieldName" | "twinClassFieldKey" | "fieldValidatorFeaturerName";
+            sortField?: "twinClassFieldName" | "twinClassFieldKey" | "fieldValidatorFeaturerName" | "active";
             /**
              * @description Sort direction: ASC or DESC. Default: ASC
              * @enum {string}
@@ -17924,6 +18136,12 @@ export interface components {
             fieldValidatorFeaturerIdList?: number[];
             /** @description field validator featurer id exclude list */
             fieldValidatorFeaturerIdExcludeList?: number[];
+            /**
+             * @description active
+             * @example ANY
+             * @enum {string}
+             */
+            active?: "ONLY" | "ONLY_NOT" | "ANY";
         };
         TwinClassFieldValidatorSearchRsV1: {
             /**
@@ -17953,7 +18171,7 @@ export interface components {
             /** @description search params */
             search?: components["schemas"]["TwinClassFieldValidatorSearchV1"];
             /** @description Group by fields */
-            groupFields?: ("twinClassFieldId" | "fieldValidatorFeaturerId")[];
+            groupFields?: ("twinClassFieldId" | "fieldValidatorFeaturerId" | "active")[];
         };
         TwinClassFieldValidatorCountRsV1: {
             /**
@@ -25399,6 +25617,126 @@ export interface components {
             /** @description Group by fields */
             groupFields?: ("permissionSchemaId" | "twinClassSchemaId" | "twinflowSchemaId" | "notificationSchemaId" | "tierId")[];
         };
+        DataListSubsetCreateRqV1: {
+            /** @description data list subsets */
+            dataListSubsets?: components["schemas"]["DataListSubsetCreateV1"][];
+        };
+        DataListSubsetCreateV1: {
+            /**
+             * Format: uuid
+             * @description Data list id. Immutable after creation
+             */
+            dataListId: string;
+            /** @description Data list subset key. Unique within the data list */
+            key: string;
+            /** @description Name translations */
+            nameI18n?: components["schemas"]["I18nSaveV1"];
+            /** @description Description translations */
+            descriptionI18n?: components["schemas"]["I18nSaveV1"];
+        };
+        DataListSubsetSearchRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DataListSubsetSearchV1"];
+            /**
+             * @description Sort field. Default: key
+             * @enum {string}
+             */
+            sortField?: "name" | "key" | "dataListName";
+            /**
+             * @description Sort direction: ASC or DESC. Default: ASC
+             * @enum {string}
+             */
+            sortDirection?: "ASC" | "DESC";
+        };
+        DataListSubsetSearchV1: {
+            /** @description data list subset id list */
+            idList?: string[];
+            /** @description data list subset id exclude list */
+            idExcludeList?: string[];
+            /** @description data list id list */
+            dataListIdList?: string[];
+            /** @description data list id exclude list */
+            dataListIdExcludeList?: string[];
+            /** @description name like list */
+            nameLikeList?: string[];
+            /** @description name not like list */
+            nameNotLikeList?: string[];
+            /** @description key like list */
+            keyLikeList?: string[];
+            /** @description key not like list */
+            keyNotLikeList?: string[];
+        };
+        DataListSubsetSearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description data list subset list */
+            dataListSubsets?: components["schemas"]["DataListSubsetV1"][];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+        };
+        DataListSubsetDeleteRqV1: {
+            /** @description data list subset id list to delete */
+            dataListSubsetIdList?: string[];
+        };
+        DataListSubsetCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["DataListSubsetSearchV1"];
+            /** @description Group by fields */
+            groupFields?: "dataListId"[];
+        };
+        DataListSubsetCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["DataListSubsetCountV1"][];
+        };
+        DataListSubsetCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
+            /**
+             * Format: uuid
+             * @description data list id
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            dataListId?: string;
+        };
         DataListOptionProjectionCreateRqV1: {
             /** @description data list option projection list */
             dataListOptionProjectionList?: components["schemas"]["DataListOptionProjectionCreateV1"][];
@@ -29066,6 +29404,28 @@ export interface components {
             /** @description result - domain business account */
             businessAccount?: components["schemas"]["DomainBusinessAccountV1"];
         };
+        DataListSubsetViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - data list subset */
+            dataListSubset?: components["schemas"]["DataListSubsetV1"];
+        };
         DataListRsV2: {
             /**
              * Format: int32
@@ -29332,6 +29692,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -29464,6 +29825,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -29879,6 +30241,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -30006,6 +30369,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -30143,6 +30507,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30188,6 +30553,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -30325,6 +30691,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -30370,6 +30737,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -30681,6 +31049,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -30808,6 +31177,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -30935,6 +31305,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31076,6 +31447,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31200,6 +31572,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31328,6 +31701,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31457,6 +31831,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31586,6 +31961,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31714,6 +32090,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -31848,6 +32225,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -31894,6 +32272,7 @@ export interface operations {
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -32025,6 +32404,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -32071,6 +32451,7 @@ export interface operations {
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -32196,6 +32577,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32321,6 +32703,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32446,6 +32829,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32573,6 +32957,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32700,6 +33085,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32825,6 +33211,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -32950,6 +33337,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33074,6 +33462,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33242,6 +33631,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33367,6 +33757,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33495,6 +33886,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33623,6 +34015,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33746,6 +34139,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -33926,6 +34320,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34063,6 +34458,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34278,6 +34674,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34405,6 +34802,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34533,6 +34931,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34661,6 +35060,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34789,6 +35189,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -34918,6 +35319,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -35053,6 +35455,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35098,6 +35501,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -35239,6 +35643,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -35284,6 +35689,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -35512,6 +35918,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -35639,6 +36046,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -35850,6 +36258,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -35977,6 +36386,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -36104,6 +36514,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -36235,6 +36646,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -36406,6 +36818,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -36585,6 +36998,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -36631,6 +37045,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -36798,6 +37213,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -36971,6 +37387,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -37232,6 +37649,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -37358,6 +37776,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -37720,6 +38139,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -37735,6 +38155,7 @@ export interface operations {
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showNotificationChannel2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37856,6 +38277,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -37871,6 +38293,7 @@ export interface operations {
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showNotificationChannel2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -37998,6 +38421,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38044,6 +38468,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -38178,6 +38603,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38224,6 +38650,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -38358,6 +38785,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38404,6 +38832,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -38535,6 +38964,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38581,6 +39011,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -38712,6 +39143,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38758,6 +39190,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -38889,6 +39322,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -38935,6 +39369,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39066,6 +39501,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39112,6 +39548,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39242,6 +39679,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39288,6 +39726,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39422,6 +39861,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39468,6 +39908,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39598,6 +40039,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39644,6 +40086,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39778,6 +40221,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -39824,6 +40268,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -39958,6 +40403,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40004,6 +40450,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -40176,11 +40623,13 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDomain2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TierMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountInitiator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountTemplate2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40381,11 +40830,13 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDomain2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TierMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountInitiator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountTemplate2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40545,6 +40996,100 @@ export interface operations {
             };
         };
     };
+    dataListSubsetUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubset2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListSubset2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubsetMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListSubsetUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Data list subsets updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListSubsetListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    dataListSubsetCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubset2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListSubset2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubsetMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListSubsetCreateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Data list subsets created */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListSubsetListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     dataListOptionProjectionUpdateV1: {
         parameters: {
             query?: {
@@ -40560,6 +41105,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionProjection2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40690,6 +41236,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionProjection2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -40809,9 +41356,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -40853,9 +41402,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -40941,9 +41492,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -40986,10 +41539,12 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -41031,7 +41586,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -41089,6 +41646,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -41214,6 +41772,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -41656,9 +42215,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -41703,9 +42264,11 @@ export interface operations {
     dataListOptionsMapViewPublicV1: {
         parameters: {
             query?: {
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -41747,7 +42310,9 @@ export interface operations {
     dataListPublicSearchV2: {
         parameters: {
             query?: {
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -41792,7 +42357,9 @@ export interface operations {
     dataListPublicSearchV1: {
         parameters: {
             query?: {
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -41896,6 +42463,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -42403,6 +42971,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -42540,6 +43109,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42585,6 +43155,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -42725,6 +43296,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -42770,6 +43342,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -43176,6 +43749,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43311,6 +43885,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43446,6 +44021,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43576,6 +44152,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43706,6 +44283,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43838,6 +44416,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -43970,6 +44549,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44098,6 +44678,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44266,6 +44847,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44391,6 +44973,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44518,6 +45101,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44649,6 +45233,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44859,6 +45444,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -44991,6 +45577,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -45123,6 +45710,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -45259,6 +45847,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45305,6 +45894,7 @@ export interface operations {
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -45439,6 +46029,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -45485,6 +46076,7 @@ export interface operations {
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -45658,6 +46250,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -45786,6 +46379,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -45917,6 +46511,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46045,6 +46640,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46173,6 +46769,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46300,6 +46897,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46430,6 +47028,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46640,6 +47239,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46765,6 +47365,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -46893,6 +47494,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47021,6 +47623,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47146,6 +47749,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47277,6 +47881,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47408,6 +48013,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47539,6 +48145,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47680,6 +48287,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47797,7 +48405,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -47858,6 +48468,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -47991,6 +48602,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48119,6 +48731,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48243,6 +48856,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48373,6 +48987,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48500,6 +49115,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48667,6 +49283,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48791,6 +49408,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -48961,6 +49579,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -49092,6 +49711,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -49231,6 +49851,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -49407,6 +50028,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -49578,6 +50200,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -49916,6 +50539,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50045,6 +50669,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50216,6 +50841,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50347,6 +50973,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50475,6 +51102,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50603,6 +51231,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50861,6 +51490,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -50989,6 +51619,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -51121,6 +51752,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51255,6 +51887,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -51384,6 +52017,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51518,6 +52152,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -51786,6 +52421,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -51920,6 +52556,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -52049,6 +52686,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDraft2UserMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52183,6 +52821,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -52412,6 +53051,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -52457,6 +53097,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -52700,6 +53341,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -52830,6 +53472,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -52960,6 +53603,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -53373,6 +54017,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -53503,6 +54148,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -53686,6 +54332,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -53814,6 +54461,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -53945,6 +54593,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54079,6 +54728,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54214,6 +54864,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -54260,6 +54911,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -54385,6 +55037,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54518,6 +55171,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54649,6 +55303,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54783,6 +55438,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -54916,6 +55572,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55052,6 +55709,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55175,6 +55833,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55302,6 +55961,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55427,6 +56087,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55555,6 +56216,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55728,6 +56390,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55855,6 +56518,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -55985,6 +56649,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -56115,6 +56780,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -56392,6 +57058,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -56407,6 +57074,7 @@ export interface operations {
                 showHistoryNotificationMode?: "HIDE" | "SHORT" | "DETAILED";
                 showHistoryNotificationRecipient2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showNotificationChannel2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationChannelMode?: "HIDE" | "SHORT" | "DETAILED";
                 showNotificationChannelEvent2NotificationContextMode?: "HIDE" | "SHORT" | "DETAILED";
                 showPermission2PermissionGroupMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56717,6 +57385,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56763,6 +57432,7 @@ export interface operations {
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -56894,6 +57564,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -56940,6 +57611,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -57114,6 +57786,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57160,6 +57833,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -57291,6 +57965,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57338,6 +58013,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
@@ -57473,6 +58149,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57519,6 +58196,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -57693,6 +58371,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57739,6 +58418,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -57870,6 +58550,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -57917,6 +58598,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58052,6 +58734,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58098,6 +58781,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58232,6 +58916,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58278,6 +58963,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58409,6 +59095,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58456,6 +59143,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58590,6 +59278,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58636,6 +59325,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58810,6 +59500,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -58856,6 +59547,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -58987,6 +59679,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59033,6 +59726,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
@@ -59168,6 +59862,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59214,6 +59909,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -59388,6 +60084,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59434,6 +60131,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -59565,6 +60263,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59612,6 +60311,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -59746,6 +60446,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59792,6 +60493,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -59926,6 +60628,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -59972,6 +60675,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -60103,6 +60807,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60149,6 +60854,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -60284,6 +60990,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60330,6 +61037,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -60464,6 +61172,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60510,6 +61219,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -60641,6 +61351,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60687,6 +61398,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
@@ -60822,6 +61534,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -60868,6 +61581,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61042,6 +61756,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61088,6 +61803,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61219,6 +61935,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61266,6 +61983,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61400,6 +62118,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61446,6 +62165,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61580,6 +62300,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61626,6 +62347,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61760,6 +62482,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -61806,6 +62529,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -61979,6 +62703,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62025,6 +62750,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -62159,6 +62885,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62205,6 +62932,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -62336,6 +63064,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62382,6 +63111,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -62516,6 +63246,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62562,6 +63293,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -62775,6 +63507,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -62821,6 +63554,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -63365,6 +64099,144 @@ export interface operations {
             };
         };
     };
+    dataListSubsetSearchV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubset2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListSubset2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubsetMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListSubsetSearchRqV1"];
+            };
+        };
+        responses: {
+            /** @description Data list subset data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListSubsetSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    dataListSubsetDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListSubsetDeleteRqV1"];
+            };
+        };
+        responses: {
+            /** @description Data list subsets deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    dataListSubsetCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubset2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataListSubsetCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListSubsetCountRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     dataListOptionProjectionSearchV1: {
         parameters: {
             query?: {
@@ -63380,6 +64252,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionProjection2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -63513,6 +64386,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionProjection2DataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -63635,9 +64509,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -63680,9 +64556,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -63731,9 +64609,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -63779,9 +64659,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -63826,9 +64708,11 @@ export interface operations {
     dataListOptionsMapViewV1: {
         parameters: {
             query?: {
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -63871,9 +64755,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -63919,7 +64805,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -63961,7 +64849,9 @@ export interface operations {
     dataListSearchV1: {
         parameters: {
             query?: {
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -64068,6 +64958,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -64243,6 +65134,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -64373,6 +65265,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -64503,6 +65396,7 @@ export interface operations {
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
                 showCommentMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -64758,6 +65652,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -64934,6 +65829,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -65064,6 +65960,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -65192,6 +66089,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -65884,9 +66782,11 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -65928,7 +66828,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -65970,7 +66872,9 @@ export interface operations {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -66109,6 +67013,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -66233,6 +67138,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -66357,6 +67263,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -66478,6 +67385,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -66641,6 +67549,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -66686,6 +67595,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -66861,6 +67771,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -66988,6 +67899,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67116,6 +68028,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67242,6 +68155,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67365,6 +68279,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67491,6 +68406,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67615,6 +68531,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67739,6 +68656,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -67869,6 +68787,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -67914,6 +68833,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -68310,6 +69230,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -68439,6 +69360,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -68699,6 +69621,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -68823,6 +69746,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -68947,6 +69871,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -69077,6 +70002,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -69207,6 +70133,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -69339,6 +70266,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -69470,6 +70398,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
@@ -69685,6 +70614,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -69731,6 +70661,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -69861,6 +70792,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -69907,6 +70839,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -70037,6 +70970,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -70083,6 +71017,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -70213,6 +71148,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -70259,6 +71195,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -70389,6 +71326,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -70435,6 +71373,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -70568,6 +71507,7 @@ export interface operations {
                 showConditionSetInFactoryPipelineStepUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryPipelineUsagesCountMode?: "HIDE" | "SHOW";
                 showConditionSetInFactoryTriggerUsagesCountMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFactory2FactoryBranchMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -70614,6 +71554,7 @@ export interface operations {
                 showFactoryTrigger2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryTrigger2TwinTriggerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFactoryUsagesCountMode?: "HIDE" | "SHOW";
+                showFactoryUsagesMode?: "HIDE" | "SHORT" | "DETAILED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";
                 showFeaturerTypeMode?: "HIDE" | "SHOW";
                 showLinkDst2TwinClassMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
@@ -70869,6 +71810,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -70996,6 +71938,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71122,6 +72065,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71248,6 +72192,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71375,6 +72320,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71502,6 +72448,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71629,6 +72576,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -71756,6 +72704,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -72017,6 +72966,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -72188,11 +73138,13 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDomain2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TierMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountInitiator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountTemplate2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -72413,11 +73365,13 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDomain2PermissionSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TierMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomain2TwinClassSchemaMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDomainBusinessAccountInitiator2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainBusinessAccountTemplate2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDomainNavbar2FaceMode?: "HIDE" | "SHORT" | "DETAILED";
@@ -72628,14 +73582,62 @@ export interface operations {
             };
         };
     };
+    dataListSubsetViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubset2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showDataListSubset2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showDataListSubsetMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example be44e826-ce24-4881-a227-f3f72d915a20 */
+                dataListSubsetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Data list subset data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataListSubsetViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
     dataListByKeyViewV1: {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showDataListOptionMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
             };
             header: {
                 /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
@@ -72731,6 +73733,7 @@ export interface operations {
                 showComment2TwinMode?: "HIDE" | "SHORT" | "DETAILED";
                 showComment2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showCommentActionMode?: "HIDE" | "SHOW";
+                showDataList2UserMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2BusinessAccountMode?: "HIDE" | "SHORT" | "DETAILED";
                 showDataListOption2DataListMode?: "HIDE" | "SHORT" | "DETAILED" | "MANAGED";
                 showFeaturerParamMode?: "HIDE" | "SHOW";

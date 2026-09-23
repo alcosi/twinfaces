@@ -48,14 +48,16 @@ export const hydrateTwinClassFieldFromMap = (
   if (hydrated.fieldTyperParams && hydrated.fieldTyperFeaturer?.params) {
     hydrated.fieldTyperDetailedParams = extendFeaturerParams(
       hydrated.fieldTyperParams,
-      hydrated.fieldTyperFeaturer.params
+      hydrated.fieldTyperFeaturer.params,
+      relatedObjects
     );
   }
 
   if (hydrated.twinSorterParams && hydrated.twinSorterFeaturer?.params) {
     hydrated.twinSorterDetailedParams = extendFeaturerParams(
       hydrated.twinSorterParams,
-      hydrated.twinSorterFeaturer.params
+      hydrated.twinSorterFeaturer.params,
+      relatedObjects
     );
   }
 
@@ -71,7 +73,8 @@ export const hydrateTwinClassFieldFromMap = (
   ) {
     hydrated.fieldInitializerDetailedParams = extendFeaturerParams(
       hydrated.fieldInitializerParams,
-      hydrated.fieldInitializerFeaturer.params
+      hydrated.fieldInitializerFeaturer.params,
+      relatedObjects
     );
   }
   return hydrated;

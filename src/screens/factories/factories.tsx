@@ -51,9 +51,10 @@ import { FactoryFormFields } from "./form-fields";
 
 // Every displayable field of a factory gets a column. The related-entity id
 // lists (`pipelineIdList`, `stepIdList`, …) are wire payload with no column of
-// their own, so they are excluded rather than stubbed out.
+// their own, so they are excluded rather than stubbed out — and so is `usages`,
+// whose one number worth showing is already the `factoryUsagesCount` column.
 const colDefs: Record<
-  keyof Omit<Factory, "createdByUserId" | `${string}IdList`>,
+  keyof Omit<Factory, "createdByUserId" | "usages" | `${string}IdList`>,
   ColumnDef<Factory>
 > = {
   id: {

@@ -23,7 +23,8 @@ export const hydrateTwinTriggerFromMap = (
   if (hydrated.triggerParams && hydrated.triggerFeaturer?.params) {
     hydrated.triggerDetailedParams = extendFeaturerParams(
       hydrated.triggerParams,
-      hydrated.triggerFeaturer.params
+      hydrated.triggerFeaturer.params,
+      relatedObjects
     );
   }
 

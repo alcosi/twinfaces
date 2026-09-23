@@ -15,7 +15,9 @@ import { FactoryPipelineResourceLink } from "@/features/factory-pipeline/ui";
 import { FactoryTriggerResourceLink } from "@/features/factory-trigger/ui";
 import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
+import { TwinFlowFactoryResourceLink } from "@/features/twinflow-factory/ui";
 import { cn, isPopulatedString } from "@/shared/libs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui";
 
@@ -302,6 +304,22 @@ function ChipResourceLink({ chip }: { chip: GraphChip }) {
     case "status":
       return (
         <TwinClassStatusResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "transition":
+      return (
+        <TwinFlowTransitionResourceLink
+          data={chip.entity}
+          disabled={disabled}
+          withTooltip
+        />
+      );
+    case "twinflowFactory":
+      return (
+        <TwinFlowFactoryResourceLink
           data={chip.entity}
           disabled={disabled}
           withTooltip

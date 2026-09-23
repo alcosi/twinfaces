@@ -89,7 +89,8 @@ export const hydrateTwinClassFromMap = (
   if (hydrated.headHunterParams && hydrated.headHunterFeaturer?.params) {
     hydrated.headHunterDetailedParams = extendFeaturerParams(
       hydrated.headHunterParams,
-      hydrated.headHunterFeaturer.params
+      hydrated.headHunterFeaturer.params,
+      relatedObjects
     );
   }
 
@@ -145,7 +146,8 @@ export const hydrateRuleFromMap = (
   ) {
     hydrated.fieldOverwriterDetailedParams = extendFeaturerParams(
       hydrated.fieldOverwriterParams,
-      hydrated.fieldOverwriterFeaturer.params
+      hydrated.fieldOverwriterFeaturer.params,
+      relatedObjects
     );
   }
 

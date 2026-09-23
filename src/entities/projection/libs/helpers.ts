@@ -48,7 +48,8 @@ export const hydrateProjectionFromMap = (
   ) {
     hydrated.projectorDetailedParams = extendFeaturerParams(
       hydrated.fieldProjectorParams,
-      hydrated.fieldProjectorFeaturer.params
+      hydrated.fieldProjectorFeaturer.params,
+      relatedObjects
     );
   }
 

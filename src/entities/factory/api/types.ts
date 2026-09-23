@@ -5,6 +5,8 @@ import { RequireFields } from "@/shared/libs";
 export type Factory = components["schemas"]["FactoryV1"] & {
   createdByUser?: User;
 };
+/** One place a factory is referenced from — an entry of `Factory.usages`. */
+export type FactoryUsage = components["schemas"]["UsageV1"];
 export type Factory_SHORT = RequireFields<
   Factory,
   "id" | "name" | "key" | "createdAt"

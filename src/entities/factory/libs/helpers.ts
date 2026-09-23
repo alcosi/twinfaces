@@ -1,4 +1,5 @@
 import { RelatedObjects } from "@/shared/api";
+
 import { Factory, Factory_DETAILED } from "../api";
 
 export const hydrateFactoryFromMap = (
