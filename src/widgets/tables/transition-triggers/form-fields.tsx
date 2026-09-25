@@ -61,6 +61,7 @@ export function TriggersFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Twin trigger",
     adapter: twinTriggerAdapter,
+    create: { entity: "twinTrigger" },
     extraFilters: buildTwinTriggerFilters(),
     mapExtraFilters: (filters) => mapTwinTriggerFilters(filters),
     searchPlaceholder: "Search...",

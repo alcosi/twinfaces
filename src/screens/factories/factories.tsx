@@ -11,8 +11,8 @@ import { z } from "zod";
 import {
   FACTORY_SCHEMA,
   Factory,
-  FactoryCreateRq,
   FactoryFilterKeys,
+  buildFactoryCreateRq,
   useCreateFactory,
   useFactoryCount,
   useFactoryFilters,
@@ -38,6 +38,7 @@ import {
   SortableHeader,
   buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
+import { FactoryFormFields } from "@/widgets/form-fields/factory";
 
 import {
   FactoryDuplicateDialog,
@@ -47,7 +48,6 @@ import {
   FactoryExportSqlDialog,
   FactoryExportSqlDialogRef,
 } from "./factory-export-sql-dialog";
-import { FactoryFormFields } from "./form-fields";
 
 // Every displayable field of a factory gets a column. The related-entity id
 // lists (`pipelineIdList`, `stepIdList`, …) are wire payload with no column of
@@ -252,21 +252,7 @@ export function Factories() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_SCHEMA>
   ) => {
-    const body: FactoryCreateRq = {
-      nameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      descriptionI18n: {
-        translations: {
-          en: formValues.description,
-        },
-      },
-      key: formValues.key,
-    };
-
-    await createFactory(body);
+    await createFactory(buildFactoryCreateRq(formValues));
     toast.success("Factory created successfully!");
   };
 

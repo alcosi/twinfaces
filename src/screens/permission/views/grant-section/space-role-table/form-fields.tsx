@@ -45,6 +45,7 @@ export function SpaceRoleTableFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Permission",
     adapter: permissionAdapter,
+    create: { entity: "permission" },
     extraFilters: buildPermissionFilters(),
     mapExtraFilters: (filters) => mapPermissionFilters(filters),
     searchPlaceholder: "Search...",

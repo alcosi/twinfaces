@@ -9,11 +9,13 @@ export const usePermissionCreate = () => {
 
   const createPermission = useCallback(
     async ({ body }: { body: CreatePermissionRequestBody }) => {
-      const { error } = await api.permission.create({ body });
+      const { data, error } = await api.permission.create({ body });
 
       if (error) {
         throw error;
       }
+
+      return data?.permission?.id;
     },
     [api]
   );

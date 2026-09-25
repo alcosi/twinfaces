@@ -1,6 +1,9 @@
+import { z } from "zod";
+
 import { RelatedObjects } from "@/shared/api";
 
-import { Factory, Factory_DETAILED } from "../api";
+import { Factory, FactoryCreateRq, Factory_DETAILED } from "../api";
+import { FACTORY_SCHEMA } from "./schemas";
 
 export const hydrateFactoryFromMap = (
   dto: Factory,
@@ -14,3 +17,17 @@ export const hydrateFactoryFromMap = (
 
   return hydrated;
 };
+
+/**
+ * Shared by the factories table and the cascading create panel, so both post
+ * the very same body.
+ */
+export function buildFactoryCreateRq(
+  values: z.infer<typeof FACTORY_SCHEMA>
+): FactoryCreateRq {
+  return {
+    key: values.key,
+    nameI18n: { translations: { en: values.name } },
+    descriptionI18n: { translations: { en: values.description } },
+  };
+}

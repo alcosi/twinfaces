@@ -10,11 +10,13 @@ export const useCreateFactory = () => {
   const createFactory = useCallback(
     async (body: FactoryCreateRq) => {
       try {
-        const { error } = await api.factory.create({ body });
+        const { data, error } = await api.factory.create({ body });
 
         if (error) {
           throw new Error("Failed to create factory");
         }
+
+        return data?.factory?.id;
       } catch (error) {
         throw new Error("An error occured while creating factory");
       }

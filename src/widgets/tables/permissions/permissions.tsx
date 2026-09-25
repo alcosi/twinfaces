@@ -7,11 +7,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import {
-  CreatePermissionRequestBody,
   PERMISSION_SCHEMA,
   type Permission,
   PermissionFormValues,
   Permission_DETAILED,
+  buildPermissionCreateRq,
   usePermissionCount,
   usePermissionCreate,
   usePermissionFilters,
@@ -186,24 +186,7 @@ export function PermissionsTable({
   );
 
   async function handleCreate(formValues: z.infer<typeof PERMISSION_SCHEMA>) {
-    const body: CreatePermissionRequestBody = {
-      groupId: formValues.groupId,
-      key: formValues.key,
-      nameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      descriptionI18n: formValues.description
-        ? {
-            translations: {
-              en: formValues.description,
-            },
-          }
-        : undefined,
-    };
-
-    await createPermission({ body });
+    await createPermission({ body: buildPermissionCreateRq(formValues) });
     toast.success("Permission created successfully!");
   }
 

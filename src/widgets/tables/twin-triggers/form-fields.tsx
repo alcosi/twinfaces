@@ -34,6 +34,7 @@ export function TwinTriggerFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Job class",
     adapter: twinClassAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search...",

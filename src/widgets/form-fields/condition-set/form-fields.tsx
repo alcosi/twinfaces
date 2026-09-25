@@ -28,6 +28,7 @@ export function ConditionSetFields({
     type: AutoFormValueType.complexCombobox,
     label: "Factory",
     adapter: factoryAdapter,
+    create: { entity: "factory" },
     extraFilters: buildFactoryFilters(),
     mapExtraFilters: (filters) => mapFactoryFilters(filters),
     searchPlaceholder: "Search...",

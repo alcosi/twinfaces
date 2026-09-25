@@ -10,10 +10,10 @@ import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
 import {
-  AdvancedFilterPanels,
-  useAdvancedFilterLevels,
-} from "@/components/advanced-filters";
-import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
+  SidePanels,
+  SidePanelsContext,
+  useSidePanels,
+} from "@/components/side-panels";
 
 import { isPopulatedString } from "@/shared/libs";
 import {
@@ -61,13 +61,15 @@ function Component(
 ) {
   const defaultValues = useRef(dialogForm?.formState.defaultValues).current;
 
-  const advancedFilters = useAdvancedFilterLevels();
+  // The create/edit sheet is where cascading creation belongs: a combobox that
+  // has nothing to pick can open a create panel right next to the form.
+  const sidePanels = useSidePanels({ cascadeCreateEnabled: true });
   const {
     scrollRef,
     visibleWidth,
     contextValue,
-    reset: resetAdvancedFilters,
-  } = advancedFilters;
+    reset: resetSidePanels,
+  } = sidePanels;
 
   const [dialogState, updateDialogState] = useReducer(
     (state: DialogState, updates: Partial<DialogState>) => ({
@@ -84,7 +86,7 @@ function Component(
     open: (row) => {
       updateDialogState({ open: true, rowId: row?.id });
       dialogForm?.reset(row ?? defaultValues);
-      resetAdvancedFilters();
+      resetSidePanels();
     },
   }));
 
@@ -93,7 +95,7 @@ function Component(
 
     updateDialogState({ open: false, rowId: undefined });
     dialogForm?.reset();
-    resetAdvancedFilters();
+    resetSidePanels();
   }
 
   async function handleFormSubmit(formValues: unknown) {
@@ -105,7 +107,7 @@ function Component(
       }
       updateDialogState({ open: false, rowId: undefined });
       onSubmitSuccess?.();
-      resetAdvancedFilters();
+      resetSidePanels();
     } catch (error) {
       console.error("Action failed:", error);
       toast.error("Action failed");
@@ -143,9 +145,9 @@ function Component(
               </SheetHeader>
 
               <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                <AdvancedFiltersContext.Provider value={contextValue}>
+                <SidePanelsContext.Provider value={contextValue}>
                   {renderFormFields && renderFormFields()}
-                </AdvancedFiltersContext.Provider>
+                </SidePanelsContext.Provider>
               </div>
 
               <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
@@ -161,8 +163,8 @@ function Component(
               </div>
             </form>
 
-            {/* Advanced filter panels (stack-based, supports N levels) */}
-            <AdvancedFilterPanels {...advancedFilters} />
+            {/* Filter / create panels (stack-based, supports N levels) */}
+            <SidePanels {...sidePanels} />
           </div>
         </Form>
       </SheetContent>

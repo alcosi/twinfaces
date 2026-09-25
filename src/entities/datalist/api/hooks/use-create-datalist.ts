@@ -9,11 +9,13 @@ export const useDatalistCreate = () => {
 
   const createDatalist = useCallback(
     async ({ body }: { body: DataListCreateRqV1 }) => {
-      const { error } = await api.datalist.create({ body });
+      const { data, error } = await api.datalist.create({ body });
 
       if (error) {
         throw error;
       }
+
+      return data?.dataList?.id;
     },
     [api]
   );

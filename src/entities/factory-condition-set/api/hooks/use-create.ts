@@ -10,11 +10,13 @@ export const useFactoryConditionSetCreate = () => {
   const createFactoryConditionSet = useCallback(
     async ({ body }: { body: FactoryConditionSetCreateRq }) => {
       try {
-        const { error } = await api.factoryConditionSet.create({ body });
+        const { data, error } = await api.factoryConditionSet.create({ body });
 
         if (error) {
           throw new Error("Failed to create factory condition set");
         }
+
+        return data?.conditionSets?.[0]?.id;
       } catch (error) {
         console.error("Failed to create factory condition set:", error);
         throw new Error(

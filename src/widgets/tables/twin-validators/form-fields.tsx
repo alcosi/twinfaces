@@ -46,6 +46,7 @@ export function TwinValidatorFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Validator set",
     adapter: validatorSetAdapter,
+    create: { entity: "validatorSet" },
     extraFilters: buildValidatorSetFilters(),
     mapExtraFilters: (filters) => mapValidatorSetFilters(filters),
     searchPlaceholder: "Search...",

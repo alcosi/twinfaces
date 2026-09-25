@@ -10,11 +10,13 @@ export const useTwinTriggerCreate = () => {
   const createTwinTrigger = useCallback(
     async ({ body }: { body: TwinTriggerCreateRq }) => {
       try {
-        const { error } = await api.twinTrigger.create({ body });
+        const { data, error } = await api.twinTrigger.create({ body });
 
         if (error) {
           throw new Error("Failed to create twin trigger");
         }
+
+        return data?.triggers?.[0]?.id;
       } catch {
         throw new Error("An error occured while creating twin trigger");
       }

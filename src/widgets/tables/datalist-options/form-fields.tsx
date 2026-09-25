@@ -38,6 +38,7 @@ export function DatalistOptionFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Datalist",
     adapter: dlAdapter,
+    create: { entity: "datalist" },
     extraFilters: buildDatalistFilters(),
     mapExtraFilters: (filters) => mapDatalistFilters(filters),
     searchPlaceholder: "Search datalist...",

@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { AdvancedFiltersContextValue } from "@/components/advanced-filters-context";
 import { AutoFormComplexComboboxValueInfo } from "@/components/auto-field";
 
-import { AdvancedFilterLevel } from "./advanced-filter-panel";
+import { OpenCascadeCreateArgs, SidePanelsContextValue } from "./context";
 import {
   AdvancedFilterTouched,
   AdvancedFilterValues,
@@ -20,20 +19,25 @@ const TRANSITION_MS = 300;
 const PANEL_WIDTH = 400;
 const MAX_VISIBLE_LEVELS = 3;
 
+export type SidePanelLevel =
+  | { kind: "filters"; key: string; info: AutoFormComplexComboboxValueInfo }
+  | ({ kind: "create"; key: string } & OpenCascadeCreateArgs);
+
 /**
- * Manages the horizontal stack of advanced-filter panels shared by the table
- * filters sidebar and the create/edit sheet. Supports arbitrary nesting: a
- * complex combobox inside a panel can open a deeper panel.
+ * Manages the horizontal stack of side panels shared by the table filters
+ * sidebar and the create/edit sheet. A panel either narrows a combobox
+ * (advanced filters) or creates the entity that combobox picks from, and both
+ * nest arbitrarily deep: a create panel's own comboboxes can open either kind.
  *
- * Panel values live here rather than in the panels themselves, so that closing
+ * Filter values live here rather than in the panels themselves, so that closing
  * a panel keeps its filters applied — the combobox that opened it can then
  * still show how many of them are in effect.
  */
-export function useAdvancedFilterLevels() {
-  const [levels, setLevels] = useState<AdvancedFilterLevel[]>([]);
-  const [renderedLevels, setRenderedLevels] = useState<AdvancedFilterLevel[]>(
-    []
-  );
+export function useSidePanels({
+  cascadeCreateEnabled = false,
+}: { cascadeCreateEnabled?: boolean } = {}) {
+  const [levels, setLevels] = useState<SidePanelLevel[]>([]);
+  const [renderedLevels, setRenderedLevels] = useState<SidePanelLevel[]>([]);
   const [valuesByKey, setValuesByKey] = useState<
     Record<string, AdvancedFilterValues>
   >({});
@@ -70,33 +74,43 @@ export function useAdvancedFilterLevels() {
     []
   );
 
-  const openAdvancedFilters = useCallback(
-    (filterKey: string, info: AutoFormComplexComboboxValueInfo) => {
-      initValues(filterKey, info);
+  // Re-opening a panel that is already in the stack cuts back to it instead of
+  // pushing a duplicate; anything opened from level N replaces levels past N.
+  const pushLevel = useCallback(
+    (level: SidePanelLevel, parentIndex: number) => {
       setLevels((prev) => {
-        const existingIndex = prev.findIndex(
-          (level) => level.key === filterKey
-        );
+        const existingIndex = prev.findIndex((it) => it.key === level.key);
         if (existingIndex !== -1) return prev.slice(0, existingIndex + 1);
-        return [{ key: filterKey, info }];
+        return [...prev.slice(0, parentIndex + 1), level];
       });
     },
-    [initValues]
+    []
   );
 
   const openAdvancedFiltersFromLevel = useCallback(
     (parentIndex: number) =>
       (filterKey: string, info: AutoFormComplexComboboxValueInfo) => {
         initValues(filterKey, info);
-        setLevels((prev) => {
-          const existingIndex = prev.findIndex(
-            (level) => level.key === filterKey
-          );
-          if (existingIndex !== -1) return prev.slice(0, existingIndex + 1);
-          return [...prev.slice(0, parentIndex + 1), { key: filterKey, info }];
-        });
+        pushLevel({ kind: "filters", key: filterKey, info }, parentIndex);
       },
-    [initValues]
+    [initValues, pushLevel]
+  );
+
+  const openCascadeCreateFromLevel = useCallback(
+    (parentIndex: number) => (key: string, args: OpenCascadeCreateArgs) => {
+      pushLevel({ kind: "create", key, ...args }, parentIndex);
+    },
+    [pushLevel]
+  );
+
+  const openAdvancedFilters = useMemo(
+    () => openAdvancedFiltersFromLevel(-1),
+    [openAdvancedFiltersFromLevel]
+  );
+
+  const openCascadeCreate = useMemo(
+    () => openCascadeCreateFromLevel(-1),
+    [openCascadeCreateFromLevel]
   );
 
   const closeFrom = useCallback((index: number) => {
@@ -154,9 +168,22 @@ export function useAdvancedFilterLevels() {
     [valuesByKey]
   );
 
-  const contextValue: AdvancedFiltersContextValue = useMemo(
-    () => ({ openAdvancedFilters, path: "", openKeys, appliedCounts }),
-    [openAdvancedFilters, openKeys, appliedCounts]
+  const contextValue: SidePanelsContextValue = useMemo(
+    () => ({
+      openAdvancedFilters,
+      openCascadeCreate,
+      cascadeCreateEnabled,
+      path: "",
+      openKeys,
+      appliedCounts,
+    }),
+    [
+      openAdvancedFilters,
+      openCascadeCreate,
+      cascadeCreateEnabled,
+      openKeys,
+      appliedCounts,
+    ]
   );
 
   const visibleWidth =
@@ -182,12 +209,15 @@ export function useAdvancedFilterLevels() {
     scrollRef,
     visibleWidth,
     contextValue,
+    cascadeCreateEnabled,
     openKeys,
     appliedCounts,
     valuesByKey,
     touchedByKey,
     openAdvancedFilters,
+    openCascadeCreate,
     openAdvancedFiltersFromLevel,
+    openCascadeCreateFromLevel,
     setFilterValue,
     resetFilterValues,
     closeFrom,

@@ -18,12 +18,13 @@ import {
   FetchTreePageResult,
   TWIN_CLASSES_SCHEMA,
   TwinClassContext,
-  TwinClassCreateRq,
   TwinClassFieldValues,
   TwinClassFilterKeys,
   TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
+  buildTwinClassCreateRq,
   useTwinClassCount,
+  useTwinClassCreate,
   useTwinClassFilters,
   useTwinClassSearch,
 } from "@/entities/twin-class";
@@ -33,7 +34,7 @@ import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
-import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import {
@@ -53,8 +54,8 @@ import {
   SortableHeader,
   buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
+import { TwinClassFormFields } from "@/widgets/form-fields/twin-class";
 
-import { TwinClassFormFields } from "./form-fields";
 import {
   TwinClassDuplicateDialog,
   TwinClassDuplicateDialogRef,
@@ -349,7 +350,7 @@ function boolLabel(
 }
 
 export function TwinClasses({ type }: { type?: string }) {
-  const api = useContext(PrivateApiContext);
+  const { createTwinClass } = useTwinClassCreate();
   const router = useRouter();
   const { twinClass } = useContext(TwinClassContext);
   const tableRef = useRef<DataTableHandle>(null);
@@ -833,88 +834,14 @@ export function TwinClasses({ type }: { type?: string }) {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof TWIN_CLASSES_SCHEMA>
   ) => {
-    const {
-      name,
-      description,
-      headTwinClass,
-      headHunterFeaturerId,
-      headHunterParams,
-      extendsTwinClassId,
-      autoCreatePermissions,
-      viewPermissionId,
-      createPermissionId,
-      tagDataListId,
-      markerDataListId,
-      segment,
-      assigneeRequired,
-      autoCreateTwinflow,
-      ownerType,
-      abstractClass,
-      permissionSchemaSpace,
-      twinflowSchemaSpace,
-      twinClassSchemaSpace,
-      aliasSpace,
-      key,
-      uniqueName,
-    } = formValues;
-
-    const twinClassCreateRq: TwinClassCreateRq = {
-      twinClassCreates: [
-        {
-          key,
-          nameI18n: name
-            ? {
-                translationInCurrentLocale: name,
-                translations: {},
-              }
-            : undefined,
-          descriptionI18n: description
-            ? {
-                translationInCurrentLocale: description,
-                translations: {},
-              }
-            : undefined,
-          abstractClass,
-          segment,
-          assigneeRequired,
-          ownerType,
-          headTwinClassId: headTwinClass?.[0]?.id,
-          headHunterFeaturerId,
-          headHunterParams,
-          extendsTwinClassId: extendsTwinClassId || undefined,
-          markerDataListId: markerDataListId || undefined,
-          tagDataListId: tagDataListId || undefined,
-          autoCreatePermissions,
-          uniqueName,
-          autoCreateTwinflow,
-          viewPermissionId: !autoCreatePermissions
-            ? viewPermissionId
-            : undefined,
-          createPermissionId: !autoCreatePermissions
-            ? createPermissionId
-            : undefined,
-          permissionSchemaSpace,
-          twinflowSchemaSpace,
-          twinClassSchemaSpace,
-          aliasSpace,
-        },
-      ],
-    };
-
     try {
-      const { error } = await api.twinClass.create({
-        body: twinClassCreateRq,
-      });
-
-      if (error) {
-        toast.error("Failed to create twin class");
-        throw error;
-      }
+      await createTwinClass({ body: buildTwinClassCreateRq(formValues) });
 
       toast.success("Twin class created successfully!");
       tableRef.current?.refresh();
     } catch (error) {
       console.error("Create error:", error);
+      toast.error("Failed to create twin class");
       throw error;
     }
   };

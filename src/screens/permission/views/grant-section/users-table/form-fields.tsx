@@ -51,6 +51,7 @@ export function UserTableFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Permission",
     adapter: pAdapter,
+    create: { entity: "permission" },
     extraFilters: buildPermissionFilters(),
     mapExtraFilters: (filters) => mapPermissionFilters(filters),
     searchPlaceholder: "Search...",

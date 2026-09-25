@@ -2,6 +2,7 @@ import {
   ChevronDown,
   ChevronUp,
   FilterX,
+  Plus,
   SlidersHorizontal,
 } from "lucide-react";
 import {
@@ -14,17 +15,18 @@ import {
 } from "react";
 
 import {
-  AdvancedFiltersContext,
+  SidePanelsContext,
+  scopeCreateKey,
   scopeFilterKey,
-} from "@/components/advanced-filters-context";
+} from "@/components/side-panels/context";
 import {
   buildInitialFilterValues,
   countAppliedFilters,
   normalizeFilterValue,
   stripIndeterminateFilters,
-} from "@/components/advanced-filters/filter-values";
+} from "@/components/side-panels/filter-values";
 
-import { cn } from "@/shared/libs";
+import { cn, isTruthy } from "@/shared/libs";
 
 import { AutoField, AutoFormComplexComboboxValueInfo } from "../auto-field";
 import { ComboboxFormItem } from "../form-fields";
@@ -44,17 +46,31 @@ export function ComplexComboboxFormItem({
   required?: boolean;
   filterKey?: string;
 }) {
-  const sidebarCtx = useContext(AdvancedFiltersContext);
+  const sidebarCtx = useContext(SidePanelsContext);
   const useSidebar = sidebarCtx !== null && filterKey !== undefined;
   // The same field name appears in several nested filter sets, so the panel it
   // belongs to is part of its key.
   const scopedKey = useSidebar
     ? scopeFilterKey(sidebarCtx.path, filterKey)
     : undefined;
+  const scopedCreateKey = useSidebar
+    ? scopeCreateKey(sidebarCtx.path, filterKey)
+    : undefined;
 
   const hasExtraFilters = Object.values(info.extraFilters).some(
     (filter) => filter !== undefined
   );
+
+  // Creating from here only works inside a panel stack that can host the create
+  // panel, and only for entities whose create form the registry knows.
+  const canCascadeCreate =
+    useSidebar &&
+    sidebarCtx.cascadeCreateEnabled &&
+    info.create !== undefined &&
+    !info.disabled;
+  const isCreatePanelOpen =
+    scopedCreateKey !== undefined &&
+    (sidebarCtx?.openKeys.includes(scopedCreateKey) ?? false);
 
   const [open, setOpen] = useState(false);
   const [filtersVersion, setFiltersVersion] = useState(0);
@@ -111,6 +127,22 @@ export function ComplexComboboxFormItem({
     info.adapter.invalidate?.();
   }
 
+  /**
+   * Picks up what the create panel just added: the list is refreshed either way,
+   * and the new entity is selected when the API handed its id back.
+   */
+  async function handleCreated(id?: string) {
+    info.adapter.invalidate?.();
+
+    if (!isTruthy(id)) return;
+
+    const created = await info.adapter.getById(id);
+    if (!isTruthy(created)) return;
+
+    const selected = Array.isArray(value) ? value : [];
+    onChange?.(info.multi ? [...selected, created] : [created]);
+  }
+
   const label: ReactNode =
     info.label != null ? (
       <span className="inline-flex flex-wrap items-center gap-2">
@@ -147,6 +179,29 @@ export function ComplexComboboxFormItem({
             required={required}
           />
         </div>
+
+        {canCascadeCreate && (
+          <button
+            type="button"
+            aria-pressed={isCreatePanelOpen}
+            aria-label={`Create a new ${typeof info.label === "string" ? info.label : "item"}`}
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-md border transition-colors",
+              isCreatePanelOpen
+                ? "border-brand-500 bg-brand-500 text-primary-foreground"
+                : "border-input text-muted-foreground hover:bg-muted hover:text-primary"
+            )}
+            onClick={() =>
+              sidebarCtx.openCascadeCreate(scopedCreateKey!, {
+                config: info.create!,
+                label: info.label,
+                onCreated: handleCreated,
+              })
+            }
+          >
+            <Plus size={16} />
+          </button>
+        )}
 
         {!info.disabled && useSidebar && hasExtraFilters && (
           <button

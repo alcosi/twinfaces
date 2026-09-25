@@ -15,11 +15,16 @@ export const useCreateTwinFlow = () => {
       twinClassId: string;
       body: TwinFlowCreateRq;
     }) => {
-      const { error } = await api.twinFlow.create({ twinClassId, body });
+      const { data, error } = await api.twinFlow.create({
+        twinClassId,
+        body,
+      });
 
       if (error) {
         throw error;
       }
+
+      return data?.twinflow?.id;
     },
     [api]
   );
