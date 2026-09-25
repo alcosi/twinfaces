@@ -35,6 +35,7 @@ export function TwinClassStatusFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Class",
     adapter: tcAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search...",

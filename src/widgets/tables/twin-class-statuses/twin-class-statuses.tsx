@@ -11,9 +11,9 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
-  TwinStatusCreateRq,
   TwinStatusFilterKeys,
   TwinStatus_DETAILED,
+  buildTwinStatusCreateRq,
   useStatusCreate,
   useStatusFilters,
   useTwinStatusCount,
@@ -318,21 +318,6 @@ export function TwinClassStatusesTable({
   }
 
   async function handleCreate(formValues: TwinClassStatusFormValues) {
-    const data: TwinStatusCreateRq = {
-      key: formValues.key,
-      nameI18n: {
-        translationInCurrentLocale: formValues.name,
-        translations: {},
-      },
-      descriptionI18n: {
-        translationInCurrentLocale: formValues.description,
-        translations: {},
-      },
-      // logo: formValues.logo,
-      backgroundColor: formValues.backgroundColor,
-      fontColor: formValues.fontColor,
-    };
-
     if (!formValues.twinClassId) {
       toast.error("Twin class ID is missing");
       return;
@@ -340,7 +325,7 @@ export function TwinClassStatusesTable({
 
     await createStatus({
       twinClassId: twinClassId || formValues.twinClassId!,
-      body: data,
+      body: buildTwinStatusCreateRq(formValues),
     });
 
     toast.success("Status created successfully!");

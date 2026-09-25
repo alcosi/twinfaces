@@ -43,6 +43,7 @@ export function FactoryConditionFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Condition Set",
     adapter: conditionSetAdapter,
+    create: { entity: "factoryConditionSet" },
     extraFilters: buildFactoryConditionSetFilters(),
     mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
     searchPlaceholder: "Search...",

@@ -79,6 +79,7 @@ export function FactoryPipelineFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Factory",
     adapter: factoryAdapter,
+    create: { entity: "factory" },
     extraFilters: buildFactoryFilters(),
     mapExtraFilters: (filters) => mapFactoryFilters(filters),
     searchPlaceholder: "Search...",
@@ -91,6 +92,7 @@ export function FactoryPipelineFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Condition set",
     adapter: factoryConditionSetAdapter,
+    create: { entity: "factoryConditionSet" },
     extraFilters: buildFactoryConditionSetFilters(),
     mapExtraFilters: (filters) => mapFactoryConditionSetFilters(filters),
     searchPlaceholder: "Search...",
@@ -102,6 +104,7 @@ export function FactoryPipelineFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Next factory",
     adapter: nextFactoryAdapter,
+    create: { entity: "factory" },
     extraFilters: buildFactoryFilters(),
     mapExtraFilters: (filters) => mapFactoryFilters(filters),
     searchPlaceholder: "Search...",
@@ -113,6 +116,7 @@ export function FactoryPipelineFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Input class",
     adapter: twinClassAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search...",
@@ -125,6 +129,12 @@ export function FactoryPipelineFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Output status",
     adapter: twinStatusAdapter,
+    // A status only exists inside a class, so a new one starts in the class
+    // this pipeline already takes as input.
+    create: {
+      entity: "twinStatus",
+      defaultValues: { twinClassId: twinClassWatch?.[0]?.id },
+    },
     extraFilters: buildTwinStatusFilters(),
     mapExtraFilters: (filters) => ({
       ...mapTwinStatusFilters(filters),

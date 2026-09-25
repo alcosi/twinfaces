@@ -10,8 +10,8 @@ import { z } from "zod";
 import {
   DATALIST_SCHEMA,
   DataList,
-  DataListCreateRqV1,
   DatalistFilterKeys,
+  buildDatalistCreateRq,
   useDatalistCount,
   useDatalistCreate,
   useDatalistFilters,
@@ -29,8 +29,7 @@ import {
   SortableHeader,
   buildCountGroupingLoad,
 } from "@/widgets/crud-data-table";
-
-import { DatalistFormFields } from "./form-fields";
+import { DatalistFormFields } from "@/widgets/form-fields/datalist";
 
 const colDefs: Record<
   keyof Pick<
@@ -159,24 +158,7 @@ export const DatalistsScreen = () => {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof DATALIST_SCHEMA>
   ) => {
-    const { key, name, description, ...rest } = formValues;
-
-    const requestBody: DataListCreateRqV1 = {
-      ...rest,
-      key: key,
-      nameI18n: {
-        translationInCurrentLocale: name,
-        translations: {},
-      },
-      descriptionI18n: description
-        ? {
-            translationInCurrentLocale: description,
-            translations: {},
-          }
-        : undefined,
-    };
-
-    createDatalist({ body: requestBody }).then(() => {
+    createDatalist({ body: buildDatalistCreateRq(formValues) }).then(() => {
       toast.success("Datalist created successfully!");
       tableRef.current?.refresh();
     });

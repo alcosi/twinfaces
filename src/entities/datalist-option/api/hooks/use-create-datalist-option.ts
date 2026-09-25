@@ -9,11 +9,13 @@ export const useCreateDatalistOption = () => {
 
   const createDatalistOption = useCallback(
     async ({ body }: { body: DataListOptionCreateRqDV1 }) => {
-      const { error } = await api.datalistOption.create({ body });
+      const { data, error } = await api.datalistOption.create({ body });
 
       if (error) {
         throw error;
       }
+
+      return data?.option?.id;
     },
     [api]
   );

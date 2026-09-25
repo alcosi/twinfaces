@@ -18,7 +18,13 @@ import {
   useStatusFilters,
   useTwinStatusSelectAdapterWithFilters,
 } from "@/entities/twin-status";
-import { isFalsy, isTruthy, reduceToObject, toArray } from "@/shared/libs";
+import {
+  isFalsy,
+  isTruthy,
+  reduceToObject,
+  toArray,
+  toArrayOfString,
+} from "@/shared/libs";
 
 export function TwinClassTwinFlowFormFields({
   control,
@@ -46,6 +52,7 @@ export function TwinClassTwinFlowFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Class",
     adapter: tcAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search...",
@@ -58,6 +65,14 @@ export function TwinClassTwinFlowFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Initial status",
     adapter: twinStatusAdapter,
+    // A status only exists inside a class, so a new one starts in the class
+    // this twinflow belongs to.
+    create: {
+      entity: "twinStatus",
+      defaultValues: {
+        twinClassId: toArrayOfString(toArray(twinClassIdWatch), "id")[0],
+      },
+    },
     extraFilters: buildTwinStatusFilters(),
     mapExtraFilters: (filters) => ({
       ...mapTwinStatusFilters(filters),

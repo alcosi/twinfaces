@@ -10,17 +10,17 @@ import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
-  TwinClassFieldCreateRq,
   TwinClassFieldV1_DETAILED,
   TwinClassFieldV2FilterKeys,
   useTwinClassFieldCount,
+  useTwinClassFieldCreate,
   useTwinClassFieldFilters,
   useTwinClassFieldSearch,
 } from "@/entities/twin-class-field";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
+import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import {
@@ -43,6 +43,7 @@ import {
 } from "../../crud-data-table";
 import { TWIN_CLASS_FIELD_SCHEMA } from "./constants";
 import { TwinClassFieldFormFields } from "./form-fields";
+import { buildTwinClassFieldCreateRq } from "./helpers";
 import {
   TwinClassFieldDuplicateDialog,
   TwinClassFieldDuplicateDialogRef,
@@ -281,7 +282,7 @@ export function TwinClassFieldsTable({
   const tableRef = useRef<DataTableHandle>(null);
   const duplicateDialogRef = useRef<TwinClassFieldDuplicateDialogRef>(null);
   const router = useRouter();
-  const api = useContext(PrivateApiContext);
+  const { createTwinClassField } = useTwinClassFieldCreate();
   const { buildFilterFields, mapFiltersToPayload } = useTwinClassFieldFilters({
     enabledFilters: isTruthy(twinClassId)
       ? [
@@ -618,40 +619,9 @@ export function TwinClassFieldsTable({
   });
 
   const handleOnCreateSubmit = async (formValues: TwinClassFieldFormValues) => {
-    const body: TwinClassFieldCreateRq = {
-      twinClassFields: [
-        {
-          twinClassId: twinClassId || formValues.twinClassId!,
-          key: formValues.key,
-          required: formValues.required,
-          system: formValues.system,
-          nameI18n: {
-            translationInCurrentLocale: formValues.name,
-          },
-          descriptionI18n: {
-            translationInCurrentLocale: formValues.description,
-          },
-          fieldTyperFeaturerId: formValues.fieldTyperFeaturerId,
-          fieldTyperParams: formValues.fieldTyperParams,
-          twinSorterFeaturerId: formValues.twinSorterFeaturerId,
-          twinSorterParams: formValues.twinSorterParams,
-          viewPermissionId: formValues.viewPermissionId,
-          editPermissionId: formValues.editPermissionId,
-          externalId: formValues.externalId,
-          fieldInitializerFeaturerId: Number(
-            formValues.fieldInitializerFeaturerId
-          ),
-          fieldInitializerParams: formValues.fieldInitializerParams,
-        },
-      ],
-    };
-
-    const { error } = await api.twinClassField.create({
-      body,
+    await createTwinClassField({
+      body: buildTwinClassFieldCreateRq(formValues, twinClassId),
     });
-    if (error) {
-      throw error;
-    }
     toast.success("Class field created successfully!");
   };
 

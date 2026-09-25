@@ -2,12 +2,12 @@ import { FilterIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  AdvancedFilterPanels,
-  useAdvancedFilterLevels,
-} from "@/components/advanced-filters";
-import { AdvancedFiltersContext } from "@/components/advanced-filters-context";
 import { AutoField, AutoFormValueInfo } from "@/components/auto-field";
+import {
+  SidePanels,
+  SidePanelsContext,
+  useSidePanels,
+} from "@/components/side-panels";
 
 import { cn, isTruthy } from "@/shared/libs";
 import {
@@ -32,8 +32,9 @@ export function FiltersSidebar({
 }: FiltersSidebarProps) {
   const [open, setOpen] = useState(false);
 
-  const advancedFilters = useAdvancedFilterLevels();
-  const { scrollRef, visibleWidth, contextValue, reset } = advancedFilters;
+  // Filters only ever narrow an existing list, so no create panels here.
+  const sidePanels = useSidePanels();
+  const { scrollRef, visibleWidth, contextValue, reset } = sidePanels;
 
   const keys = useMemo(
     () => Object.keys(filtersInfo).filter((key) => isTruthy(filtersInfo[key])),
@@ -102,7 +103,7 @@ export function FiltersSidebar({
                 </SheetHeader>
 
                 <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                  <AdvancedFiltersContext.Provider value={contextValue}>
+                  <SidePanelsContext.Provider value={contextValue}>
                     {keys.map((filterKey) => (
                       <AutoField
                         key={filterKey}
@@ -112,7 +113,7 @@ export function FiltersSidebar({
                         layout="inline"
                       />
                     ))}
-                  </AdvancedFiltersContext.Provider>
+                  </SidePanelsContext.Provider>
                 </div>
 
                 <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
@@ -130,8 +131,8 @@ export function FiltersSidebar({
                 </div>
               </form>
 
-              {/* Advanced filter panels (stack-based, supports N levels) */}
-              <AdvancedFilterPanels {...advancedFilters} />
+              {/* Filter panels (stack-based, supports N levels) */}
+              <SidePanels {...sidePanels} />
             </div>
           </Form>
         </SheetContent>

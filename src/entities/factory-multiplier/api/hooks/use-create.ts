@@ -10,11 +10,16 @@ export const useFactoryMultiplierCreate = () => {
   const createFactoryMultiplier = useCallback(
     async ({ id, body }: { id: string; body: FactoryMultiplierCreateRq }) => {
       try {
-        const { error } = await api.factoryMultiplier.create({ id, body });
+        const { data, error } = await api.factoryMultiplier.create({
+          id,
+          body,
+        });
 
         if (error) {
           throw new Error("Failed to create factory multiplier");
         }
+
+        return data?.factoryMultiplier?.id;
       } catch (error) {
         throw new Error("An error occured while creating factory multiplier");
       }

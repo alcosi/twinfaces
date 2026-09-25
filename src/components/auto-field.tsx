@@ -29,6 +29,7 @@ import {
   TextFormField,
   TextFormItem,
 } from "./form-fields";
+import { CascadeCreateConfig } from "./side-panels/create-entities";
 
 export enum AutoFormValueType {
   string = "string",
@@ -58,6 +59,12 @@ export interface AutoFormComplexComboboxValueInfo {
   noItemsText?: string;
   multi?: boolean;
   disabled?: boolean;
+  /**
+   * Lets the field create the entity it picks from, right in the create sheet,
+   * when the option the user is after isn't in the list yet. Only honoured
+   * inside a panel stack that offers cascading creation.
+   */
+  create?: CascadeCreateConfig;
 }
 
 export type AutoFormValueInfo = AutoFormCommonInfo &

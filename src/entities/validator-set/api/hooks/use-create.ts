@@ -9,10 +9,12 @@ export const useValidatorSetCreate = () => {
   const createValidatorSet = useCallback(
     async ({ body }: { body: ValidatorSetCreateRq }) => {
       try {
-        const { error } = await api.validatorSet.create({ body });
+        const { data, error } = await api.validatorSet.create({ body });
         if (error) {
           throw new Error("Failed to create validator set");
         }
+
+        return data?.validatorSets?.[0]?.id;
       } catch (error) {
         throw new Error("An error occured while creating validator set");
       }

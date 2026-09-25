@@ -15,11 +15,16 @@ export const useStatusCreate = () => {
       twinClassId: string;
       body: TwinStatusCreateRq;
     }) => {
-      const { error } = await api.twinStatus.create({ twinClassId, body });
+      const { data, error } = await api.twinStatus.create({
+        twinClassId,
+        body,
+      });
 
       if (error) {
         throw error;
       }
+
+      return data?.twinStatus?.id;
     },
     [api]
   );

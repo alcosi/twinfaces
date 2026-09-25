@@ -9,10 +9,12 @@ import {
   Rule_DETAILED,
   TwinClass,
   TwinClassBaseV1,
+  TwinClassCreateRq,
   TwinClassDynamicMarker,
   TwinClassDynamicMarker_DETAILED,
   TwinClass_DETAILED,
 } from "../api";
+import { TwinClassFieldValues } from "./types";
 
 export const hydrateTwinClassFromMap = (
   dto: TwinClass,
@@ -153,3 +155,49 @@ export const hydrateRuleFromMap = (
 
   return hydrated;
 };
+
+/**
+ * Shared by the twin-classes table and the cascading create panel, so both post
+ * the very same body.
+ */
+export function buildTwinClassCreateRq(
+  values: TwinClassFieldValues
+): TwinClassCreateRq {
+  return {
+    twinClassCreates: [
+      {
+        key: values.key,
+        nameI18n: values.name
+          ? { translationInCurrentLocale: values.name, translations: {} }
+          : undefined,
+        descriptionI18n: values.description
+          ? { translationInCurrentLocale: values.description, translations: {} }
+          : undefined,
+        abstractClass: values.abstractClass,
+        segment: values.segment,
+        assigneeRequired: values.assigneeRequired,
+        ownerType: values.ownerType,
+        headTwinClassId: values.headTwinClass?.[0]?.id,
+        headHunterFeaturerId: values.headHunterFeaturerId,
+        headHunterParams: values.headHunterParams,
+        extendsTwinClassId: values.extendsTwinClassId || undefined,
+        markerDataListId: values.markerDataListId || undefined,
+        tagDataListId: values.tagDataListId || undefined,
+        autoCreatePermissions: values.autoCreatePermissions,
+        uniqueName: values.uniqueName,
+        autoCreateTwinflow: values.autoCreateTwinflow,
+        // The pair is only honoured when the class doesn't mint its own.
+        viewPermissionId: !values.autoCreatePermissions
+          ? values.viewPermissionId
+          : undefined,
+        createPermissionId: !values.autoCreatePermissions
+          ? values.createPermissionId
+          : undefined,
+        permissionSchemaSpace: values.permissionSchemaSpace,
+        twinflowSchemaSpace: values.twinflowSchemaSpace,
+        twinClassSchemaSpace: values.twinClassSchemaSpace,
+        aliasSpace: values.aliasSpace,
+      },
+    ],
+  };
+}

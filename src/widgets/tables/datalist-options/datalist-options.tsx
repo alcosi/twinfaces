@@ -12,10 +12,10 @@ import { z } from "zod";
 import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
-  DataListOptionCreateRqDV1,
   DataListOptionFilterKeys,
   DataListOptionFilters,
   DataListOption_DETAILED,
+  buildDatalistOptionCreateRq,
   useCreateDatalistOption,
   useDatalistOptionCount,
   useDatalistOptionFilters,
@@ -201,39 +201,9 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       [key: string]: string;
     }
   ) => {
-    const { name, icon, attribute1, attribute2, attribute3, attribute4 } =
-      formValues;
-
-    const datalist: DataList = isPopulatedArray<DataList>(formValues.dataList)
-      ? formValues.dataList[0]
-      : (formValues.dataList as DataList);
-
-    const attributesMap = [
-      { key: datalist.attribute1?.key, value: attribute1 },
-      { key: datalist.attribute2?.key, value: attribute2 },
-      { key: datalist.attribute3?.key, value: attribute3 },
-      { key: datalist.attribute4?.key, value: attribute4 },
-    ].reduce(
-      (acc, { key, value }) => {
-        if (isPopulatedString(key)) {
-          acc[key] = value!;
-        }
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
-    const requestBody: DataListOptionCreateRqDV1 = {
-      dataListId: datalist.id,
-      optionI18n: {
-        translationInCurrentLocale: name,
-        translations: {},
-      },
-      icon: icon,
-      attributesMap,
-    };
-
-    return createDatalistOption({ body: requestBody }).then(() => {
+    return createDatalistOption({
+      body: buildDatalistOptionCreateRq(formValues),
+    }).then(() => {
       toast.success("Datalist option created successfully!");
     });
   };

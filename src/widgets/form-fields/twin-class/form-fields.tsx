@@ -29,7 +29,8 @@ import {
   useTwinClassSelectAdapterWithFilters,
 } from "@/entities/twin-class";
 import { isFalsy, isPopulatedArray } from "@/shared/libs";
-import { FeaturerFormField } from "@/widgets/form-fields";
+
+import { FeaturerFormField } from "../featurer";
 
 export function TwinClassFormFields({
   control,
@@ -67,6 +68,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Head",
     adapter: headTwinClassAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search twin class...",
@@ -78,6 +80,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Extends",
     adapter: extendsTwinClassAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => mapTwinClassFilters(filters),
     searchPlaceholder: "Search twin class...",
@@ -89,6 +92,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Markers list",
     adapter: markerDatalistAdapter,
+    create: { entity: "datalist" },
     extraFilters: buildDatalistFilters(),
     mapExtraFilters: (filters) => mapDatalistFilters(filters),
     searchPlaceholder: "Search datalist...",
@@ -100,6 +104,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Tags list",
     adapter: tagDatalistAdapter,
+    create: { entity: "datalist" },
     extraFilters: buildDatalistFilters(),
     mapExtraFilters: (filters) => mapDatalistFilters(filters),
     searchPlaceholder: "Search datalist...",
@@ -111,6 +116,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Create",
     adapter: createPermissionAdapter,
+    create: { entity: "permission" },
     extraFilters: buildPermissionFilters(),
     mapExtraFilters: (filters) => mapPermissionFilters(filters),
     searchPlaceholder: "Search create permission...",
@@ -122,6 +128,7 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "View",
     adapter: viewPermissionAdapter,
+    create: { entity: "permission" },
     extraFilters: buildPermissionFilters(),
     mapExtraFilters: (filters) => mapPermissionFilters(filters),
     searchPlaceholder: "Search view permission...",

@@ -1,7 +1,8 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
-import { TwinStatus, TwinStatus_DETAILED } from "../api";
+import { TwinStatus, TwinStatusCreateRq, TwinStatus_DETAILED } from "../api";
+import { TwinClassStatusFormValues } from "./types";
 
 export const hydrateTwinStatusFromMap = (
   dto: TwinStatus,
@@ -20,3 +21,25 @@ export const hydrateTwinStatusFromMap = (
 
   return hydrated;
 };
+
+/**
+ * Shared by the statuses table and the cascading create panel, so both post the
+ * very same body.
+ */
+export function buildTwinStatusCreateRq(
+  values: TwinClassStatusFormValues
+): TwinStatusCreateRq {
+  return {
+    key: values.key,
+    nameI18n: {
+      translationInCurrentLocale: values.name,
+      translations: {},
+    },
+    descriptionI18n: {
+      translationInCurrentLocale: values.description,
+      translations: {},
+    },
+    backgroundColor: values.backgroundColor,
+    fontColor: values.fontColor,
+  };
+}

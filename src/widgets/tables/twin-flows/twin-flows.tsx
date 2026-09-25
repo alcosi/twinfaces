@@ -10,8 +10,8 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_FLOW_SCHEMA,
   TwinFlow,
-  TwinFlowCreateRq,
   TwinFlow_DETAILED,
+  buildTwinFlowCreateRq,
   useCreateTwinFlow,
   useTwinFlowFilters,
   useTwinFlowSearchV1,
@@ -180,20 +180,9 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
   const handleCreateSubmit = async (
     formValues: z.infer<typeof TWIN_FLOW_SCHEMA>
   ) => {
-    const { name, description, initialStatus } = formValues;
-
-    const requestBody: TwinFlowCreateRq = {
-      nameI18n: { translationInCurrentLocale: name, translations: {} },
-      descriptionI18n: {
-        translationInCurrentLocale: description,
-        translations: {},
-      },
-      initialStatusId: initialStatus,
-    };
-
     await createTwinFlow({
       twinClassId: twinClassId || formValues.twinClassId!,
-      body: requestBody,
+      body: buildTwinFlowCreateRq(formValues),
     });
     toast.success("Twin flow created successfully!");
   };

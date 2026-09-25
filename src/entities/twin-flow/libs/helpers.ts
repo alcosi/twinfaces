@@ -1,9 +1,12 @@
+import { z } from "zod";
+
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinStatus_DETAILED } from "@/entities/twin-status";
 import { User_DETAILED } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
-import { TwinFlow, TwinFlow_DETAILED } from "../api";
+import { TwinFlow, TwinFlowCreateRq, TwinFlow_DETAILED } from "../api";
+import { TWIN_FLOW_SCHEMA } from "./schema";
 
 export const hydrateTwinFlowFromMap = (
   dto: TwinFlow,
@@ -40,3 +43,23 @@ export const hydrateTwinFlowFromMap = (
 
   return hydrated;
 };
+
+/**
+ * Shared by the twinflows table and the cascading create panel, so both post
+ * the very same body.
+ */
+export function buildTwinFlowCreateRq(
+  values: z.infer<typeof TWIN_FLOW_SCHEMA>
+): TwinFlowCreateRq {
+  return {
+    nameI18n: {
+      translationInCurrentLocale: values.name,
+      translations: {},
+    },
+    descriptionI18n: {
+      translationInCurrentLocale: values.description,
+      translations: {},
+    },
+    initialStatusId: values.initialStatus,
+  };
+}

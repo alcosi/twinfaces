@@ -4,16 +4,17 @@ import { ArrowLeft } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  AdvancedFiltersContext,
-  AdvancedFiltersContextValue,
-} from "@/components/advanced-filters-context";
-import {
   AutoField,
   AutoFormComplexComboboxValueInfo,
 } from "@/components/auto-field";
 
 import { Button } from "@/shared/ui";
 
+import {
+  OpenCascadeCreateArgs,
+  SidePanelsContext,
+  SidePanelsContextValue,
+} from "./context";
 import {
   AdvancedFilterTouched,
   AdvancedFilterValues,
@@ -22,33 +23,31 @@ import {
   stripIndeterminateFilters,
 } from "./filter-values";
 
-export interface AdvancedFilterLevel {
-  key: string;
-  info: AutoFormComplexComboboxValueInfo;
-}
-
 export function AdvancedFilterPanel({
-  level,
+  filterKey,
+  info,
   values,
   touched,
   openKeys,
   appliedCounts,
   onValueChange,
   onReset,
-  onOpenNext,
+  onOpenFilters,
+  onOpenCreate,
   onClose,
 }: {
-  level: AdvancedFilterLevel;
+  filterKey: string;
+  info: AutoFormComplexComboboxValueInfo;
   values: AdvancedFilterValues;
   touched: AdvancedFilterTouched;
   openKeys: string[];
   appliedCounts: Record<string, number>;
   onValueChange: (name: string, value: unknown) => void;
   onReset: () => void;
-  onOpenNext: (key: string, info: AutoFormComplexComboboxValueInfo) => void;
+  onOpenFilters: (key: string, info: AutoFormComplexComboboxValueInfo) => void;
+  onOpenCreate: (key: string, args: OpenCascadeCreateArgs) => void;
   onClose: () => void;
 }) {
-  const { info } = level;
   const prevAppliedRef = useRef<string | null>(null);
   // Some inputs (tag boxes) only read their value on mount, so a reset has to
   // remount the fields for the cleared values to show up.
@@ -79,14 +78,18 @@ export function AdvancedFilterPanel({
     info.adapter.invalidate?.();
   }
 
-  const contextValue: AdvancedFiltersContextValue = useMemo(
+  const contextValue: SidePanelsContextValue = useMemo(
     () => ({
-      openAdvancedFilters: onOpenNext,
-      path: level.key,
+      openAdvancedFilters: onOpenFilters,
+      openCascadeCreate: onOpenCreate,
+      // A filter only ever narrows an existing list, so nothing is created from
+      // inside one.
+      cascadeCreateEnabled: false,
+      path: filterKey,
       openKeys,
       appliedCounts,
     }),
-    [onOpenNext, level.key, openKeys, appliedCounts]
+    [onOpenFilters, onOpenCreate, filterKey, openKeys, appliedCounts]
   );
 
   return (
@@ -107,7 +110,7 @@ export function AdvancedFilterPanel({
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-        <AdvancedFiltersContext.Provider value={contextValue}>
+        <SidePanelsContext.Provider value={contextValue}>
           <div className="text-muted-foreground text-xs">
             Filters for&nbsp;
             <span className="text-foreground font-medium">{info.label}</span>
@@ -127,7 +130,7 @@ export function AdvancedFilterPanel({
                 }
               />
             ))}
-        </AdvancedFiltersContext.Provider>
+        </SidePanelsContext.Provider>
       </div>
 
       <div className="flex items-center justify-end gap-2 px-6 py-4">

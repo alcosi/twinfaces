@@ -52,6 +52,7 @@ export function TwinRoleTableFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Permission",
     adapter: permissionAdapter,
+    create: { entity: "permission" },
     extraFilters: buildPermissionFilters(),
     mapExtraFilters: (filters) => mapPermissionFilters(filters),
     searchPlaceholder: "Search...",
@@ -75,6 +76,7 @@ export function TwinRoleTableFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Twin class",
     adapter: twinClassAdapter,
+    create: { entity: "twinClass" },
     extraFilters: buildTwinClassFilters(),
     mapExtraFilters: (filters) => ({
       ...mapTwinClassFilters(filters),
