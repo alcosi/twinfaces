@@ -73,12 +73,14 @@ export function FactoryMultiplierFormFields({
         control={control}
         name="factoryId"
         info={factoryInfo}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="inputTwinClassId"
         info={twinClassInfo}
+        required
       />
 
       <FeaturerFormField
@@ -87,6 +89,7 @@ export function FactoryMultiplierFormFields({
         label="Multiplier"
         name="multiplierFeaturerId"
         paramsFieldName="multiplierParams"
+        required
       />
 
       <SwitchFormField control={control} name="active" label="Active" />

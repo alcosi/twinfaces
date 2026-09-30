@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { RelatedObjects } from "@/shared/api";
 
-import { Factory, FactoryCreateRq, Factory_DETAILED } from "../api";
+import { Factory, FactoryCreate, Factory_DETAILED } from "../api";
 import { FACTORY_SCHEMA } from "./schemas";
 
 export const hydrateFactoryFromMap = (
@@ -24,7 +24,7 @@ export const hydrateFactoryFromMap = (
  */
 export function buildFactoryCreateRq(
   values: z.infer<typeof FACTORY_SCHEMA>
-): FactoryCreateRq {
+): FactoryCreate {
   return {
     key: values.key,
     nameI18n: { translations: { en: values.name } },

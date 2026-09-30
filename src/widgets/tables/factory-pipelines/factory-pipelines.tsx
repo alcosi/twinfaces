@@ -569,12 +569,7 @@ export function FactoryPipelinesTable({
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_PIPELINE_SCHEMA>
   ) => {
-    const { factoryId, ...body } = formValues;
-
-    await createFactoryPipeline({
-      id: factoryId,
-      body: { factoryPipeline: body },
-    });
+    await createFactoryPipeline({ body: formValues });
 
     toast.success("Factory pipeline created successfully!");
   };

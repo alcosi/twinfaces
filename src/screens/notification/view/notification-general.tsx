@@ -86,7 +86,7 @@ export function NotificationGeneral() {
           historyNotifications: [
             {
               twinClassId: id,
-              id: notification.id,
+              id: notification.id!,
             },
           ],
         },
@@ -118,7 +118,7 @@ export function NotificationGeneral() {
         body: {
           historyNotifications: [
             {
-              id: notification.id,
+              id: notification.id!,
               twinClassFieldId: id,
             },
           ],
@@ -151,7 +151,7 @@ export function NotificationGeneral() {
         body: {
           historyNotifications: [
             {
-              id: notification.id,
+              id: notification.id!,
               notificationSchemaId: id,
             },
           ],
@@ -186,7 +186,7 @@ export function NotificationGeneral() {
         body: {
           historyNotifications: [
             {
-              id: notification.id,
+              id: notification.id!,
               historyNotificationRecipientId: id,
             },
           ],
@@ -219,7 +219,7 @@ export function NotificationGeneral() {
         body: {
           historyNotifications: [
             {
-              id: notification.id,
+              id: notification.id!,
               twinValidatorSetId: id,
             },
           ],
@@ -240,7 +240,7 @@ export function NotificationGeneral() {
           body: {
             historyNotifications: [
               {
-                id: notification.id,
+                id: notification.id!,
                 twinValidatorSetInvert: !notification.twinValidatorSetInvert,
               },
             ],

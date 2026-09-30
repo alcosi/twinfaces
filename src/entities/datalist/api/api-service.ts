@@ -5,6 +5,7 @@ import {
   DataListCreateRqV1,
   DataListRqQuery,
   DataListSortField,
+  DataListUpdateRqV1,
   DatalistFilters,
 } from "@/entities/datalist";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
@@ -96,17 +97,10 @@ export function createDatalistApi(settings: ApiSettings) {
     });
   }
 
-  function update({
-    dataListId,
-    body,
-  }: {
-    dataListId: string;
-    body: DataListCreateRqV1;
-  }) {
-    return settings.client.PUT("/private/data_list/{dataListId}/v1", {
+  function update({ body }: { body: DataListUpdateRqV1 }) {
+    return settings.client.PUT("/private/data_list/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { dataListId },
       },
       body,
     });

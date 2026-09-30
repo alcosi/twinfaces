@@ -104,13 +104,12 @@ export function createFactoryApi(settings: ApiSettings) {
     });
   }
 
-  function update({ id, body }: { id: string; body: FactoryUpdateRq }) {
-    return settings.client.PUT("/private/factory/{factoryId}/v1", {
+  function update({ body }: { body: FactoryUpdateRq }) {
+    return settings.client.PUT("/private/factory/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { factoryId: id },
       },
-      body: body,
+      body,
     });
   }
 

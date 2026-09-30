@@ -5,7 +5,7 @@ import { TwinStatus_DETAILED } from "@/entities/twin-status";
 import { User_DETAILED } from "@/entities/user";
 import { RelatedObjects } from "@/shared/api";
 
-import { TwinFlow, TwinFlowCreateRq, TwinFlow_DETAILED } from "../api";
+import { TwinFlow, TwinFlowCreate, TwinFlow_DETAILED } from "../api";
 import { TWIN_FLOW_SCHEMA } from "./schema";
 
 export const hydrateTwinFlowFromMap = (
@@ -49,9 +49,13 @@ export const hydrateTwinFlowFromMap = (
  * the very same body.
  */
 export function buildTwinFlowCreateRq(
-  values: z.infer<typeof TWIN_FLOW_SCHEMA>
-): TwinFlowCreateRq {
+  values: z.infer<typeof TWIN_FLOW_SCHEMA>,
+  twinClassId?: string
+): TwinFlowCreate {
   return {
+    // The class used to be a path parameter; the batch endpoint takes it in
+    // the body instead.
+    twinClassId: twinClassId || values.twinClassId!,
     nameI18n: {
       translationInCurrentLocale: values.name,
       translations: {},

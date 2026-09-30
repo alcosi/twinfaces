@@ -376,12 +376,7 @@ export function FactoryMultipliersTable({
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>
   ) => {
-    const { factoryId, ...body } = formValues;
-
-    await createFactoryMultiplier({
-      id: factoryId,
-      body: { factoryMultiplier: body },
-    });
+    await createFactoryMultiplier({ body: formValues });
     toast.success("Factory multiplier created successfully!");
   };
 

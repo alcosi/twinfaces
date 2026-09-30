@@ -11,6 +11,10 @@ export type DataListSearchRq = components["schemas"]["DataListSearchRqV2"];
 export type DataListSearch = components["schemas"]["DataListSearchV1"];
 export type DataListCreateRqV1 = components["schemas"]["DataListCreateRqV1"];
 export type DataListUpdateRqV1 = components["schemas"]["DataListUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type DataListCreate = components["schemas"]["DataListCreateV1"];
+export type DataListUpdate = components["schemas"]["DataListUpdateV1"];
 
 export type DataListAttribute = {
   index: string;

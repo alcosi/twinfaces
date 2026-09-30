@@ -98,30 +98,22 @@ export function createFactoryPipelineApi(settings: ApiSettings) {
     });
   }
 
-  function update({ id, body }: { id: string; body: FactoryPipelineUpdateRq }) {
-    return settings.client.PUT(
-      "/private/factory_pipeline/{factoryPipelineId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryPipelineId: id },
-        },
-        body: body,
-      }
-    );
+  function update({ body }: { body: FactoryPipelineUpdateRq }) {
+    return settings.client.PUT("/private/factory_pipeline/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
-  function create({ id, body }: { id: string; body: FactoryPipelineCreateRq }) {
-    return settings.client.POST(
-      `/private/factory/{factoryId}/factory_pipeline/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryId: id },
-        },
-        body: body,
-      }
-    );
+  function create({ body }: { body: FactoryPipelineCreateRq }) {
+    return settings.client.POST("/private/factory_pipeline/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   function exportSql({ body }: { body: FactoryPipelineExportSqlRq }) {

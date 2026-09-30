@@ -10,11 +10,10 @@ export function useUpdateFactoryConditionSet() {
   }: {
     body: {
       conditionSets: Array<{
-        id?: string;
+        conditionSetId: string;
         name?: string;
         twinFactoryId?: string;
         description?: string;
-        conditionSetId?: string;
       }>;
     };
   }) {

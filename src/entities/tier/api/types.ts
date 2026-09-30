@@ -30,4 +30,6 @@ export type TierCreateRq = components["schemas"]["TierCreateRqV1"];
 export type TierCreate = components["schemas"]["TierCreateV1"];
 
 export type TierUpdateRq = components["schemas"]["TierUpdateRqV1"];
+// The endpoint takes a batch; a single entity is what every screen actually
+// sends, so the hook speaks this and wraps it into the list itself.
 export type TierUpdate = components["schemas"]["TierUpdateV1"];

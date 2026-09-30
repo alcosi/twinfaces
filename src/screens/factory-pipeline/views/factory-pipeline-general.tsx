@@ -63,9 +63,7 @@ export function FactoryPipelineGeneral() {
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
-          factoryPipeline: {
-            inputTwinClassId: id,
-          },
+          inputTwinClassId: id,
         },
       }).then(refresh);
     },
@@ -94,9 +92,7 @@ export function FactoryPipelineGeneral() {
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
-          factoryPipeline: {
-            factoryConditionSetId: id,
-          },
+          factoryConditionSetId: id,
         },
       }).then(refresh);
     },
@@ -113,9 +109,7 @@ export function FactoryPipelineGeneral() {
         return updateFactoryPipeline({
           factoryPipelineId: pipeline.id,
           body: {
-            factoryPipeline: {
-              factoryConditionSetInvert: !pipeline.factoryConditionSetInvert,
-            },
+            factoryConditionSetInvert: !pipeline.factoryConditionSetInvert,
           },
         }).then(refresh);
       },
@@ -133,9 +127,7 @@ export function FactoryPipelineGeneral() {
         return updateFactoryPipeline({
           factoryPipelineId: pipeline.id,
           body: {
-            factoryPipeline: {
-              active: !pipeline.active,
-            },
+            active: !pipeline.active,
           },
         }).then(refresh);
       },
@@ -166,9 +158,7 @@ export function FactoryPipelineGeneral() {
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
-          factoryPipeline: {
-            outputStatusId: id,
-          },
+          outputStatusId: id,
         },
       }).then(refresh);
     },
@@ -190,9 +180,7 @@ export function FactoryPipelineGeneral() {
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
-          factoryPipeline: {
-            nextFactoryId: id,
-          },
+          nextFactoryId: id,
         },
       }).then(refresh);
     },
@@ -213,9 +201,7 @@ export function FactoryPipelineGeneral() {
       return updateFactoryPipeline({
         factoryPipelineId: pipeline.id,
         body: {
-          factoryPipeline: {
-            description: value,
-          },
+          description: value,
         },
       }).then(refresh);
     },

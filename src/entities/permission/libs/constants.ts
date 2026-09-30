@@ -3,10 +3,11 @@ import { z } from "zod";
 import { FIRST_ID_EXTRACTOR, FIRST_USER_ID_EXTRACTOR } from "@/shared/libs";
 
 export const PERMISSION_SCHEMA = z.object({
+  // Required by the API (PermissionCreateV1.required), so the form has to
+  // guarantee it rather than let an empty value through.
   groupId: z
     .string()
     .uuid("Group ID must be a valid UUID")
-    .optional()
     .or(FIRST_ID_EXTRACTOR),
   key: z.string().min(1, "Key can not be empty"),
   name: z.string().min(1, "Name can not be empty"),

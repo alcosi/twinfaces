@@ -66,9 +66,7 @@ export function FactoryMultiplierGeneral() {
       return updateFactoryMultiplier({
         factoryMultiplierId: factoryMultiplier.id,
         body: {
-          factoryMultiplier: {
-            inputTwinClassId: id,
-          },
+          inputTwinClassId: id,
         },
       }).then(refresh);
     },
@@ -86,10 +84,8 @@ export function FactoryMultiplierGeneral() {
       return updateFactoryMultiplier({
         factoryMultiplierId: factoryMultiplier.id,
         body: {
-          factoryMultiplier: {
-            multiplierFeaturerId: values.multiplierFeaturerId[0].id,
-            multiplierParams: values.multiplierParams,
-          },
+          multiplierFeaturerId: values.multiplierFeaturerId[0].id,
+          multiplierParams: values.multiplierParams,
         },
       }).then(refresh);
     },
@@ -115,9 +111,7 @@ export function FactoryMultiplierGeneral() {
         return updateFactoryMultiplier({
           factoryMultiplierId: factoryMultiplier.id,
           body: {
-            factoryMultiplier: {
-              active: !factoryMultiplier.active,
-            },
+            active: !factoryMultiplier.active,
           },
         }).then(refresh);
       },
@@ -141,9 +135,7 @@ export function FactoryMultiplierGeneral() {
       return updateFactoryMultiplier({
         factoryMultiplierId: factoryMultiplier.id,
         body: {
-          factoryMultiplier: {
-            description: value,
-          },
+          description: value,
         },
       }).then(refresh);
     },

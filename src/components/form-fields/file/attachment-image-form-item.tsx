@@ -5,6 +5,7 @@ import { ImageCropModal } from "@/features/ui/image-cropper-modal";
 import { FormItem, FormMessage } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 type AttachmentImageFormItemProps = FormItemProps & {
@@ -49,7 +50,7 @@ export const AttachmentImageFormItem = ({
       {label && (
         <div className="flex items-center gap-4">
           <FormItemLabel inForm={inForm}>
-            {label} {required && <span className="text-destructive">*</span>}
+            {label} <RequiredMark required={required} />
           </FormItemLabel>
         </div>
       )}

@@ -3,6 +3,7 @@ import { ComponentProps } from "react";
 import { Switch } from "@/shared/ui/switch";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 export function SwitchFormItem({
@@ -26,7 +27,7 @@ export function SwitchFormItem({
       {label && (
         <FormItemLabel inForm={inForm}>
           {label}
-          {props.required && <span className="text-destructive">*</span>}
+          <RequiredMark required={props.required} />
         </FormItemLabel>
       )}
       <div className="flex flex-row items-start space-y-0 space-x-3">

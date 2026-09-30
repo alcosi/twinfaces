@@ -10,6 +10,10 @@ export type CreatePermissionRequestBody =
   components["schemas"]["PermissionCreateRqV1"];
 export type UpdatePermissionRequestBody =
   components["schemas"]["PermissionUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type PermissionCreate = components["schemas"]["PermissionCreateV1"];
+export type PermissionUpdate = components["schemas"]["PermissionUpdateV1"];
 
 export type PermissionFilterKeys =
   | "idList"

@@ -82,6 +82,7 @@ export function PipelineStepFormFields({
         control={control}
         name="factoryPipelineId"
         info={factoryPipelineInfo}
+        required
       />
 
       <TextFormField
@@ -89,6 +90,7 @@ export function PipelineStepFormFields({
         name="order"
         label="Order"
         type="number"
+        required
       />
 
       <ComplexComboboxFormField
@@ -109,6 +111,7 @@ export function PipelineStepFormFields({
         label="Filler"
         name="fillerFeaturerId"
         paramsFieldName="fillerParams"
+        required
       />
 
       <SwitchFormField control={control} name="optional" label="Optional" />

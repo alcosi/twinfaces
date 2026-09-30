@@ -4,6 +4,7 @@ import { MarkdownEditor } from "@/features/markdown";
 import { FormItem, FormMessage } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "..";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 type MarkdownEditorFormItemProps = FormItemProps & {
@@ -26,7 +27,7 @@ export function MarkdownEditorFormItem({
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-error-500">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
 

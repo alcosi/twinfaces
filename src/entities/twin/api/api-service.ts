@@ -158,13 +158,19 @@ export function createTwinApi(settings: ApiSettings) {
     });
   }
 
-  function update({ id, body }: { id: string; body: TwinUpdateRq }) {
+  function update({
+    id,
+    body,
+  }: {
+    id: string;
+    body: Omit<TwinUpdateRq, "twinId">;
+  }) {
     return settings.client.PUT("/private/twin/{twinId}/v1", {
       params: {
         header: getApiDomainHeaders(settings),
         path: { twinId: id },
       },
-      body: body,
+      body: { ...body, twinId: id },
     });
   }
 

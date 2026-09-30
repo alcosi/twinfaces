@@ -153,33 +153,13 @@ export function ComplexComboboxFormItem({
       info.label
     );
 
-  return (
-    <div
-      className={cn(
-        "transition-colors",
-        !useSidebar && "space-y-2",
-        !useSidebar && open && "border-border bg-card rounded-md border p-3"
-      )}
-    >
-      <div className={cn(useSidebar && "flex items-end gap-1.5")}>
-        <div className={cn(useSidebar && "min-w-0 flex-1")}>
-          <ComboboxFormItem
-            key={info.adapter.version}
-            label={label}
-            description={info.description}
-            {...info.adapter}
-            fieldValue={value}
-            onSelect={onChange}
-            inForm={inForm}
-            selectPlaceholder={info.selectPlaceholder}
-            searchPlaceholder={info.searchPlaceholder}
-            noItemsText={info.noItemsText}
-            multi={info.multi}
-            disabled={info.disabled}
-            required={required}
-          />
-        </div>
-
+  const showFiltersButton = !info.disabled && useSidebar && hasExtraFilters;
+  // Rendered inside the field, level with the control itself: keeping them out
+  // of the field's own column is what made them drift down as soon as a
+  // validation message appeared under the combobox.
+  const actions =
+    canCascadeCreate || showFiltersButton ? (
+      <>
         {canCascadeCreate && (
           <button
             type="button"
@@ -203,7 +183,7 @@ export function ComplexComboboxFormItem({
           </button>
         )}
 
-        {!info.disabled && useSidebar && hasExtraFilters && (
+        {showFiltersButton && (
           <button
             type="button"
             aria-pressed={isPanelOpen}
@@ -221,7 +201,33 @@ export function ComplexComboboxFormItem({
             <SlidersHorizontal size={16} />
           </button>
         )}
-      </div>
+      </>
+    ) : undefined;
+
+  return (
+    <div
+      className={cn(
+        "transition-colors",
+        !useSidebar && "space-y-2",
+        !useSidebar && open && "border-border bg-card rounded-md border p-3"
+      )}
+    >
+      <ComboboxFormItem
+        key={info.adapter.version}
+        label={label}
+        description={info.description}
+        {...info.adapter}
+        fieldValue={value}
+        onSelect={onChange}
+        inForm={inForm}
+        selectPlaceholder={info.selectPlaceholder}
+        searchPlaceholder={info.searchPlaceholder}
+        noItemsText={info.noItemsText}
+        multi={info.multi}
+        disabled={info.disabled}
+        required={required}
+        actions={actions}
+      />
 
       {!info.disabled && !useSidebar && hasExtraFilters && (
         <button

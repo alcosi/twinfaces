@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryBranchUpdateRq } from "../types";
+import { FactoryBranchUpdate } from "../types";
 
 export function useUpdateFactoryBranch() {
   const api = useContext(PrivateApiContext);
@@ -12,15 +12,14 @@ export function useUpdateFactoryBranch() {
     body,
   }: {
     factoryBranchId: string;
-    body: FactoryBranchUpdateRq;
+    body: Omit<FactoryBranchUpdate, "id">;
   }) {
     const { error } = await api.factoryBranch.update({
-      id: factoryBranchId,
-      body,
+      body: { factoryBranches: [{ id: factoryBranchId, ...body }] },
     });
 
     if (error) {
-      throw new Error("Failed to fetch factory branch due to API error", error);
+      throw new Error("Failed to update factory branch due to API error");
     }
   }
 

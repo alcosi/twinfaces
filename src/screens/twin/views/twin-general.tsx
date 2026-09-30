@@ -48,7 +48,7 @@ export function TwinGeneral() {
   const tagAdapter = useTagsByTwinClassIdSelectAdapter(twin?.twinClassId);
   const flavorAdapter = useDatalistOptionSelectAdapter();
 
-  async function handleTwinUpdate(body: TwinUpdateRq) {
+  async function handleTwinUpdate(body: Omit<TwinUpdateRq, "twinId">) {
     if (isUndefined(twin)) {
       console.error("updateTwin: no twin");
       return;

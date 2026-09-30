@@ -155,12 +155,14 @@ export function FactoryPipelineFormFields({
         control={control}
         name="factoryId"
         info={factoryInfo}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="inputTwinClassId"
         info={twinClassInfo}
+        required
       />
 
       <ComplexComboboxFormField

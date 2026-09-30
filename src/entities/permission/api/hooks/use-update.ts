@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { UpdatePermissionRequestBody } from "../types";
+import { PermissionUpdate } from "../types";
 
 export const usePermissionUpdate = () => {
   const api = useContext(PrivateApiContext);
@@ -13,9 +13,11 @@ export const usePermissionUpdate = () => {
       body,
     }: {
       permissionId: string;
-      body: UpdatePermissionRequestBody;
+      body: Omit<PermissionUpdate, "id">;
     }) => {
-      return await api.permission.update({ permissionId, body });
+      return await api.permission.update({
+        body: { permissions: [{ id: permissionId, ...body }] },
+      });
     },
     [api]
   );

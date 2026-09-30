@@ -10,6 +10,12 @@ import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
 import {
+  REQUIRED_FIELDS_MODE_OFF,
+  RequiredFieldsModeProvider,
+  RequiredFieldsModeToggle,
+  useRequiredFieldsModeState,
+} from "@/components/form-fields";
+import {
   SidePanels,
   SidePanelsContext,
   useSidePanels,
@@ -64,6 +70,9 @@ function Component(
   // The create/edit sheet is where cascading creation belongs: a combobox that
   // has nothing to pick can open a create panel right next to the form.
   const sidePanels = useSidePanels({ cascadeCreateEnabled: true });
+  // Covers this form only. A create panel opened from it is a different entity
+  // with a different set of required fields, so it holds its own.
+  const requiredFieldsMode = useRequiredFieldsModeState();
   const {
     scrollRef,
     visibleWidth,
@@ -114,7 +123,10 @@ function Component(
     }
   }
 
-  const fallbackTitle = dialogState.rowId ? "Edit" : "Create";
+  // Editing starts from values that are already there, so hiding the optional
+  // ones would just make them disappear. The toggle belongs to creation.
+  const isCreate = !isPopulatedString(dialogState.rowId);
+  const fallbackTitle = isCreate ? "Create" : "Edit";
 
   return dialogForm ? (
     <Sheet open={dialogState.open} onOpenChange={handleOpenChange}>
@@ -128,44 +140,52 @@ function Component(
         }}
       >
         <Form {...dialogForm}>
-          <div
-            ref={scrollRef}
-            className="flex h-full w-full overflow-x-auto"
-            style={{ scrollBehavior: "smooth" }}
+          <RequiredFieldsModeProvider
+            value={isCreate ? requiredFieldsMode : REQUIRED_FIELDS_MODE_OFF}
           >
-            {/* Main create/edit panel */}
-            <form
-              className="flex h-full w-[400px] shrink-0 flex-col"
-              onSubmit={dialogForm.handleSubmit(handleFormSubmit)}
+            <div
+              ref={scrollRef}
+              className="flex h-full w-full overflow-x-auto"
+              style={{ scrollBehavior: "smooth" }}
             >
-              <SheetHeader className="px-6 py-4">
-                <SheetTitle className="text-base">
-                  {isPopulatedString(title) ? title : fallbackTitle}
-                </SheetTitle>
-              </SheetHeader>
+              {/* Main create/edit panel */}
+              <form
+                className="flex h-full w-[400px] shrink-0 flex-col"
+                onSubmit={dialogForm.handleSubmit(handleFormSubmit)}
+              >
+                {/* `pr-12` keeps the toggle clear of the sheet's own close button,
+                  which is pinned to the right edge of the whole panel stack. */}
+                <SheetHeader className="flex-row items-center justify-between gap-3 space-y-0 px-6 py-4 pr-12">
+                  <SheetTitle className="text-base">
+                    {isPopulatedString(title) ? title : fallbackTitle}
+                  </SheetTitle>
 
-              <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-                <SidePanelsContext.Provider value={contextValue}>
-                  {renderFormFields && renderFormFields()}
-                </SidePanelsContext.Provider>
-              </div>
+                  {isCreate && <RequiredFieldsModeToggle />}
+                </SheetHeader>
 
-              <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
-                <Button
-                  type="submit"
-                  loading={dialogForm.formState.isSubmitting}
-                  disabled={!dialogForm.formState.isDirty}
-                >
-                  {isPopulatedString(submitButtonLabel)
-                    ? submitButtonLabel
-                    : "Save"}
-                </Button>
-              </div>
-            </form>
+                <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
+                  <SidePanelsContext.Provider value={contextValue}>
+                    {renderFormFields && renderFormFields()}
+                  </SidePanelsContext.Provider>
+                </div>
 
-            {/* Filter / create panels (stack-based, supports N levels) */}
-            <SidePanels {...sidePanels} />
-          </div>
+                <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
+                  <Button
+                    type="submit"
+                    loading={dialogForm.formState.isSubmitting}
+                    disabled={!dialogForm.formState.isDirty}
+                  >
+                    {isPopulatedString(submitButtonLabel)
+                      ? submitButtonLabel
+                      : "Save"}
+                  </Button>
+                </div>
+              </form>
+
+              {/* Filter / create panels (stack-based, supports N levels) */}
+              <SidePanels {...sidePanels} />
+            </div>
+          </RequiredFieldsModeProvider>
         </Form>
       </SheetContent>
     </Sheet>

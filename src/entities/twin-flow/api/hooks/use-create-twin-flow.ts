@@ -2,29 +2,22 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { TwinFlowCreateRq } from "../types";
+import { TwinFlowCreate } from "../types";
 
 export const useCreateTwinFlow = () => {
   const api = useContext(PrivateApiContext);
 
   const createTwinFlow = useCallback(
-    async ({
-      twinClassId,
-      body,
-    }: {
-      twinClassId: string;
-      body: TwinFlowCreateRq;
-    }) => {
+    async ({ body }: { body: TwinFlowCreate }) => {
       const { data, error } = await api.twinFlow.create({
-        twinClassId,
-        body,
+        body: { twinflows: [body] },
       });
 
       if (error) {
         throw error;
       }
 
-      return data?.twinflow?.id;
+      return data?.twinflowList?.[0]?.id;
     },
     [api]
   );

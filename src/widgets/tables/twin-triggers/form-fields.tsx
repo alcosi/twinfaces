@@ -50,6 +50,7 @@ export function TwinTriggerFormFields({
         label="Twin trigger featurer"
         name="triggerFeaturerId"
         paramsFieldName="triggerParams"
+        required
       />
 
       <ComplexComboboxFormField

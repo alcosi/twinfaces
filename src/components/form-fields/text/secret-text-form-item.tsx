@@ -5,6 +5,7 @@ import { useToggle } from "@/shared/libs";
 import { Button, FormItem, FormMessage, Input } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 type SecretTextFormItemProps = FormItemProps & {
@@ -31,7 +32,7 @@ export const SecretTextFormItem = ({
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-destructive">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
 

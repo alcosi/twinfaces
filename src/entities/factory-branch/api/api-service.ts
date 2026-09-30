@@ -94,26 +94,21 @@ export function createFactoryBranchApi(settings: ApiSettings) {
     });
   }
 
-  function create({ id, body }: { id: string; body: FactoryBranchCreateRq }) {
-    return settings.client.POST(
-      `/private/factory/{factoryId}/factory_branch/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryId: id },
-        },
-        body: body,
-      }
-    );
-  }
-
-  function update({ id, body }: { id: string; body: FactoryBranchUpdateRq }) {
-    return settings.client.PUT("/private/factory_branch/{factoryBranchId}/v1", {
+  function create({ body }: { body: FactoryBranchCreateRq }) {
+    return settings.client.POST("/private/factory_branch/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { factoryBranchId: id },
       },
-      body: body,
+      body,
+    });
+  }
+
+  function update({ body }: { body: FactoryBranchUpdateRq }) {
+    return settings.client.PUT("/private/factory_branch/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
     });
   }
 

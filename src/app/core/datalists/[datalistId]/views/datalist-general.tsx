@@ -12,8 +12,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 import {
   DATALIST_ATTRIBUTE_SCHEMA,
   DataListAttribute,
-  DataListCreateRqV1,
-  DataListUpdateRqV1,
+  DataListUpdate,
   useDatalistUpdate,
 } from "@/entities/datalist";
 import { DatalistContext } from "@/features/datalist";
@@ -58,7 +57,7 @@ export function DatalistGeneral() {
     setKeyCountAttribute(totalKeyAttributes);
   }, [datalist]);
 
-  async function update(newDatalist: DataListUpdateRqV1) {
+  async function update(newDatalist: Omit<DataListUpdate, "id">) {
     updateDatalist({ dataListId: datalist.id!, body: newDatalist })
       .then(() => {
         fetchDatalist();
@@ -239,7 +238,7 @@ export function DatalistGeneral() {
   ) {
     const { key, name, ...rest } = formValues;
 
-    const requestBody: DataListCreateRqV1 = {
+    const requestBody: Omit<DataListUpdate, "id"> = {
       ...rest,
       ["attribute" + Number(keyCountAttribute + 1)]: {
         key: key,

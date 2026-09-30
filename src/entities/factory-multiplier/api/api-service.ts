@@ -100,42 +100,22 @@ export function createFactoryMultiplierApi(settings: ApiSettings) {
     );
   }
 
-  function update({
-    id,
-    body,
-  }: {
-    id: string;
-    body: FactoryMultiplierUpdateRq;
-  }) {
-    return settings.client.PUT(
-      "/private/factory_multiplier/{factoryMultiplierId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryMultiplierId: id },
-        },
-        body: body,
-      }
-    );
+  function update({ body }: { body: FactoryMultiplierUpdateRq }) {
+    return settings.client.PUT("/private/factory_multiplier/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
-  function create({
-    id,
-    body,
-  }: {
-    id: string;
-    body: FactoryMultiplierCreateRq;
-  }) {
-    return settings.client.POST(
-      `/private/factory/{factoryId}/factory_multiplier/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryId: id },
-        },
-        body: body,
-      }
-    );
+  function create({ body }: { body: FactoryMultiplierCreateRq }) {
+    return settings.client.POST("/private/factory_multiplier/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   function exportSql({ body }: { body: FactoryMultiplierExportSqlRq }) {

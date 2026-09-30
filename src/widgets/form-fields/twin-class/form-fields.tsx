@@ -150,7 +150,7 @@ export function TwinClassFormFields({
         required
       />
 
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}
@@ -165,7 +165,6 @@ export function TwinClassFormFields({
         selectPlaceholder="Select owner type"
         searchPlaceholder="Search owner type..."
         noItemsText="No owner type found"
-        required
         {...twinClassOwnerTypeAdapter}
       />
 

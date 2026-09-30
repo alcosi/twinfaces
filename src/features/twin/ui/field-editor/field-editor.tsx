@@ -80,7 +80,7 @@ export function TwinFieldEditor({
   }
 
   async function handleOnSubmit(value: string) {
-    const body: TwinUpdateRq = TWIN_SELF_FIELD_KEYS.includes(
+    const body: Omit<TwinUpdateRq, "twinId"> = TWIN_SELF_FIELD_KEYS.includes(
       field.key as TwinSelfFieldKey
     )
       ? { [field.key]: value }

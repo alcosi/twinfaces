@@ -1,5 +1,7 @@
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 
+import { RequiredFieldsGate } from "@/components/form-fields";
+
 import { FormField } from "@/shared/ui";
 
 import { AutoFormComplexComboboxValueInfo } from "../auto-field";
@@ -17,19 +19,21 @@ export function ComplexComboboxFormField<TFormValues extends FieldValues>({
   required?: boolean;
 }) {
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <ComplexComboboxFormItem
-          value={field.value}
-          onChange={field.onChange}
-          info={info}
-          inForm
-          required={required}
-          filterKey={name as string}
-        />
-      )}
-    />
+    <RequiredFieldsGate required={required}>
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <ComplexComboboxFormItem
+            value={field.value}
+            onChange={field.onChange}
+            info={info}
+            inForm
+            required={required}
+            filterKey={name as string}
+          />
+        )}
+      />
+    </RequiredFieldsGate>
   );
 }

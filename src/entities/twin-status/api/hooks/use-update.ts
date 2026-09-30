@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { TwinStatusUpdateRq } from "@/entities/twin-status";
+import { TwinStatusUpdate } from "@/entities/twin-status";
 import { PrivateApiContext } from "@/shared/api";
 
 export const useStatusUpdate = () => {
@@ -12,9 +12,11 @@ export const useStatusUpdate = () => {
       body,
     }: {
       statusId: string;
-      body: TwinStatusUpdateRq;
+      body: Omit<TwinStatusUpdate, "id">;
     }) => {
-      return await api.twinStatus.update({ statusId, body });
+      return await api.twinStatus.update({
+        body: { statuses: [{ id: statusId, ...body }] },
+      });
     },
     [api]
   );

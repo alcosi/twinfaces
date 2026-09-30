@@ -21,6 +21,12 @@ export type FactoryPipelineUpdateRq =
   components["schemas"]["FactoryPipelineUpdateRqV1"];
 export type FactoryPipelineCreateRq =
   components["schemas"]["FactoryPipelineCreateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type FactoryPipelineCreate =
+  components["schemas"]["FactoryPipelineCreateV1"];
+export type FactoryPipelineUpdate =
+  components["schemas"]["FactoryPipelineUpdateV1"];
 export type FactoryPipelineExportSqlRq =
   components["schemas"]["FactoryPipelineExportSqlRqV1"];
 export type FactoryPipelineDuplicateRq =

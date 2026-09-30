@@ -21,11 +21,12 @@ export function PermissionsFormFields({
         selectPlaceholder="Select permission group"
         searchPlaceholder="Search permission group..."
         noItemsText="No permission groups found"
+        required
         {...permissionGroupAdapter}
       />
 
-      <TextFormField control={control} name="key" label="Key" />
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="key" label="Key" required />
+      <TextFormField control={control} name="name" label="Name" required />
       <TextFormField control={control} name="description" label="Description" />
     </>
   );

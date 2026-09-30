@@ -22,6 +22,12 @@ export type FactoryMultiplierUpdateRq =
   components["schemas"]["FactoryMultiplierUpdateRqV1"];
 export type FactoryMultiplierCreateRq =
   components["schemas"]["FactoryMultiplierCreateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type FactoryMultiplierCreate =
+  components["schemas"]["FactoryMultiplierCreateV1"];
+export type FactoryMultiplierUpdate =
+  components["schemas"]["FactoryMultiplierUpdateV1"];
 export type FactoryMultiplierExportSqlRq =
   components["schemas"]["FactoryMultiplierExportSqlRqV1"];
 export type FactoryMultiplierDuplicateRq =

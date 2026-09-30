@@ -19,6 +19,7 @@ import {
 } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 
 export function ComboboxFormItem<TFieldModel>({
   fieldValue = [],
@@ -28,6 +29,7 @@ export function ComboboxFormItem<TFieldModel>({
   required,
   buttonClassName,
   inForm,
+  actions,
   ...props
 }: ComboboxProps<TFieldModel> & {
   fieldValue?: TFieldModel[] | string;
@@ -35,6 +37,11 @@ export function ComboboxFormItem<TFieldModel>({
   description?: React.ReactNode;
   required?: boolean;
   inForm?: boolean;
+  /**
+   * Buttons sitting next to the control itself — kept in the same row so the
+   * validation message growing underneath doesn't push them around.
+   */
+  actions?: React.ReactNode;
 }) {
   const comboboxRef = useRef<ComboboxHandle<TFieldModel> | null>(null);
 
@@ -79,21 +86,32 @@ export function ComboboxFormItem<TFieldModel>({
     }
   }
 
+  const control = (
+    <FormControl>
+      <Combobox<TFieldModel>
+        ref={comboboxRef}
+        onSelect={onSelect}
+        buttonClassName={cn("w-full", buttonClassName)}
+        {...props}
+      />
+    </FormControl>
+  );
+
   return (
     <FormItem className="w-full">
       {label && (
         <FormItemLabel>
-          {label} {required && <span className="text-destructive">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
-      <FormControl>
-        <Combobox<TFieldModel>
-          ref={comboboxRef}
-          onSelect={onSelect}
-          buttonClassName={cn("w-full", buttonClassName)}
-          {...props}
-        />
-      </FormControl>
+      {actions ? (
+        <div className="flex items-start gap-1.5">
+          <div className="min-w-0 flex-1">{control}</div>
+          {actions}
+        </div>
+      ) : (
+        control
+      )}
       {description && (
         <FormItemDescription inForm={inForm}>{description}</FormItemDescription>
       )}

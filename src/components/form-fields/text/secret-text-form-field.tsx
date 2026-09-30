@@ -8,6 +8,7 @@ import {
 } from "@/shared/libs";
 import { FormField, InputProps, StepsProgressBar } from "@/shared/ui";
 
+import { RequiredFieldsGate } from "../required-mode";
 import { FormFieldProps, TextFormFieldProps } from "../types";
 import { SecretTextFormItem } from "./secret-text-form-item";
 
@@ -44,33 +45,35 @@ export function SecretTextFormField<T extends FieldValues>({
   }, [passwordWatched]);
 
   return (
-    <>
-      <FormField
-        control={control}
-        name={name}
-        render={({ field, fieldState, formState }) => (
-          <SecretTextFormItem
-            type="password"
-            autoFocus={props.autoFocus}
-            fieldValue={field.value}
-            onChange={(x) => field.onChange(x)}
-            invalid={
-              isTruthy(formState.errors.root?.message) || fieldState.invalid
-            }
-            inputId={inputId}
-            inForm={true}
-            {...props}
+    <RequiredFieldsGate required={props.required}>
+      <>
+        <FormField
+          control={control}
+          name={name}
+          render={({ field, fieldState, formState }) => (
+            <SecretTextFormItem
+              type="password"
+              autoFocus={props.autoFocus}
+              fieldValue={field.value}
+              onChange={(x) => field.onChange(x)}
+              invalid={
+                isTruthy(formState.errors.root?.message) || fieldState.invalid
+              }
+              inputId={inputId}
+              inForm={true}
+              {...props}
+            />
+          )}
+        />
+        {showStrengthIndicator && passwordWatched && (
+          <StepsProgressBar
+            steps={["0", "1", "2", "3"]}
+            current={strengthLevel.toString()}
+            activeColor={strengthColorMap[strengthLevel]}
+            inactiveColor="bg-transparent"
           />
         )}
-      />
-      {showStrengthIndicator && passwordWatched && (
-        <StepsProgressBar
-          steps={["0", "1", "2", "3"]}
-          current={strengthLevel.toString()}
-          activeColor={strengthColorMap[strengthLevel]}
-          inactiveColor="bg-transparent"
-        />
-      )}
-    </>
+      </>
+    </RequiredFieldsGate>
   );
 }

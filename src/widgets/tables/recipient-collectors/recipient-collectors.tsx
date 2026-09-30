@@ -136,10 +136,12 @@ export function RecipientCollectorsTable() {
   async function handleOnCreateSubmit(
     formValues: z.infer<typeof RECIPIENT_COLLECTOR_SCHEMA>
   ) {
-    const { ...body } = formValues;
+    const { recipientResolverParams, ...body } = formValues;
     await createRecipientCollector({
       body: {
-        recipientCollectors: [{ ...body }],
+        recipientCollectors: [
+          { ...body, recipientResolverParams: recipientResolverParams ?? {} },
+        ],
       },
     });
 

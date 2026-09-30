@@ -43,7 +43,7 @@ export function FactoryEraserGeneral() {
   const factoryConditionSetAdapter = useFactoryConditionSetSelectAdapter();
   const { confirm } = useActionDialogs();
 
-  async function update(body: FactoryEraserUpdate) {
+  async function update(body: Omit<FactoryEraserUpdate, "id">) {
     try {
       await updateFactoryEraser({ factoryEraserId: eraser.id, body });
       toast.success("Factory eraser was updated successfully!");
@@ -75,9 +75,7 @@ export function FactoryEraserGeneral() {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
 
       return update({
-        eraser: {
-          inputTwinClassId: id,
-        },
+        inputTwinClassId: id,
       });
     },
   };
@@ -104,9 +102,7 @@ export function FactoryEraserGeneral() {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
 
       return update({
-        eraser: {
-          twinFactoryConditionSetId: id,
-        },
+        twinFactoryConditionSetId: id,
       });
     },
   };
@@ -120,9 +116,7 @@ export function FactoryEraserGeneral() {
       body: `Are you sure you want to ${action} action for this eraser?`,
       onSuccess: () => {
         return update({
-          eraser: {
-            twinFactoryConditionInvert: !eraser.factoryConditionSetInvert,
-          },
+          twinFactoryConditionInvert: !eraser.factoryConditionSetInvert,
         }).then(refresh);
       },
     });
@@ -137,9 +131,7 @@ export function FactoryEraserGeneral() {
       body: `Are you sure you want to ${action} action for this eraser?`,
       onSuccess: () => {
         return update({
-          eraser: {
-            active: !eraser.active,
-          },
+          active: !eraser.active,
         }).then(refresh);
       },
     });
@@ -154,9 +146,7 @@ export function FactoryEraserGeneral() {
     },
     onSubmit: async (value) => {
       return update({
-        eraser: {
-          action: value,
-        },
+        action: value,
       });
     },
   };
@@ -174,9 +164,7 @@ export function FactoryEraserGeneral() {
     schema: z.string().min(1),
     onSubmit: (value) => {
       return update({
-        eraser: {
-          description: value,
-        },
+        description: value,
       });
     },
   };

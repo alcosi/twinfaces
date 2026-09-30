@@ -46,11 +46,10 @@ export function createTierApi(settings: ApiSettings) {
     });
   }
 
-  function update({ tierId, body }: { tierId: string; body: TierUpdateRq }) {
-    return settings.client.PUT("/private/tier/{tierId}/v1", {
+  function update({ body }: { body: TierUpdateRq }) {
+    return settings.client.PUT("/private/tier/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { tierId },
         query: {
           lazyRelation: false,
           showTierMode: "DETAILED",

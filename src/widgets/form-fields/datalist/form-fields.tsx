@@ -17,9 +17,15 @@ export function DatalistFormFields<T extends z.infer<typeof DATALIST_SCHEMA>>({
         name={"key" as Path<T>}
         label="Key"
         autoFocus={true}
+        required
       />
 
-      <TextFormField control={control} name={"name" as Path<T>} label="Name" />
+      <TextFormField
+        control={control}
+        name={"name" as Path<T>}
+        label="Name"
+        required
+      />
 
       <TextAreaFormField
         control={control}

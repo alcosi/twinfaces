@@ -24,6 +24,10 @@ export type FactoryViewhQuery =
   operations["factoryViewV1"]["parameters"]["query"];
 export type FactoryUpdateRq = components["schemas"]["FactoryUpdateRqV1"];
 export type FactoryCreateRq = components["schemas"]["FactoryCreateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type FactoryCreate = components["schemas"]["FactoryCreateV1"];
+export type FactoryUpdate = components["schemas"]["FactoryUpdateV1"];
 export type FactoryExportSqlRq =
   components["schemas"]["TwinFactoryExportSqlRqV1"];
 export type FactoryDuplicateRq = components["schemas"]["FactoryDuplicateRqV1"];

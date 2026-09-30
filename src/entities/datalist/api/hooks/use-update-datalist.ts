@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { DataListUpdateRqV1 } from "@/entities/datalist";
+import { DataListUpdate } from "@/entities/datalist";
 import { PrivateApiContext } from "@/shared/api";
 
 export const useDatalistUpdate = () => {
@@ -12,9 +12,11 @@ export const useDatalistUpdate = () => {
       body,
     }: {
       dataListId: string;
-      body: DataListUpdateRqV1;
+      body: Omit<DataListUpdate, "id">;
     }) => {
-      return await api.datalist.update({ dataListId, body });
+      return await api.datalist.update({
+        body: { dataLists: [{ id: dataListId, ...body }] },
+      });
     },
     [api]
   );

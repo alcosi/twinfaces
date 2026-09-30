@@ -7,7 +7,7 @@ import { AutoFormValueType } from "@/components/auto-field";
 
 import { useFactoryConditionSetSelectAdapter } from "@/entities/factory-condition-set";
 import {
-  FactoryPipelineStepUpdateRq,
+  FactoryPipelineStepUpdate,
   useFactoryPipelineStepUpdate,
 } from "@/entities/factory-pipeline-step";
 import {
@@ -47,7 +47,7 @@ export function PipelineStepGeneral() {
   const fCAdapter = useFactoryConditionSetSelectAdapter();
   const fAdapter = useFeaturerSelectAdapter(23);
 
-  async function update(body: FactoryPipelineStepUpdateRq) {
+  async function update(body: Omit<FactoryPipelineStepUpdate, "id">) {
     try {
       await updateFactoryPipelineStep({ factoryPipelineStepId: step.id, body });
       toast.success("Pipeline step update successfully!");
@@ -78,9 +78,7 @@ export function PipelineStepGeneral() {
     onSubmit: async (value) => {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return update({
-        factoryPipelineStep: {
-          factoryConditionSetId: id,
-        },
+        factoryConditionSetId: id,
       });
     },
   };
@@ -94,9 +92,7 @@ export function PipelineStepGeneral() {
       body: `Are you sure you want to ${action} action for this step?`,
       onSuccess: () => {
         return update({
-          factoryPipelineStep: {
-            factoryConditionSetInvert: !step.factoryConditionInvert,
-          },
+          factoryConditionSetInvert: !step.factoryConditionInvert,
         });
       },
     });
@@ -111,9 +107,7 @@ export function PipelineStepGeneral() {
       body: `Are you sure you want to ${action} action for this step?`,
       onSuccess: () => {
         return update({
-          factoryPipelineStep: {
-            active: !step.active,
-          },
+          active: !step.active,
         });
       },
     });
@@ -127,10 +121,8 @@ export function PipelineStepGeneral() {
     title: "Update filler featurer",
     onSubmit: (values) => {
       return update({
-        factoryPipelineStep: {
-          fillerFeaturerId: values.fillerFeaturerId[0].id,
-          fillerParams: values.fillerParams,
-        },
+        fillerFeaturerId: values.fillerFeaturerId[0].id,
+        fillerParams: values.fillerParams,
       });
     },
     valuesInfo: {
@@ -157,9 +149,7 @@ export function PipelineStepGeneral() {
     schema: z.string().min(1),
     onSubmit: (value) => {
       return update({
-        factoryPipelineStep: {
-          description: value,
-        },
+        description: value,
       });
     },
   };

@@ -31,22 +31,19 @@ export const TWIN_CLASSES_SCHEMA = z.object({
       REGEX_PATTERNS.TWIN_CLASS_KEY,
       "Letters, numbers, underscores, and spaces allowed"
     ),
-  name: z
-    .string()
-    .max(100)
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  // Required by the API (TwinClassCreateV1.required).
+  name: z.string().min(1, "Name can not be empty").max(100),
   description: z
     .string()
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  // Optional per the API (TwinClassCreateV1 only requires key + nameI18n).
   ownerType: z
     .array(
       z.object({
         id: z.enum(OWNER_TYPES),
       })
     )
-    .min(1, "Required")
     .transform((arr) =>
       isPopulatedArray<{ id: TwinClass["ownerType"] }>(arr)
         ? arr[0].id

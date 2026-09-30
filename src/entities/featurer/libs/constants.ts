@@ -9,6 +9,17 @@ export const FEATURER_ID_EXTRACTOR = z
   .min(1, "Required")
   .transform((arr) => (isPopulatedArray<{ id: number }>(arr) ? arr[0].id : 0));
 
+// Mirrors FEATURER_ID_EXTRACTOR for featurers the API marks as optional: an
+// untouched combobox yields `[]`, which has to collapse to `undefined` rather
+// than fail a `.min(1)` check.
+export const OPTIONAL_FEATURER_ID_EXTRACTOR = z
+  .union([z.literal(""), z.array(z.object({ id: z.number() })), z.number()])
+  .optional()
+  .transform((value) => {
+    if (isPopulatedArray<{ id: number }>(value)) return value[0].id;
+    return typeof value === "number" ? value : undefined;
+  });
+
 export const FEATURER_PARAMS_VALUE = z
   .record(
     z.string(),

@@ -44,7 +44,7 @@ export function FactoryConditionSetGeneral() {
         body: {
           conditionSets: [
             {
-              conditionSetId: factoryConditionSet.id,
+              conditionSetId: factoryConditionSet.id!,
               name: value,
             },
           ],
@@ -77,7 +77,7 @@ export function FactoryConditionSetGeneral() {
         body: {
           conditionSets: [
             {
-              conditionSetId: factoryConditionSet.id,
+              conditionSetId: factoryConditionSet.id!,
               twinFactoryId: id,
             },
           ],
@@ -103,7 +103,7 @@ export function FactoryConditionSetGeneral() {
         body: {
           conditionSets: [
             {
-              conditionSetId: factoryConditionSet.id,
+              conditionSetId: factoryConditionSet.id!,
               description: value,
             },
           ],

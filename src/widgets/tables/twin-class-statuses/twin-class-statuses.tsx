@@ -324,8 +324,7 @@ export function TwinClassStatusesTable({
     }
 
     await createStatus({
-      twinClassId: twinClassId || formValues.twinClassId!,
-      body: buildTwinStatusCreateRq(formValues),
+      body: buildTwinStatusCreateRq(formValues, twinClassId),
     });
 
     toast.success("Status created successfully!");

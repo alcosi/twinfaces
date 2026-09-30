@@ -199,19 +199,21 @@ export function TiersTable() {
   ) => {
     await createTier({
       body: {
-        tier: {
-          name: formValues.name,
-          description: formValues.description,
-          custom: formValues.custom,
-          permissionSchemaId: formValues.permissionSchemaId || undefined,
-          twinflowSchemaId: formValues.twinflowSchemaId || undefined,
-          twinClassSchemaId: formValues.twinClassSchemaId || undefined,
-          attachmentsStorageQuotaSize:
-            formValues.attachmentsStorageQuotaSize ?? undefined,
-          attachmentsStorageQuotaCount:
-            formValues.attachmentsStorageQuotaCount ?? undefined,
-          userCountQuota: formValues.userCountQuota ?? undefined,
-        },
+        tiers: [
+          {
+            name: formValues.name,
+            description: formValues.description,
+            custom: formValues.custom,
+            permissionSchemaId: formValues.permissionSchemaId,
+            twinflowSchemaId: formValues.twinflowSchemaId,
+            twinClassSchemaId: formValues.twinClassSchemaId,
+            attachmentsStorageQuotaSize:
+              formValues.attachmentsStorageQuotaSize ?? undefined,
+            attachmentsStorageQuotaCount:
+              formValues.attachmentsStorageQuotaCount ?? undefined,
+            userCountQuota: formValues.userCountQuota ?? undefined,
+          },
+        ],
       },
     });
 

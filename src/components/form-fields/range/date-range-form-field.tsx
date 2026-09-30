@@ -1,6 +1,7 @@
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { AutoFormDateRangeValueInfo } from "@/components/auto-field";
+import { RequiredFieldsGate } from "@/components/form-fields";
 import {
   FormFieldProps,
   FormItemLabel,
@@ -17,26 +18,28 @@ export function DateRangeFormField<T extends FieldValues>({
   ...props
 }: Props<T>) {
   return (
-    <div className="grid grid-cols-2 grid-rows-[auto_1fr] gap-2">
-      {label && (
-        <div className="col-span-2">
-          <FormItemLabel>{label}</FormItemLabel>
-        </div>
-      )}
-      <TextFormField
-        {...props}
-        name={`${name}.from` as FieldPath<T>}
-        control={control}
-        type="date"
-        placeholder="from"
-      />
-      <TextFormField
-        {...props}
-        name={`${name}.to` as FieldPath<T>}
-        control={control}
-        type="date"
-        placeholder="to"
-      />
-    </div>
+    <RequiredFieldsGate required={props.required}>
+      <div className="grid grid-cols-2 grid-rows-[auto_1fr] gap-2">
+        {label && (
+          <div className="col-span-2">
+            <FormItemLabel>{label}</FormItemLabel>
+          </div>
+        )}
+        <TextFormField
+          {...props}
+          name={`${name}.from` as FieldPath<T>}
+          control={control}
+          type="date"
+          placeholder="from"
+        />
+        <TextFormField
+          {...props}
+          name={`${name}.to` as FieldPath<T>}
+          control={control}
+          type="date"
+          placeholder="to"
+        />
+      </div>
+    </RequiredFieldsGate>
   );
 }

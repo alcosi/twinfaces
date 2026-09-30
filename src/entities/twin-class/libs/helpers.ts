@@ -167,9 +167,10 @@ export function buildTwinClassCreateRq(
     twinClassCreates: [
       {
         key: values.key,
-        nameI18n: values.name
-          ? { translationInCurrentLocale: values.name, translations: {} }
-          : undefined,
+        nameI18n: {
+          translationInCurrentLocale: values.name,
+          translations: {},
+        },
         descriptionI18n: values.description
           ? { translationInCurrentLocale: values.description, translations: {} }
           : undefined,

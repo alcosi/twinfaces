@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 
-import { TwinFlowUpdateRq } from "@/entities/twin-flow";
+import { TwinFlowUpdate } from "@/entities/twin-flow";
 import { PrivateApiContext } from "@/shared/api";
 
 export const useUpdateTwinFlow = () => {
@@ -12,9 +12,11 @@ export const useUpdateTwinFlow = () => {
       body,
     }: {
       twinflowId: string;
-      body: TwinFlowUpdateRq;
+      body: Omit<TwinFlowUpdate, "id">;
     }) => {
-      return await api.twinFlow.update({ twinflowId, body });
+      return await api.twinFlow.update({
+        body: { twinflows: [{ id: twinflowId, ...body }] },
+      });
     },
     [api]
   );

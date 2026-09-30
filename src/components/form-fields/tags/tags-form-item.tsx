@@ -10,6 +10,7 @@ import {
 } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 export function TagsFormItem<TField>({
@@ -41,7 +42,7 @@ export function TagsFormItem<TField>({
     <div>
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-error-500">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
       <FormControl>
