@@ -4,6 +4,7 @@ export * from "./combobox";
 export * from "./file";
 export { FormItemDescription, FormItemLabel } from "./form-items-common";
 export * from "./range";
+export * from "./required-mode";
 export * from "./switch";
 export * from "./tags";
 export * from "./text";

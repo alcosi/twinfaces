@@ -9,7 +9,13 @@ export const useTwinUpdate = () => {
   const api = useContext(PrivateApiContext);
 
   const updateTwin = useCallback(
-    async ({ id, body }: { id: string; body: TwinUpdateRq }) => {
+    async ({
+      id,
+      body,
+    }: {
+      id: string;
+      body: Omit<TwinUpdateRq, "twinId">;
+    }) => {
       setLoading(true);
       try {
         const { data, error } = await api.twin.update({ id, body });

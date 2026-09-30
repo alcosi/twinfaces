@@ -90,19 +90,12 @@ export function createPermissionApi(settings: ApiSettings) {
     });
   }
 
-  async function update({
-    permissionId,
-    body,
-  }: {
-    permissionId: string;
-    body: UpdatePermissionRequestBody;
-  }) {
-    return settings.client.POST("/private/permission/{permissionId}/v1", {
+  async function update({ body }: { body: UpdatePermissionRequestBody }) {
+    return settings.client.PUT("/private/permission/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { permissionId },
       },
-      body: body,
+      body,
     });
   }
 

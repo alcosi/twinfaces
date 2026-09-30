@@ -16,7 +16,7 @@ export function useUpdateFactoryCondition() {
         description?: string;
         active?: boolean;
         invert?: boolean;
-        id?: string;
+        id: string;
       }>;
     };
   }) {

@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { isTruthy } from "@/shared/libs";
 import { FormField } from "@/shared/ui";
 
+import { RequiredFieldsGate } from "../required-mode";
 import { FormFieldProps, TextFormFieldProps } from "../types";
 import { AttachmentImageFormItem } from "./attachment-image-form-item";
 
@@ -18,23 +19,25 @@ export function AttachmentImageFormField<T extends FieldValues>({
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
 
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field, fieldState, formState }) => {
-        return (
-          <AttachmentImageFormItem
-            fieldValue={field.value}
-            onChange={field.onChange}
-            invalid={
-              isTruthy(fieldState.error) || isTruthy(formState.errors.root)
-            }
-            inputId={inputId}
-            inForm={true}
-            {...props}
-          />
-        );
-      }}
-    />
+    <RequiredFieldsGate required={props.required}>
+      <FormField
+        control={control}
+        name={name}
+        render={({ field, fieldState, formState }) => {
+          return (
+            <AttachmentImageFormItem
+              fieldValue={field.value}
+              onChange={field.onChange}
+              invalid={
+                isTruthy(fieldState.error) || isTruthy(formState.errors.root)
+              }
+              inputId={inputId}
+              inForm={true}
+              {...props}
+            />
+          );
+        }}
+      />
+    </RequiredFieldsGate>
   );
 }

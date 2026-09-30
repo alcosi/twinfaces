@@ -142,9 +142,8 @@ export function TwinClassDynamicMarkersTable({
           dynamicMarkers: [
             {
               twinClassId: formValues.twinClassId,
-              twinValidatorSetId: formValues.twinValidatorSetId || undefined,
-              markerDataListOptionId:
-                formValues.markerDataListOptionId || undefined,
+              twinValidatorSetId: formValues.twinValidatorSetId,
+              markerDataListOptionId: formValues.markerDataListOptionId,
             },
           ],
         },

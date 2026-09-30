@@ -181,8 +181,7 @@ export function TwinFlows({ twinClassId }: { twinClassId?: string }) {
     formValues: z.infer<typeof TWIN_FLOW_SCHEMA>
   ) => {
     await createTwinFlow({
-      twinClassId: twinClassId || formValues.twinClassId!,
-      body: buildTwinFlowCreateRq(formValues),
+      body: buildTwinFlowCreateRq(formValues, twinClassId),
     });
     toast.success("Twin flow created successfully!");
   };

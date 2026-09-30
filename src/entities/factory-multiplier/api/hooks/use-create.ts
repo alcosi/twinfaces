@@ -2,24 +2,23 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryMultiplierCreateRq } from "../types";
+import { FactoryMultiplierCreate } from "../types";
 
 export const useFactoryMultiplierCreate = () => {
   const api = useContext(PrivateApiContext);
 
   const createFactoryMultiplier = useCallback(
-    async ({ id, body }: { id: string; body: FactoryMultiplierCreateRq }) => {
+    async ({ body }: { body: FactoryMultiplierCreate }) => {
       try {
         const { data, error } = await api.factoryMultiplier.create({
-          id,
-          body,
+          body: { factoryMultipliers: [body] },
         });
 
         if (error) {
           throw new Error("Failed to create factory multiplier");
         }
 
-        return data?.factoryMultiplier?.id;
+        return data?.factoryMultiplierList?.[0]?.id;
       } catch (error) {
         throw new Error("An error occured while creating factory multiplier");
       }

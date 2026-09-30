@@ -5,6 +5,7 @@ import {
   DataListOptionCreateRqDV1,
   DataListOptionFilters,
   DataListOptionSortField,
+  DataListOptionUpdateRqV1,
 } from "@/entities/datalist-option";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
@@ -106,7 +107,7 @@ export function createDatalistOptionApi(settings: ApiSettings) {
     body,
   }: {
     dataListOptionId: string;
-    body: DataListOptionCreateRqDV1;
+    body: DataListOptionUpdateRqV1;
   }) {
     return settings.client.PUT(
       "/private/data_list_option/{dataListOptionId}/v1",

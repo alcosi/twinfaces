@@ -184,11 +184,7 @@ export const CASCADE_CREATE_DEFINITIONS: Record<
     },
     useCreate: () => {
       const { createFactoryMultiplier } = useFactoryMultiplierCreate();
-      return ({ factoryId, ...body }) =>
-        createFactoryMultiplier({
-          id: factoryId,
-          body: { factoryMultiplier: body },
-        });
+      return (values) => createFactoryMultiplier({ body: values });
     },
     FormFields: lazyFormFields(
       () => import("@/widgets/tables/factory-multipliers/form-fields"),
@@ -211,11 +207,7 @@ export const CASCADE_CREATE_DEFINITIONS: Record<
     },
     useCreate: () => {
       const { createFactoryPipeline } = useFactoryPipelineCreate();
-      return ({ factoryId, ...body }) =>
-        createFactoryPipeline({
-          id: factoryId,
-          body: { factoryPipeline: body },
-        });
+      return (values) => createFactoryPipeline({ body: values });
     },
     FormFields: lazyFormFields(
       () => import("@/widgets/tables/factory-pipelines/form-fields"),
@@ -312,10 +304,7 @@ export const CASCADE_CREATE_DEFINITIONS: Record<
     useCreate: () => {
       const { createTwinFlow } = useCreateTwinFlow();
       return (values) =>
-        createTwinFlow({
-          twinClassId: values.twinClassId!,
-          body: buildTwinFlowCreateRq(values),
-        });
+        createTwinFlow({ body: buildTwinFlowCreateRq(values) });
     },
     FormFields: lazyFormFields(
       () => import("@/widgets/tables/twin-flows/form-fields"),
@@ -337,10 +326,7 @@ export const CASCADE_CREATE_DEFINITIONS: Record<
     useCreate: () => {
       const { createStatus } = useStatusCreate();
       return (values) =>
-        createStatus({
-          twinClassId: values.twinClassId!,
-          body: buildTwinStatusCreateRq(values),
-        });
+        createStatus({ body: buildTwinStatusCreateRq(values) });
     },
     FormFields: lazyFormFields(
       () => import("@/widgets/tables/twin-class-statuses/form-fields"),

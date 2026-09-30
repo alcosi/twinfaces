@@ -35,13 +35,13 @@ export function TwinFlowFactoryGeneral({
   const twinflowAdapter = useTwinFlowSelectAdapter();
   const factoryAdapter = useFactorySelectAdapter();
 
-  async function update(updateData: TwinFlowFactoryUpdateV1) {
+  async function update(updateData: Omit<TwinFlowFactoryUpdateV1, "id">) {
     try {
       await updateTwinFlowFactory({
         body: {
           twinflowFactories: [
             {
-              id: twinflowFactory.id,
+              id: twinflowFactory.id!,
               ...updateData,
             },
           ],

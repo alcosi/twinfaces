@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { isEmptyString } from "@/shared/libs";
 import { FormField, TagBoxProps } from "@/shared/ui";
 
+import { RequiredFieldsGate } from "../required-mode";
 import { FormFieldProps } from "../types";
 import { TagsFormItem } from "./tags-form-item";
 
@@ -21,21 +22,23 @@ export function TagsFormField<TForm extends FieldValues, TField>({
 }: Props<TForm, TField>) {
   const inputId = idPrefix ? `${idPrefix}-${name}` : undefined;
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <TagsFormItem
-          fieldValue={isEmptyString(field.value) ? [] : field.value}
-          inputId={inputId}
-          label={label}
-          description={description}
-          inForm={true}
-          schema={schema}
-          onChange={(x) => field.onChange(x)}
-          {...props}
-        />
-      )}
-    />
+    <RequiredFieldsGate required={props.required}>
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <TagsFormItem
+            fieldValue={isEmptyString(field.value) ? [] : field.value}
+            inputId={inputId}
+            label={label}
+            description={description}
+            inForm={true}
+            schema={schema}
+            onChange={(x) => field.onChange(x)}
+            {...props}
+          />
+        )}
+      />
+    </RequiredFieldsGate>
   );
 }

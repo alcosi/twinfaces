@@ -1,6 +1,7 @@
 // NOTE: importing from '@/entities/datalist' triggers an excaption
-import { DATALIST_SCHEMA } from "@/entities/datalist/libs/constans";
 import { z } from "zod";
+
+import { DATALIST_SCHEMA } from "@/entities/datalist/libs/constans";
 
 export const DATALIST_OPTION_STATUS_TYPES = [
   "active",
@@ -17,7 +18,7 @@ const DATALIST_SCHEMA_EXTENDED = DATALIST_SCHEMA.extend({
 });
 
 export const DATALIST_OPTION_SCHEMA = z.object({
-  dataList: z.array(DATALIST_SCHEMA_EXTENDED),
+  dataList: z.array(DATALIST_SCHEMA_EXTENDED).min(1, "Required"),
   name: z.string().min(1).max(100),
   icon: z
     .string()

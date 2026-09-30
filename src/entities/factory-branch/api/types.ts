@@ -28,7 +28,13 @@ export type FactoryBranchCreateRq =
 export type FactoryBranchViewQuery =
   operations["factoryBranchViewV1"]["parameters"]["query"];
 export type FactoryBranchUpdateRq =
-  components["schemas"]["FactoryBranchUpdateRqv1"];
+  components["schemas"]["FactoryBranchUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type FactoryBranchCreate =
+  components["schemas"]["FactoryBranchCreateV1"];
+export type FactoryBranchUpdate =
+  components["schemas"]["FactoryBranchUpdateV1"];
 export type FactoryBranchExportSqlRq =
   components["schemas"]["FactoryBranchExportSqlRqV1"];
 

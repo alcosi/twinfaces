@@ -394,9 +394,7 @@ export function FactoryBranchesTable({
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof FACTORY_BRANCH_SCHEMA>
   ) => {
-    const { factoryId, ...body } = formValues;
-
-    await createFactoryBranch({ id: factoryId, body });
+    await createFactoryBranch({ body: formValues });
     toast.success("Factory branch created successfully!");
   };
 

@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryPipelineUpdateRq } from "../types";
+import { FactoryPipelineUpdate } from "../types";
 
 export function useUpdateFactoryPipeline() {
   const api = useContext(PrivateApiContext);
@@ -12,18 +12,14 @@ export function useUpdateFactoryPipeline() {
     body,
   }: {
     factoryPipelineId: string;
-    body: FactoryPipelineUpdateRq;
+    body: Omit<FactoryPipelineUpdate, "id">;
   }) {
     const { error } = await api.factoryPipeline.update({
-      id: factoryPipelineId,
-      body,
+      body: { factoryPipelines: [{ id: factoryPipelineId, ...body }] },
     });
 
     if (error) {
-      throw new Error(
-        "Failed to fetch factory pipeline due to API error",
-        error
-      );
+      throw new Error("Failed to update factory pipeline due to API error");
     }
   }
 

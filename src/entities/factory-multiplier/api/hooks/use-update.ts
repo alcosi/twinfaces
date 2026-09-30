@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryMultiplierUpdateRq } from "../types";
+import { FactoryMultiplierUpdate } from "../types";
 
 export function useUpdateFactoryMultiplier() {
   const api = useContext(PrivateApiContext);
@@ -12,18 +12,14 @@ export function useUpdateFactoryMultiplier() {
     body,
   }: {
     factoryMultiplierId: string;
-    body: FactoryMultiplierUpdateRq;
+    body: Omit<FactoryMultiplierUpdate, "id">;
   }) {
     const { error } = await api.factoryMultiplier.update({
-      id: factoryMultiplierId,
-      body,
+      body: { factoryMultipliers: [{ id: factoryMultiplierId, ...body }] },
     });
 
     if (error) {
-      throw new Error(
-        "Failed to fetch factory multiplier due to API error",
-        error
-      );
+      throw new Error("Failed to update factory multiplier due to API error");
     }
   }
 

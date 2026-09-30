@@ -1,6 +1,7 @@
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { AutoFormNumberRangeValueInfo } from "@/components/auto-field";
+import { RequiredFieldsGate } from "@/components/form-fields";
 import {
   FormFieldProps,
   FormItemLabel,
@@ -17,27 +18,29 @@ export function NumberRangeFormField<T extends FieldValues>({
   ...props
 }: Props<T>) {
   return (
-    <div className="grid grid-rows-[auto_1fr] grid-cols-2 gap-2">
-      {label && (
-        <div className="col-span-2">
-          <FormItemLabel>{label}</FormItemLabel>
-        </div>
-      )}
-      <TextFormField
-        {...props}
-        name={`${name}.from` as FieldPath<T>}
-        control={control}
-        type="number"
-        placeholder={props.placeholderFrom ?? "from"}
-      />
+    <RequiredFieldsGate required={props.required}>
+      <div className="grid grid-cols-2 grid-rows-[auto_1fr] gap-2">
+        {label && (
+          <div className="col-span-2">
+            <FormItemLabel>{label}</FormItemLabel>
+          </div>
+        )}
+        <TextFormField
+          {...props}
+          name={`${name}.from` as FieldPath<T>}
+          control={control}
+          type="number"
+          placeholder={props.placeholderFrom ?? "from"}
+        />
 
-      <TextFormField
-        {...props}
-        name={`${name}.to` as FieldPath<T>}
-        control={control}
-        type="number"
-        placeholder={props.placeholderFrom ?? "to"}
-      />
-    </div>
+        <TextFormField
+          {...props}
+          name={`${name}.to` as FieldPath<T>}
+          control={control}
+          type="number"
+          placeholder={props.placeholderFrom ?? "to"}
+        />
+      </div>
+    </RequiredFieldsGate>
   );
 }

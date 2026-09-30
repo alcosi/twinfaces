@@ -3,6 +3,7 @@
 import { FormItem, FormMessage, Input, InputProps } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps, TextFormFieldProps } from "../types";
 
 export function TextFormItem({
@@ -34,7 +35,7 @@ export function TextFormItem({
     <FormItem className="w-full">
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-destructive">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
       <Input

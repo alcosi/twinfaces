@@ -84,6 +84,7 @@ export function FactoryBranchFormFields({
         control={control}
         name="factoryId"
         info={factoryInfo}
+        required
       />
 
       <ComplexComboboxFormField
@@ -110,6 +111,7 @@ export function FactoryBranchFormFields({
         control={control}
         name="nextFactoryId"
         info={nextFactoryInfo}
+        required
       />
     </>
   );

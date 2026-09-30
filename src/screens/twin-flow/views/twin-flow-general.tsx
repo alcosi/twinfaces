@@ -5,7 +5,7 @@ import { z } from "zod";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { TwinFlowUpdateRq, useUpdateTwinFlow } from "@/entities/twin-flow";
+import { TwinFlowUpdate, useUpdateTwinFlow } from "@/entities/twin-flow";
 import { TwinStatus, useTwinStatusSelectAdapter } from "@/entities/twin-status";
 import {
   InPlaceEdit,
@@ -30,7 +30,7 @@ export function TwinFlowGeneral() {
   const { updateTwinFlow } = useUpdateTwinFlow();
   const twinStatusAdapter = useTwinStatusSelectAdapter();
 
-  async function update(newTwinFlow: TwinFlowUpdateRq) {
+  async function update(newTwinFlow: Omit<TwinFlowUpdate, "id">) {
     try {
       await updateTwinFlow({ twinflowId: twinFlow.id!, body: newTwinFlow });
       refresh?.();

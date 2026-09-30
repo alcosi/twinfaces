@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { FormControl, FormMessage, Textarea, TextareaProps } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
+import { RequiredMark } from "../required-mode";
 import { FormItemProps } from "../types";
 
 export function TextAreaFormItem<T extends FieldValues>({
@@ -24,7 +25,7 @@ export function TextAreaFormItem<T extends FieldValues>({
     <div>
       {label && (
         <FormItemLabel inForm={inForm}>
-          {label} {required && <span className="text-error-500">*</span>}
+          {label} <RequiredMark required={required} />
         </FormItemLabel>
       )}
       <FormControl>

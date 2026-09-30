@@ -47,7 +47,7 @@ export function TierGeneral() {
     onSubmit: async (value) => {
       return updateTier({
         tierId,
-        body: { tier: { name: value as string } },
+        body: { name: value as string },
       }).then(refresh);
     },
   };
@@ -62,7 +62,7 @@ export function TierGeneral() {
     onSubmit: async (value) => {
       return updateTier({
         tierId,
-        body: { tier: { description: value as string } },
+        body: { description: value as string },
       }).then(refresh);
     },
   };
@@ -77,7 +77,7 @@ export function TierGeneral() {
       onSuccess: () => {
         return updateTier({
           tierId,
-          body: { tier: { custom: !tier.custom } },
+          body: { custom: !tier.custom },
         }).then(refresh);
       },
     });
@@ -105,7 +105,7 @@ export function TierGeneral() {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return updateTier({
         tierId,
-        body: { tier: { permissionSchemaId: id } },
+        body: { permissionSchemaId: id },
       }).then(refresh);
     },
   };
@@ -131,7 +131,7 @@ export function TierGeneral() {
         const id = (value as unknown as Array<{ id: string }>)[0]?.id;
         return updateTier({
           tierId,
-          body: { tier: { twinflowSchemaId: id } },
+          body: { twinflowSchemaId: id },
         }).then(refresh);
       },
     };
@@ -158,7 +158,7 @@ export function TierGeneral() {
       const id = (value as unknown as Array<{ id: string }>)[0]?.id;
       return updateTier({
         tierId,
-        body: { tier: { twinClassSchemaId: id } },
+        body: { twinClassSchemaId: id },
       }).then(refresh);
     },
   };

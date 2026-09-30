@@ -53,9 +53,10 @@ export function DatalistOptionFormFields({
         control={control}
         name="dataList"
         info={datalistInfo}
+        required
       />
 
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextFormField control={control} name="icon" label="Icon" />
 

@@ -85,17 +85,13 @@ export function createPipelineStepApi(settings: ApiSettings) {
     });
   }
 
-  function create({ id, body }: { id: string; body: PipelineStepCreateRq }) {
-    return settings.client.POST(
-      `/private/factory/factory_pipeline/{factoryPipelineId}/factory_pipeline_step/v1`,
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryPipelineId: id },
-        },
-        body: body,
-      }
-    );
+  function create({ body }: { body: PipelineStepCreateRq }) {
+    return settings.client.POST("/private/factory/factory_pipeline_step/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   function getById({
@@ -114,23 +110,13 @@ export function createPipelineStepApi(settings: ApiSettings) {
     });
   }
 
-  function update({
-    factoryPipelineStepId,
-    body,
-  }: {
-    factoryPipelineStepId: string;
-    body: FactoryPipelineStepUpdateRq;
-  }) {
-    return settings.client.PUT(
-      "/private/factory/factory_pipeline_step/{factoryPipelineStepId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryPipelineStepId },
-        },
-        body,
-      }
-    );
+  function update({ body }: { body: FactoryPipelineStepUpdateRq }) {
+    return settings.client.PUT("/private/factory/factory_pipeline_step/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   function duplicate({ body }: { body: FactoryPipelineStepDuplicateRq }) {

@@ -5,7 +5,7 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormItem } from "@/components/complex-combobox";
-import { FormFieldProps } from "@/components/form-fields";
+import { FormFieldProps, RequiredFieldsGate } from "@/components/form-fields";
 
 import {
   FeaturerParam,
@@ -51,43 +51,45 @@ export function FeaturerFormField<T extends FieldValues>({
   };
 
   return (
-    <>
-      <FormField
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <ComplexComboboxFormItem
-            value={field.value}
-            onChange={(value) => {
-              // Params belong to the previously picked featurer — drop them so
-              // the new one starts from its own set.
-              methods.unregister(props.paramsFieldName);
-              field.onChange(value);
-            }}
-            info={featurerInfo}
-            inForm
-            required={required}
-            filterKey={name}
-          />
-        )}
-      />
+    <RequiredFieldsGate required={required}>
+      <>
+        <FormField
+          control={control}
+          name={name}
+          render={({ field }) => (
+            <ComplexComboboxFormItem
+              value={field.value}
+              onChange={(value) => {
+                // Params belong to the previously picked featurer — drop them so
+                // the new one starts from its own set.
+                methods.unregister(props.paramsFieldName);
+                field.onChange(value);
+              }}
+              info={featurerInfo}
+              inForm
+              required={required}
+              filterKey={name}
+            />
+          )}
+        />
 
-      {isPopulatedArray(featurerParams) && (
-        <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
-          <legend className="text-sm font-medium italic">Params</legend>
-          <div className="space-y-2">
-            {featurerParams.map((param) => (
-              <FeaturerParamFormField
-                key={param.key}
-                name={`${props.paramsFieldName}.${param.key!}` as Path<T>}
-                control={control}
-                label={param.name}
-                param={param}
-              />
-            ))}
-          </div>
-        </fieldset>
-      )}
-    </>
+        {isPopulatedArray(featurerParams) && (
+          <fieldset className="rounded-md border border-dashed px-1.5 py-2.5">
+            <legend className="text-sm font-medium italic">Params</legend>
+            <div className="space-y-2">
+              {featurerParams.map((param) => (
+                <FeaturerParamFormField
+                  key={param.key}
+                  name={`${props.paramsFieldName}.${param.key!}` as Path<T>}
+                  control={control}
+                  label={param.name}
+                  param={param}
+                />
+              ))}
+            </div>
+          </fieldset>
+        )}
+      </>
+    </RequiredFieldsGate>
   );
 }

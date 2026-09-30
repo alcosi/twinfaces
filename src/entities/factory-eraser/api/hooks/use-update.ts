@@ -13,9 +13,11 @@ export const useFactoryEraserUpdate = () => {
       body,
     }: {
       factoryEraserId: string;
-      body: FactoryEraserUpdate;
+      body: Omit<FactoryEraserUpdate, "id">;
     }) => {
-      return await api.factoryEraser.update({ factoryEraserId, body });
+      return await api.factoryEraser.update({
+        body: { erasers: [{ id: factoryEraserId, ...body }] },
+      });
     },
     [api]
   );

@@ -29,3 +29,7 @@ export type TwinFlowFilters = Partial<
 
 export type TwinFlowCreateRq = components["schemas"]["TwinflowCreateRqV1"];
 export type TwinFlowUpdateRq = components["schemas"]["TwinflowUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type TwinFlowCreate = components["schemas"]["TwinflowCreateV1"];
+export type TwinFlowUpdate = components["schemas"]["TwinflowUpdateV1"];

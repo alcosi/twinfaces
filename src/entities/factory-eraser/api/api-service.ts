@@ -7,7 +7,7 @@ import {
   FactoryEraserFilters,
   FactoryEraserRqQuery,
   FactoryEraserSortField,
-  FactoryEraserUpdate,
+  FactoryEraserUpdateRq,
 } from "@/entities/factory-eraser";
 import { ApiSettings, getApiDomainHeaders } from "@/shared/api";
 
@@ -94,23 +94,13 @@ export function createFactoryEraserApi(settings: ApiSettings) {
     });
   }
 
-  function update({
-    factoryEraserId,
-    body,
-  }: {
-    factoryEraserId: string;
-    body: FactoryEraserUpdate;
-  }) {
-    return settings.client.PUT(
-      "/private/factory/factory_eraser/{factoryEraserId}/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { factoryEraserId },
-        },
-        body: body,
-      }
-    );
+  function update({ body }: { body: FactoryEraserUpdateRq }) {
+    return settings.client.PUT("/private/factory/factory_eraser/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+      },
+      body,
+    });
   }
 
   function exportSql({ body }: { body: FactoryEraserExportSqlRq }) {

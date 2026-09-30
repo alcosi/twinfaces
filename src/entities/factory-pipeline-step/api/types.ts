@@ -21,6 +21,12 @@ export type PipelineStepCreateRq =
 
 export type FactoryPipelineStepUpdateRq =
   components["schemas"]["FactoryPipelineStepUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type PipelineStepCreate =
+  components["schemas"]["FactoryPipelineStepCreateV1"];
+export type FactoryPipelineStepUpdate =
+  components["schemas"]["FactoryPipelineStepUpdateV1"];
 
 export type PipelineStepFilterKeys =
   | "idList"

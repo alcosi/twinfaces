@@ -23,6 +23,6 @@ export function FormItemDescription({
   return inForm ? (
     <FormDescription>{children}</FormDescription>
   ) : (
-    <p className={cn("text-sm text-muted-foreground")}>{children}</p>
+    <p className={cn("text-muted-foreground text-sm")}>{children}</p>
   );
 }

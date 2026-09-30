@@ -44,6 +44,7 @@ export function ConditionSetFields({
         control={control}
         name="twinFactoryId"
         info={factoryInfo}
+        required
       />
 
       <TextAreaFormField

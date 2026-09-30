@@ -13,36 +13,19 @@ import {
 } from "./types";
 
 export function createTwinStatusApi(settings: ApiSettings) {
-  function create({
-    twinClassId,
-    body,
-  }: {
-    twinClassId: string;
-    body: TwinStatusCreateRq;
-  }) {
-    return settings.client.POST(
-      "/private/twin_class/{twinClassId}/twin_status/v1",
-      {
-        params: {
-          header: getApiDomainHeaders(settings),
-          path: { twinClassId: twinClassId },
-        },
-        body,
-      }
-    );
-  }
-
-  function update({
-    statusId,
-    body,
-  }: {
-    statusId: string;
-    body: TwinStatusUpdateRq;
-  }) {
-    return settings.client.PUT("/private/twin_status/{twinStatusId}/v1", {
+  function create({ body }: { body: TwinStatusCreateRq }) {
+    return settings.client.POST("/private/twin_status/v1", {
       params: {
         header: getApiDomainHeaders(settings),
-        path: { twinStatusId: statusId },
+      },
+      body,
+    });
+  }
+
+  function update({ body }: { body: TwinStatusUpdateRq }) {
+    return settings.client.PUT("/private/twin_status/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
       },
       body,
     });

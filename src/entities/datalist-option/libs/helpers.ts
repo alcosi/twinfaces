@@ -36,9 +36,14 @@ export function hydrateDatalistOptionFromMap(
 export function buildDatalistOptionCreateRq(
   values: z.infer<typeof DATALIST_OPTION_SCHEMA>
 ): DataListOptionCreateRqDV1 {
+  // The form's own element type carries a non-optional `id`; `DataList` does
+  // not, which is why the value is read back through the schema's type.
+  type SelectedDatalist = z.infer<
+    typeof DATALIST_OPTION_SCHEMA
+  >["dataList"][number];
   const datalist = (
     isPopulatedArray(values.dataList) ? values.dataList[0] : values.dataList
-  ) as DataList;
+  ) as SelectedDatalist;
 
   const attributesMap = [
     { key: datalist.attribute1?.key, value: values.attribute1 },

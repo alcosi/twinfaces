@@ -1,7 +1,7 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { RelatedObjects } from "@/shared/api";
 
-import { TwinStatus, TwinStatusCreateRq, TwinStatus_DETAILED } from "../api";
+import { TwinStatus, TwinStatusCreate, TwinStatus_DETAILED } from "../api";
 import { TwinClassStatusFormValues } from "./types";
 
 export const hydrateTwinStatusFromMap = (
@@ -27,9 +27,13 @@ export const hydrateTwinStatusFromMap = (
  * very same body.
  */
 export function buildTwinStatusCreateRq(
-  values: TwinClassStatusFormValues
-): TwinStatusCreateRq {
+  values: TwinClassStatusFormValues,
+  twinClassId?: string
+): TwinStatusCreate {
   return {
+    // The class used to be a path parameter; the batch endpoint takes it in
+    // the body instead.
+    twinClassId: twinClassId || values.twinClassId!,
     key: values.key,
     nameI18n: {
       translationInCurrentLocale: values.name,

@@ -2,11 +2,7 @@ import { z } from "zod";
 
 import { RelatedObjects } from "@/shared/api";
 
-import {
-  CreatePermissionRequestBody,
-  Permission,
-  Permission_DETAILED,
-} from "../api";
+import { Permission, PermissionCreate, Permission_DETAILED } from "../api";
 import { PERMISSION_SCHEMA } from "./constants";
 
 export const hydratePermissionFromMap = (
@@ -31,7 +27,7 @@ export const hydratePermissionFromMap = (
  */
 export function buildPermissionCreateRq(
   values: z.infer<typeof PERMISSION_SCHEMA>
-): CreatePermissionRequestBody {
+): PermissionCreate {
   return {
     groupId: values.groupId,
     key: values.key,

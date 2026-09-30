@@ -3,7 +3,7 @@ import { z } from "zod";
 import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
 
 export const TWIN_CLASS_STATUS_SCHEMA = z.object({
-  twinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
+  twinClassId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
   key: z
     .string()
     .min(1)
@@ -12,7 +12,7 @@ export const TWIN_CLASS_STATUS_SCHEMA = z.object({
       REGEX_PATTERNS.ALPHANUMERIC_WITH_DASHES,
       "Key can only contain latin letters, numbers, underscores and dashes"
     ),
-  name: z.string().min(0).max(100),
+  name: z.string().min(1, "Name can not be empty").max(100),
   description: z.string(),
   // logo: z
   //   .string()

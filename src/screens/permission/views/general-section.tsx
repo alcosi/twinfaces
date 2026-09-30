@@ -4,10 +4,7 @@ import { z } from "zod";
 
 import { AutoFormValueType } from "@/components/auto-field";
 
-import {
-  UpdatePermissionRequestBody,
-  usePermissionUpdate,
-} from "@/entities/permission";
+import { PermissionUpdate, usePermissionUpdate } from "@/entities/permission";
 import { usePermissionGroupSelectAdapter } from "@/entities/permission-group";
 import {
   InPlaceEdit,
@@ -24,7 +21,7 @@ export function GeneralSection() {
   const { updatePermission } = usePermissionUpdate();
   const pgAdapter = usePermissionGroupSelectAdapter();
 
-  async function update(newPermission: UpdatePermissionRequestBody) {
+  async function update(newPermission: Omit<PermissionUpdate, "id">) {
     try {
       await updatePermission({
         permissionId: permission.id,

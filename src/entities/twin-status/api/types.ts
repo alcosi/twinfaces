@@ -8,6 +8,10 @@ export type TwinStatus_DETAILED = Required<TwinStatus> & {
 
 export type TwinStatusCreateRq = components["schemas"]["TwinStatusCreateRqV1"];
 export type TwinStatusUpdateRq = components["schemas"]["TwinStatusUpdateRqV1"];
+// The endpoints take batches; a single entity is what every screen actually
+// sends, so the hooks speak these and wrap them into the list themselves.
+export type TwinStatusCreate = components["schemas"]["TwinStatusCreateV1"];
+export type TwinStatusUpdate = components["schemas"]["TwinStatusUpdateV1"];
 export type TwinStatusDuplicateRq =
   components["schemas"]["TwinStatusDuplicateRqV1"];
 export type TwinStatusExportSqlRq =

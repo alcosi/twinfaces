@@ -7,8 +7,14 @@ import { cn, usePermissionsAccess } from "@/shared/libs";
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & {
+    /**
+     * For switches that steer the view rather than the data — those must stay
+     * usable for someone who has no UPDATE right on the current route.
+     */
+    ignorePermissions?: boolean;
+  }
+>(({ className, ignorePermissions, ...props }, ref) => {
   const { canForCurrentRoute } = usePermissionsAccess();
   const canUpdate = canForCurrentRoute("UPDATE");
   return (
@@ -19,7 +25,7 @@ const Switch = React.forwardRef<
         className
       )}
       {...props}
-      disabled={!canUpdate}
+      disabled={ignorePermissions ? props.disabled : !canUpdate}
       ref={ref}
     >
       <SwitchPrimitives.Thumb

@@ -16,8 +16,12 @@ export type FactoryEraserSearchRq =
 export type FactoryEraserRqQuery =
   operations["factoryEraserViewV1"]["parameters"]["query"];
 
-export type FactoryEraserUpdate =
+export type FactoryEraserUpdateRq =
   components["schemas"]["FactoryEraserUpdateRqV1"];
+// The endpoint takes a batch; a single entity is what every screen actually
+// sends, so the hook speaks this and wraps it into the list itself.
+export type FactoryEraserUpdate =
+  components["schemas"]["FactoryEraserUpdateV1"];
 
 export type FactoryEraserExportSqlRq =
   components["schemas"]["FactoryEraserExportSqlRqV1"];

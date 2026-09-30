@@ -9,18 +9,15 @@ export const TIER_SCHEMA = z.object({
   permissionSchemaId: z
     .string()
     .uuid("Permission schema ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR)
-    .optional(),
+    .or(FIRST_ID_EXTRACTOR),
   twinflowSchemaId: z
     .string()
     .uuid("Twinflow schema ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR)
-    .optional(),
+    .or(FIRST_ID_EXTRACTOR),
   twinClassSchemaId: z
     .string()
     .uuid("Twin class schema ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR)
-    .optional(),
+    .or(FIRST_ID_EXTRACTOR),
   attachmentsStorageQuotaSize: z.coerce.number(),
   attachmentsStorageQuotaCount: z.coerce.number(),
   userCountQuota: z.coerce.number(),

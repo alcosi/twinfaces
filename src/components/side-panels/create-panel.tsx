@@ -7,6 +7,11 @@ import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { AutoFormComplexComboboxValueInfo } from "@/components/auto-field";
+import {
+  RequiredFieldsModeProvider,
+  RequiredFieldsModeToggle,
+  useRequiredFieldsModeState,
+} from "@/components/form-fields";
 
 import { isPopulatedString } from "@/shared/libs";
 import { Button, Form } from "@/shared/ui";
@@ -56,6 +61,12 @@ export function CascadeCreatePanel({
   // and with it this hook — never changes under it.
   const create = definition.useCreate();
 
+  // Deliberately its own state rather than the one the sheet that opened this
+  // panel holds: this is a different entity with a different set of required
+  // fields, so it starts off and the user decides for it separately. Closing
+  // the panel unmounts this, so reopening it starts off again.
+  const requiredFieldsMode = useRequiredFieldsModeState();
+
   const contextValue: SidePanelsContextValue = useMemo(
     () => ({
       openAdvancedFilters: onOpenFilters,
@@ -84,44 +95,52 @@ export function CascadeCreatePanel({
 
   return (
     <div className="border-border flex w-[400px] shrink-0 flex-col border-l">
-      <Form {...form}>
-        <form
-          className="flex h-full flex-col"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <div className="flex items-center gap-2 px-6 py-4">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
-              onClick={onClose}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-base font-semibold">{definition.title}</span>
-          </div>
+      <RequiredFieldsModeProvider value={requiredFieldsMode}>
+        <Form {...form}>
+          <form
+            className="flex h-full flex-col"
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
+            <div className="flex items-center gap-2 px-6 py-4 pr-12">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={onClose}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-base font-semibold">
+                {definition.title}
+              </span>
 
-          <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-            <SidePanelsContext.Provider value={contextValue}>
-              {label && (
-                <div className="text-muted-foreground text-xs">
-                  Will be selected as&nbsp;
-                  <span className="text-foreground font-medium">{label}</span>
-                </div>
-              )}
+              <div className="ml-auto">
+                <RequiredFieldsModeToggle />
+              </div>
+            </div>
 
-              <definition.FormFields control={form.control} />
-            </SidePanelsContext.Provider>
-          </div>
+            <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
+              <SidePanelsContext.Provider value={contextValue}>
+                {label && (
+                  <div className="text-muted-foreground text-xs">
+                    Will be selected as&nbsp;
+                    <span className="text-foreground font-medium">{label}</span>
+                  </div>
+                )}
 
-          <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
-            <Button type="submit" loading={form.formState.isSubmitting}>
-              Save
-            </Button>
-          </div>
-        </form>
-      </Form>
+                <definition.FormFields control={form.control} />
+              </SidePanelsContext.Provider>
+            </div>
+
+            <div className="border-border flex justify-end gap-2 border-t px-6 py-4">
+              <Button type="submit" loading={form.formState.isSubmitting}>
+                Save
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </RequiredFieldsModeProvider>
     </div>
   );
 }

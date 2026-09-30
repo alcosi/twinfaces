@@ -65,7 +65,7 @@ export function RecipientCollectorGeneral() {
         body: {
           historyNotificationRecipients: [
             {
-              id: recipientCollector.id,
+              id: recipientCollector.id!,
               recipientId: id,
             },
           ],
@@ -99,7 +99,7 @@ export function RecipientCollectorGeneral() {
         body: {
           historyNotificationRecipients: [
             {
-              id: recipientCollector.id,
+              id: recipientCollector.id!,
               recipientResolverFeaturerId: Number(id),
             },
           ],
@@ -120,7 +120,7 @@ export function RecipientCollectorGeneral() {
           body: {
             historyNotificationRecipients: [
               {
-                id: recipientCollector.id,
+                id: recipientCollector.id!,
                 exclude: !recipientCollector.exclude,
               },
             ],

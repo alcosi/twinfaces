@@ -480,12 +480,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof PIPELINE_STEP_SCHEMA>
   ) => {
-    const { factoryPipelineId, ...body } = formValues;
-
-    await createPipelineStep({
-      id: factoryPipelineId,
-      body: { factoryPipelineStep: body },
-    });
+    await createPipelineStep({ body: formValues });
     toast.success("Pipeline step created successfully!");
   };
 

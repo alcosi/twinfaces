@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { DataListCreateRqV1 } from "../api";
+import { DataListCreate } from "../api";
 import { DATALIST_SCHEMA } from "./constans";
 
 /**
@@ -9,7 +9,7 @@ import { DATALIST_SCHEMA } from "./constans";
  */
 export function buildDatalistCreateRq(
   values: z.infer<typeof DATALIST_SCHEMA>
-): DataListCreateRqV1 {
+): DataListCreate {
   const { key, name, description, ...rest } = values;
 
   return {

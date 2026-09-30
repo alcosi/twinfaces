@@ -7,6 +7,7 @@ import {
   AutoField,
   AutoFormComplexComboboxValueInfo,
 } from "@/components/auto-field";
+import { RequiredFieldsModeOff } from "@/components/form-fields";
 
 import { Button } from "@/shared/ui";
 
@@ -110,27 +111,29 @@ export function AdvancedFilterPanel({
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto px-6 pb-6">
-        <SidePanelsContext.Provider value={contextValue}>
-          <div className="text-muted-foreground text-xs">
-            Filters for&nbsp;
-            <span className="text-foreground font-medium">{info.label}</span>
-          </div>
+        <RequiredFieldsModeOff>
+          <SidePanelsContext.Provider value={contextValue}>
+            <div className="text-muted-foreground text-xs">
+              Filters for&nbsp;
+              <span className="text-foreground font-medium">{info.label}</span>
+            </div>
 
-          {Object.entries(info.extraFilters)
-            .filter(([, filterInfo]) => filterInfo !== undefined)
-            .map(([key, filterInfo]) => (
-              <AutoField
-                key={`${resetVersion}-${key}`}
-                info={filterInfo!}
-                name={key}
-                layout="inline"
-                value={values[key]}
-                onChange={(v) =>
-                  onValueChange(key, normalizeFilterValue(v, filterInfo!))
-                }
-              />
-            ))}
-        </SidePanelsContext.Provider>
+            {Object.entries(info.extraFilters)
+              .filter(([, filterInfo]) => filterInfo !== undefined)
+              .map(([key, filterInfo]) => (
+                <AutoField
+                  key={`${resetVersion}-${key}`}
+                  info={filterInfo!}
+                  name={key}
+                  layout="inline"
+                  value={values[key]}
+                  onChange={(v) =>
+                    onValueChange(key, normalizeFilterValue(v, filterInfo!))
+                  }
+                />
+              ))}
+          </SidePanelsContext.Provider>
+        </RequiredFieldsModeOff>
       </div>
 
       <div className="flex items-center justify-end gap-2 px-6 py-4">

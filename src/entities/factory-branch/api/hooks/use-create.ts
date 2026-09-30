@@ -2,19 +2,23 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryBranchCreateRq } from "../types";
+import { FactoryBranchCreate } from "../types";
 
 export const useFactoryBranchCreate = () => {
   const api = useContext(PrivateApiContext);
 
   const createFactoryBranch = useCallback(
-    async ({ id, body }: { id: string; body: FactoryBranchCreateRq }) => {
+    async ({ body }: { body: FactoryBranchCreate }) => {
       try {
-        const { error } = await api.factoryBranch.create({ id, body });
+        const { data, error } = await api.factoryBranch.create({
+          body: { factoryBranches: [body] },
+        });
 
         if (error) {
           throw new Error("Failed to create factory branch");
         }
+
+        return data?.factoryBranchList?.[0]?.id;
       } catch (error) {
         throw new Error("An error occurred while creating factory branch");
       }

@@ -8,7 +8,7 @@ import { AutoDialog, AutoEditDialogSettings } from "@/components/auto-dialog";
 import { AutoFormValueType } from "@/components/auto-field";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
-import { TwinStatusUpdateRq, useStatusUpdate } from "@/entities/twin-status";
+import { TwinStatusUpdate, useStatusUpdate } from "@/entities/twin-status";
 import {
   InPlaceEdit,
   InPlaceEditContextProvider,
@@ -43,7 +43,7 @@ export function TwinStatusGeneral() {
     setEditStatusDialogOpen(true);
   }
 
-  async function update(newStatus: TwinStatusUpdateRq) {
+  async function update(newStatus: Omit<TwinStatusUpdate, "id">) {
     try {
       await updateStatus({ statusId: twinStatusId, body: newStatus });
       refresh?.();

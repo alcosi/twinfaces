@@ -2,19 +2,23 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { PipelineStepCreateRq } from "../types";
+import { PipelineStepCreate } from "../types";
 
 export const usePipelineStepCreate = () => {
   const api = useContext(PrivateApiContext);
 
   const createPipelineStep = useCallback(
-    async ({ id, body }: { id: string; body: PipelineStepCreateRq }) => {
+    async ({ body }: { body: PipelineStepCreate }) => {
       try {
-        const { error } = await api.pipelineStep.create({ id, body });
+        const { data, error } = await api.pipelineStep.create({
+          body: { factoryPipelineSteps: [body] },
+        });
 
         if (error) {
           throw new Error("Failed to create pipeline step");
         }
+
+        return data?.steps?.[0]?.id;
       } catch (error) {
         throw new Error("An error occured while creating pipeline step");
       }

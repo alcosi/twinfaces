@@ -219,12 +219,8 @@ function Component(
           <FactoryPipelineFormFields control={pipelineForm.control} />
         )}
         onCreateSubmit={async (values) => {
-          const { factoryId, ...body } = values as z.infer<
-            typeof FACTORY_PIPELINE_SCHEMA
-          >;
           await createFactoryPipeline({
-            id: factoryId,
-            body: { factoryPipeline: body },
+            body: values as z.infer<typeof FACTORY_PIPELINE_SCHEMA>,
           });
           toast.success("Factory pipeline created successfully!");
         }}
@@ -239,10 +235,9 @@ function Component(
           <FactoryBranchFormFields control={branchForm.control} />
         )}
         onCreateSubmit={async (values) => {
-          const { factoryId, ...body } = values as z.infer<
-            typeof FACTORY_BRANCH_SCHEMA
-          >;
-          await createFactoryBranch({ id: factoryId, body });
+          await createFactoryBranch({
+            body: values as z.infer<typeof FACTORY_BRANCH_SCHEMA>,
+          });
           toast.success("Factory branch created successfully!");
         }}
         onSubmitSuccess={onCreated}
@@ -256,12 +251,8 @@ function Component(
           <FactoryMultiplierFormFields control={multiplierForm.control} />
         )}
         onCreateSubmit={async (values) => {
-          const { factoryId, ...body } = values as z.infer<
-            typeof FACTORY_MULTIPLIER_SCHEMA
-          >;
           await createFactoryMultiplier({
-            id: factoryId,
-            body: { factoryMultiplier: body },
+            body: values as z.infer<typeof FACTORY_MULTIPLIER_SCHEMA>,
           });
           toast.success("Factory multiplier created successfully!");
         }}
@@ -276,12 +267,8 @@ function Component(
           <PipelineStepFormFields control={stepForm.control} />
         )}
         onCreateSubmit={async (values) => {
-          const { factoryPipelineId, ...body } = values as z.infer<
-            typeof PIPELINE_STEP_SCHEMA
-          >;
           await createPipelineStep({
-            id: factoryPipelineId,
-            body: { factoryPipelineStep: body },
+            body: values as z.infer<typeof PIPELINE_STEP_SCHEMA>,
           });
           toast.success("Pipeline step created successfully!");
         }}

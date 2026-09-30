@@ -50,6 +50,7 @@ export function TwinClassStatusFormFields({
         control={control}
         name="twinClassId"
         info={twinClassInfo}
+        required
       />
 
       <TextFormField
@@ -57,9 +58,10 @@ export function TwinClassStatusFormFields({
         name="key"
         label="Key"
         autoFocus={true}
+        required
       />
 
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}

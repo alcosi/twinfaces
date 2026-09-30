@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 
 import { PrivateApiContext } from "@/shared/api";
 
-import { FactoryPipelineStepUpdateRq } from "../types";
+import { FactoryPipelineStepUpdate } from "../types";
 
 export const useFactoryPipelineStepUpdate = () => {
   const api = useContext(PrivateApiContext);
@@ -13,9 +13,13 @@ export const useFactoryPipelineStepUpdate = () => {
       body,
     }: {
       factoryPipelineStepId: string;
-      body: FactoryPipelineStepUpdateRq;
+      body: Omit<FactoryPipelineStepUpdate, "id">;
     }) => {
-      return await api.pipelineStep.update({ factoryPipelineStepId, body });
+      return await api.pipelineStep.update({
+        body: {
+          factoryPipelineSteps: [{ id: factoryPipelineStepId, ...body }],
+        },
+      });
     },
     [api]
   );

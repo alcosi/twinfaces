@@ -2,6 +2,7 @@ import { FieldValues } from "react-hook-form";
 
 import { ComboboxProps, FormField } from "@/shared/ui";
 
+import { RequiredFieldsGate } from "../required-mode";
 import { FormFieldProps } from "../types";
 import { ComboboxFormItem } from "./combobox-form-item";
 
@@ -17,28 +18,30 @@ export function ComboboxFormField<TFormModel extends FieldValues, TFieldModel>({
   ...props
 }: Props<TFormModel, TFieldModel>) {
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => {
-        // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
-        const _fieldValue = props.initialValues ?? field.value;
-        return (
-          <ComboboxFormItem
-            label={label}
-            description={description}
-            required={required}
-            buttonClassName={buttonClassName}
-            fieldValue={_fieldValue}
-            inForm={true}
-            {...props}
-            onSelect={(event) => {
-              props.onSelect?.(event);
-              return field.onChange(event);
-            }}
-          />
-        );
-      }}
-    />
+    <RequiredFieldsGate required={required}>
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => {
+          // TODO: Refactor after TWINFACES-207 - Combobox/select should fetch object value from field ID.
+          const _fieldValue = props.initialValues ?? field.value;
+          return (
+            <ComboboxFormItem
+              label={label}
+              description={description}
+              required={required}
+              buttonClassName={buttonClassName}
+              fieldValue={_fieldValue}
+              inForm={true}
+              {...props}
+              onSelect={(event) => {
+                props.onSelect?.(event);
+                return field.onChange(event);
+              }}
+            />
+          );
+        }}
+      />
+    </RequiredFieldsGate>
   );
 }

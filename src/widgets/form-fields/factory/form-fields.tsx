@@ -12,9 +12,9 @@ export function FactoryFormFields({
 }) {
   return (
     <>
-      <TextFormField control={control} name="key" label="Key" />
+      <TextFormField control={control} name="key" label="Key" required />
 
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}
