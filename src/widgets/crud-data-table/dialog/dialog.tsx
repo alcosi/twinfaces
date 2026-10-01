@@ -123,8 +123,9 @@ function Component(
     }
   }
 
-  // Editing starts from values that are already there, so hiding the optional
-  // ones would just make them disappear. The toggle belongs to creation.
+  // Editing starts from values that are already there, so opening on the
+  // required fields alone would just hide them. The toggle belongs to creation,
+  // and an edit sheet gets every field with no way to narrow it.
   const isCreate = !isPopulatedString(dialogState.rowId);
   const fallbackTitle = isCreate ? "Create" : "Edit";
 

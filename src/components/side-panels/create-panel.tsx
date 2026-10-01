@@ -63,8 +63,8 @@ export function CascadeCreatePanel({
 
   // Deliberately its own state rather than the one the sheet that opened this
   // panel holds: this is a different entity with a different set of required
-  // fields, so it starts off and the user decides for it separately. Closing
-  // the panel unmounts this, so reopening it starts off again.
+  // fields, so it opens on those and the user decides for it separately.
+  // Closing the panel unmounts this, so reopening it starts over.
   const requiredFieldsMode = useRequiredFieldsModeState();
 
   const contextValue: SidePanelsContextValue = useMemo(

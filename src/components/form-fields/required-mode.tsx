@@ -5,14 +5,19 @@ import { ReactNode, createContext, useContext, useMemo, useState } from "react";
 import { Switch } from "@/shared/ui/switch";
 
 export type RequiredFieldsMode = {
-  /** While on, only fields the API actually requires are rendered. */
-  enabled: boolean;
-  setEnabled: (enabled: boolean) => void;
+  /**
+   * While on — the state a create form opens in — only the fields the API
+   * actually requires are rendered. The toggle in the header turns it off to
+   * bring the optional ones back.
+   */
+  requiredOnly: boolean;
+  setRequiredOnly: (requiredOnly: boolean) => void;
 };
 
+/** Every field shown, and no toggle to change that. */
 export const REQUIRED_FIELDS_MODE_OFF: RequiredFieldsMode = {
-  enabled: false,
-  setEnabled: () => {},
+  requiredOnly: false,
+  setRequiredOnly: () => {},
 };
 
 const RequiredFieldsModeContext = createContext<RequiredFieldsMode>(
@@ -24,13 +29,14 @@ export function useRequiredFieldsMode() {
 }
 
 /**
- * Owns the toggle state for one form. Each panel that creates something calls
- * this for itself — required mode is never inherited from the panel that opened
- * it, because the fields it applies to belong to a different entity.
+ * Owns the toggle state for one form, which opens on the required fields alone.
+ * Each panel that creates something calls this for itself — the mode is never
+ * inherited from the panel that opened it, because the fields it applies to
+ * belong to a different entity.
  */
 export function useRequiredFieldsModeState(): RequiredFieldsMode {
-  const [enabled, setEnabled] = useState(false);
-  return useMemo(() => ({ enabled, setEnabled }), [enabled]);
+  const [requiredOnly, setRequiredOnly] = useState(true);
+  return useMemo(() => ({ requiredOnly, setRequiredOnly }), [requiredOnly]);
 }
 
 export function RequiredFieldsModeProvider({
@@ -49,7 +55,7 @@ export function RequiredFieldsModeProvider({
 
 /**
  * Filters have no required/optional split — every one of them is optional — so
- * required mode must not reach a filter panel and empty it out.
+ * the mode must not reach a filter panel and empty it out.
  */
 export function RequiredFieldsModeOff({ children }: { children: ReactNode }) {
   return (
@@ -60,8 +66,8 @@ export function RequiredFieldsModeOff({ children }: { children: ReactNode }) {
 }
 
 /**
- * Drops a field from the form while required mode is on. The field stays
- * registered, so whatever it defaults to is still submitted.
+ * Drops an optional field while the form shows required fields only. The field
+ * stays registered, so whatever it defaults to is still submitted.
  */
 export function RequiredFieldsGate({
   required,
@@ -70,42 +76,42 @@ export function RequiredFieldsGate({
   required?: boolean;
   children: ReactNode;
 }) {
-  const { enabled } = useRequiredFieldsMode();
+  const { requiredOnly } = useRequiredFieldsMode();
 
-  if (enabled && required !== true) return null;
+  if (requiredOnly && required !== true) return null;
 
   return <>{children}</>;
 }
 
 /**
- * The asterisk next to a required label. In required mode everything on screen
- * is required, so it would only be noise.
+ * The asterisk next to a required label. While the form shows required fields
+ * only, everything on screen is required and the mark would be noise.
  */
 export function RequiredMark({ required }: { required?: boolean }) {
-  const { enabled } = useRequiredFieldsMode();
+  const { requiredOnly } = useRequiredFieldsMode();
 
-  if (required !== true || enabled) return null;
+  if (required !== true || requiredOnly) return null;
 
   return <span className="text-destructive">*</span>;
 }
 
 export function RequiredFieldsModeToggle() {
   const mode = useRequiredFieldsMode();
-  const { enabled, setEnabled } = mode;
+  const { requiredOnly, setRequiredOnly } = mode;
 
   // Nothing above owns the state — an edit sheet, or a filter panel that turned
-  // required mode off — so there is nothing here to toggle.
+  // the mode off — so there is nothing here to toggle.
   if (mode === REQUIRED_FIELDS_MODE_OFF) return null;
 
   return (
     <Switch
-      // A view control, not a data one: hiding optional fields is allowed even
-      // for someone who may create but not update.
+      // A view control, not a data one: showing fewer fields is allowed even for
+      // someone who may create but not update.
       ignorePermissions
-      checked={enabled}
-      onCheckedChange={setEnabled}
-      aria-label="Required mode"
-      title="Required mode — show only the fields that have to be filled in"
+      checked={!requiredOnly}
+      onCheckedChange={(showAll) => setRequiredOnly(!showAll)}
+      aria-label="Show all fields"
+      title="Show all fields — only the required ones are shown by default"
     />
   );
 }
