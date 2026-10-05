@@ -3,6 +3,9 @@ import { ReactNode } from "react";
 import { cn } from "@/shared/libs";
 import { FormDescription, FormLabel, Label } from "@/shared/ui";
 
+// Softer than the body text so the inputs, not their captions, carry the form.
+const FORM_ITEM_LABEL_CLASS = "text-slate-600 dark:text-slate-300";
+
 export function FormItemLabel({
   children,
   inForm,
@@ -10,7 +13,11 @@ export function FormItemLabel({
   children: ReactNode;
   inForm?: boolean;
 }) {
-  return inForm ? <FormLabel>{children}</FormLabel> : <Label>{children}</Label>;
+  return inForm ? (
+    <FormLabel className={FORM_ITEM_LABEL_CLASS}>{children}</FormLabel>
+  ) : (
+    <Label className={FORM_ITEM_LABEL_CLASS}>{children}</Label>
+  );
 }
 
 export function FormItemDescription({

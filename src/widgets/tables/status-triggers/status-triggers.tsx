@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,7 +18,7 @@ import { TwinTriggerResourceLink } from "@/features/twin-trigger/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, isUndefined, toArray, toArrayOfString } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 import { StatusTriggerFormFields } from "./form-fields";
@@ -82,13 +81,13 @@ const colDefs: Record<
     id: "async",
     accessorKey: "async",
     header: "Async",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   active: {
     id: "active",
     accessorKey: "active",
     header: "Active",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

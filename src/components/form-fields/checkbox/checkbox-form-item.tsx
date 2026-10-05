@@ -1,6 +1,5 @@
 import { CheckboxProps } from "@radix-ui/react-checkbox";
 
-import { cn } from "@/shared/libs";
 import { Checkbox } from "@/shared/ui";
 
 import { FormItemDescription, FormItemLabel } from "../form-items-common";
@@ -42,7 +41,6 @@ export function CheckboxFormItem({
       }
       onCheckedChange={onCheckedChange}
       {...props}
-      className={cn(inline && "border-muted-foreground/40", props.className)}
       type="button"
     />
   );

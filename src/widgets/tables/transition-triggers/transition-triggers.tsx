@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -27,6 +26,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
+import { BooleanIndicator } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -90,13 +90,13 @@ const colDefs: Record<
     id: "active",
     accessorKey: "active",
     header: "Active",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   async: {
     id: "async",
     accessorKey: "async",
     header: "Async",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

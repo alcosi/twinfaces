@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +26,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs/index";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 import { RecipientCollectorFormFields } from "./form-fields";
@@ -78,7 +77,7 @@ const colDefs: Record<
     id: "exclude",
     accessorKey: "exclude",
     header: "Exclude",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

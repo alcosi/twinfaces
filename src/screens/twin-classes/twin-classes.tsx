@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useRef, useState } from "react";
@@ -38,6 +38,7 @@ import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { cn } from "@/shared/libs";
 import {
+  BooleanIndicator,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -187,7 +188,7 @@ const colDefs: Record<
     id: "abstractClass",
     accessorKey: "abstractClass",
     header: () => <SortableHeader title="Abstract" sortField="abstractt" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   assigneeRequired: {
@@ -196,7 +197,7 @@ const colDefs: Record<
     header: () => (
       <SortableHeader title="Assignee required" sortField="assigneeRequired" />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   ownerType: {
@@ -208,7 +209,7 @@ const colDefs: Record<
     id: "permissionSchemaSpace",
     accessorKey: "permissionSchemaSpace",
     header: "Permission Schema",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   twinflowSchemaSpace: {
     id: "twinflowSchemaSpace",
@@ -216,7 +217,7 @@ const colDefs: Record<
     header: () => (
       <SortableHeader title="Twinflow schema" sortField="twinflowSchemaSpace" />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   twinClassSchemaSpace: {
     id: "twinClassSchemaSpace",
@@ -227,13 +228,13 @@ const colDefs: Record<
         sortField="twinClassSchemaSpace"
       />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   aliasSpace: {
     id: "aliasSpace",
     accessorKey: "aliasSpace",
     header: () => <SortableHeader title="Alias space" sortField="aliasSpace" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   markersDataListId: {
     id: "markersDataListId",
@@ -299,14 +300,14 @@ const colDefs: Record<
     id: "segment",
     accessorKey: "segment",
     header: () => <SortableHeader title="Segment" sortField="segment" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   hasSegment: {
     id: "hasSegment",
     accessorKey: "hasSegment",
     header: "Has segment",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   twinClassFreezeId: {
@@ -328,7 +329,7 @@ const colDefs: Record<
     id: "uniqueName",
     accessorKey: "uniqueName",
     header: () => <SortableHeader title="Unique name" sortField="uniqueName" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   twinCounter: {

@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import { TwinFlowSchemaResourceLink } from "@/features/twin-flow-schema/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
+import { BooleanIndicator } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
@@ -65,7 +65,7 @@ const colDefs: Record<
     id: "custom",
     accessorKey: "custom",
     header: "Custom",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   permissionSchemaId: {

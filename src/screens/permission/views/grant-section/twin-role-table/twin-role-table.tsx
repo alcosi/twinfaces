@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,6 +19,7 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse } from "@/shared/api";
 import { formatIntlDate } from "@/shared/libs";
+import { BooleanIndicator } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import { CrudDataTable } from "@/widgets/crud-data-table";
 
@@ -78,28 +78,28 @@ const colDefs: Record<
     id: "grantedToAssignee",
     accessorKey: "grantedToAssignee",
     header: "Assignee",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   grantedToCreator: {
     id: "grantedToCreator",
     accessorKey: "grantedToCreator",
     header: "Creator",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   grantedToSpaceAssignee: {
     id: "grantedToSpaceAssignee",
     accessorKey: "grantedToSpaceAssignee",
     header: "Space Assignee",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   grantedToSpaceCreator: {
     id: "grantedToSpaceCreator",
     accessorKey: "grantedToSpaceCreator",
     header: "Space Creator",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   grantedByUserId: {

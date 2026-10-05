@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Copy, EllipsisVertical } from "lucide-react";
+import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -24,6 +24,7 @@ import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isTruthy, reduceToObject, toArray } from "@/shared/libs";
 import {
+  BooleanIndicator,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -184,13 +185,13 @@ const colDefs: Record<
   required: {
     accessorKey: "required",
     header: () => <SortableHeader title="Required" sortField="required" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   system: {
     accessorKey: "system",
     header: () => <SortableHeader title="System" sortField="system" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   inheritable: {
@@ -198,7 +199,7 @@ const colDefs: Record<
     header: () => (
       <SortableHeader title="Inheritable" sortField="inheritable" />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   externalId: {
@@ -211,7 +212,7 @@ const colDefs: Record<
     header: () => (
       <SortableHeader title="Dependent" sortField="dependentField" />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   hasDependentFields: {
@@ -222,7 +223,7 @@ const colDefs: Record<
         sortField="hasDependentFields"
       />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   projectionField: {
@@ -230,7 +231,7 @@ const colDefs: Record<
     header: () => (
       <SortableHeader title="Projected" sortField="projectionField" />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   hasProjectedFields: {
@@ -241,7 +242,7 @@ const colDefs: Record<
         sortField="hasProjectedFields"
       />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   fieldInitializerFeaturerId: {
