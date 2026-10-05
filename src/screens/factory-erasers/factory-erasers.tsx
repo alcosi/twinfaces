@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +18,7 @@ import { FactoryResourceLink } from "@/features/factory/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import {
+  BooleanIndicator,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -122,14 +123,14 @@ const colDefs: Record<
         sortField="factoryConditionSetInvert"
       />
     ),
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   active: {
     id: "active",
     accessorKey: "active",
     header: () => <SortableHeader title="Active" sortField="active" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 
   action: {

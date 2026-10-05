@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,7 @@ import { SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
 import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import {
+  BooleanIndicator,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -123,7 +124,7 @@ const colDefs: Record<
     id: "active",
     accessorKey: "active",
     header: () => <SortableHeader title="Active" sortField="active" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   factoryMultiplierFiltersCount: {
     id: "factoryMultiplierFiltersCount",

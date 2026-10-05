@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Featurer_DETAILED } from "@/entities/featurer";
@@ -13,7 +12,7 @@ import {
 } from "@/entities/twin-class";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 
@@ -40,7 +39,7 @@ const colDefs: Record<
     id: "overwrittenRequired",
     accessorKey: "overwrittenRequired",
     header: "Overwritten required",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   fieldOverwriterFeaturer: {
     id: "fieldOverwriterFeaturer",

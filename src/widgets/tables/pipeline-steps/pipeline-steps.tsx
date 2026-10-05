@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check, Copy, EllipsisVertical, FolderUp } from "lucide-react";
+import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ import {
   toArrayOfString,
 } from "@/shared/libs";
 import {
+  BooleanIndicator,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -132,7 +133,9 @@ const colDefs: Record<
         sortField="factoryConditionInvert"
       />
     ),
-    cell: (data) => data.row.original.factoryConditionInvert && <Check />,
+    cell: (data) => (
+      <BooleanIndicator value={!!data.row.original.factoryConditionInvert} />
+    ),
   },
   factoryConditionSet: {
     id: "factoryConditionSet",
@@ -157,7 +160,7 @@ const colDefs: Record<
     id: "active",
     accessorKey: "active",
     header: () => <SortableHeader title="Active" sortField="active" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
   fillerFeaturer: {
     id: "fillerFeaturer",
@@ -180,7 +183,7 @@ const colDefs: Record<
     id: "optional",
     accessorKey: "optional",
     header: () => <SortableHeader title="Optional" sortField="optional" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +19,7 @@ import {
 } from "@/entities/validator-set";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import {
   ChartDataContext,
@@ -64,7 +63,7 @@ const colDefs: Record<
     id: "invert",
     accessorKey: "invert",
     header: () => <SortableHeader title="Invert" sortField="invert" />,
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

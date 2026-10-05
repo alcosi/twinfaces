@@ -3,6 +3,7 @@ export * from "./alert";
 export * from "./anchor";
 export * from "./avatar";
 export * from "./badge";
+export * from "./boolean-indicator";
 export * from "./breadcrumb";
 export * from "./button";
 export * from "./caption";

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -32,7 +31,7 @@ import {
   toArray,
   toArrayOfString,
 } from "@/shared/libs";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import {
   ChartDataContext,
@@ -170,7 +169,7 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
           id: "custom",
           accessorKey: "custom",
           header: "Custom",
-          cell: (data) => data.getValue() && <Check className="h-4 w-4" />,
+          cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
         },
 
         ...dynamicColumns,

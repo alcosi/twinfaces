@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,7 +22,7 @@ import { TwinClassResourceLink } from "@/features/twin-class/ui";
 import { ValidatorSetResourceLink } from "@/features/validator-set/ui";
 import { PagedResponse } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import { CrudDataTable, FiltersState } from "../../crud-data-table";
 import { NotificationFormFields } from "./form-fields";
@@ -138,7 +137,7 @@ const colDefs: Record<
     id: "twinValidatorSetInvert",
     accessorKey: "twinValidatorSetInvert",
     header: "Twin validator set invert",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 

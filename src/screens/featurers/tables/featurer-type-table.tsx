@@ -2,13 +2,12 @@
 
 import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
-import { Check } from "lucide-react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
 
 import { Featurer } from "@/entities/featurer";
 import { PagedResponse } from "@/shared/api";
-import { GuidWithCopy } from "@/shared/ui";
+import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 import { CrudDataTable, FiltersState } from "@/widgets/crud-data-table";
 
 type Props = {
@@ -50,7 +49,7 @@ const colDefs: Record<
     id: "deprecated",
     accessorKey: "deprecated",
     header: "Deprecated",
-    cell: (data) => data.getValue() && <Check />,
+    cell: (data) => <BooleanIndicator value={!!data.getValue()} />,
   },
 };
 
