@@ -13,6 +13,7 @@ import {
 } from "@/shared/ui/table";
 
 import { DataTableRow } from "../types";
+import { HeaderLabel } from "./header-label";
 import { RowContextMenu } from "./row-context-menu";
 
 /**
@@ -153,10 +154,13 @@ export function DataTableGrid<TData extends DataTableRow<TData>>({
                     // column-visibility control instead of a text label.
                     <div className="flex justify-end">{columnManager}</div>
                   ) : (
-                    !header.isPlaceholder &&
-                    flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
+                    !header.isPlaceholder && (
+                      <HeaderLabel>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </HeaderLabel>
                     )
                   )}
                 </TableHead>

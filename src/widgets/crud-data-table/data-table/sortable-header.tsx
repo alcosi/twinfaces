@@ -30,13 +30,15 @@ export function SortableHeader({ title, sortField }: SortableHeaderProps) {
 
   return (
     <button
-      className="group/header hover:text-foreground inline-flex items-center gap-1"
+      // The arrow sits in reserved right padding; centered headers mirror it
+      // on the left so the title lines up with the column's center.
+      className="group/header hover:text-foreground relative inline-flex items-center pr-4.5 [text-align:inherit] group-data-centered/header-label:pl-4.5"
       onClick={handleClick}
     >
       <span>{title}</span>
       <span
         className={cn(
-          "inline-flex transition-opacity",
+          "absolute top-1/2 right-0 inline-flex -translate-y-1/2 transition-opacity",
           isActive ? "opacity-100" : "opacity-0 group-hover/header:opacity-50"
         )}
       >
