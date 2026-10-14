@@ -7,7 +7,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { TextAreaFormField, TextFormField } from "@/components/form-fields";
+import {
+  RequiredMark,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
 
 import { DOMAIN_CREATE_SCHEMA } from "@/entities/domain";
 import { PrivateApiContext } from "@/shared/api";
@@ -71,7 +75,7 @@ export function CreateDomainForm() {
     }
 
     form.reset({
-      name: undefined,
+      name: "",
       key: "",
       description: "",
       type: undefined,
@@ -109,7 +113,12 @@ export function CreateDomainForm() {
                 autoFocus={true}
               />
 
-              <TextFormField control={form.control} name="key" label="Key" />
+              <TextFormField
+                control={form.control}
+                name="key"
+                label="Key"
+                required
+              />
 
               <TextAreaFormField
                 control={form.control}
@@ -123,7 +132,9 @@ export function CreateDomainForm() {
                   name="type"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Type</FormLabel>
+                      <FormLabel>
+                        Type <RequiredMark required />
+                      </FormLabel>
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}

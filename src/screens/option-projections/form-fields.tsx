@@ -70,18 +70,21 @@ export function OptionsProjectionFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...projectionTypeAdapter}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="srcDataListOptionId"
         info={srcDataListOptionInfo}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="dstDataListOptionId"
         info={dstDataListOptionInfo}
+        required
       />
     </>
   );

@@ -30,7 +30,11 @@ import {
 
 export const TWIN_CLASS_DUPLICATE_SCHEMA = z.object({
   originalTwinClassId: z.string().uuid("Original twin class id is required"),
-  newKey: z.string().trim().min(1, "Key is required"),
+  newKey: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined),
   duplicateFields: z.boolean(),
   duplicateStatuses: z.boolean(),
 });

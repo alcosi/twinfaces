@@ -21,7 +21,7 @@ import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { useFactoryPipelineSelectAdapterWithFilters } from "@/entities/factory-pipeline";
 import { PipelineStep_DETAILED } from "@/entities/factory-pipeline-step";
 import { PrivateApiContext } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -35,7 +35,7 @@ import {
 
 const SCHEMA = z.object({
   originalFactoryPipelineStepId: z.string().uuid(),
-  newTwinFactoryPipelineId: z.string().optional().or(FIRST_ID_EXTRACTOR),
+  newTwinFactoryPipelineId: OPTIONAL_FIRST_ID_EXTRACTOR,
 });
 
 type FormValues = z.infer<typeof SCHEMA>;

@@ -7,10 +7,15 @@ export const DOMAIN_ID_SCHEMA = z
   .uuid("Domain ID must be a valid UUID")
   .or(FIRST_ID_EXTRACTOR);
 
+// Per DomainCreateV1 only key and type are required.
 export const DOMAIN_CREATE_SCHEMA = z.object({
-  name: z.string().min(1, "Name can not be empty"),
+  name: z
+    .string()
+    .optional()
+    .transform((value) => value || undefined),
   key: z
     .string()
+    .min(1, "Key can not be empty")
     .min(3)
     .max(100)
     .regex(
@@ -20,11 +25,9 @@ export const DOMAIN_CREATE_SCHEMA = z.object({
   description: z
     .string()
     .optional()
-    .or(z.literal("").transform(() => undefined)),
+    .transform((value) => value || undefined),
   type: z.enum(["basic", "b2b"], {
     message: "Select account type",
   }),
-  defaultLocale: z.enum(["en", "ru"], {
-    message: "Select language",
-  }),
+  defaultLocale: z.enum(["en", "ru"]).optional(),
 });

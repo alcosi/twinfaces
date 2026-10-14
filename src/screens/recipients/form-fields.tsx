@@ -17,6 +17,7 @@ export function RecipientFormFields({
         name="name"
         label="Name"
         autoFocus={true}
+        required
       />
 
       <TextAreaFormField

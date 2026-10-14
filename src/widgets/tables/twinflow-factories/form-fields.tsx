@@ -76,6 +76,7 @@ export function TwinFlowFactoryFormFields({
         control={control}
         name="twinflowId"
         info={twinflowInfo}
+        required
       />
 
       <ComboboxFormField
@@ -86,12 +87,14 @@ export function TwinFlowFactoryFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...launcherAdapter}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="factoryId"
         info={factoryInfo}
+        required
       />
     </>
   );

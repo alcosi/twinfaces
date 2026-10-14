@@ -117,6 +117,14 @@ export function TwinTriggersTable() {
 
   const twinTriggerForm = useForm<z.infer<typeof TWIN_TRIGGER_SCHEMA>>({
     resolver: zodResolver(TWIN_TRIGGER_SCHEMA),
+    defaultValues: {
+      triggerParams: {},
+      jobTwinClassId: "",
+      active: true,
+      name: "",
+      description: "",
+      order: 0,
+    },
   });
 
   const handleOnCreateSubmit = async (

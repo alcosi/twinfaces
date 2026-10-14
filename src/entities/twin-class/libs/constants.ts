@@ -1,11 +1,12 @@
 import { z } from "zod";
 
 import {
-  FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
+  OPTIONAL_FEATURER_ID_EXTRACTOR,
 } from "@/entities/featurer";
 import {
   FIRST_ID_EXTRACTOR,
+  OPTIONAL_FIRST_ID_EXTRACTOR,
   REGEX_PATTERNS,
   isPopulatedArray,
 } from "@/shared/libs";
@@ -38,12 +39,10 @@ export const TWIN_CLASSES_SCHEMA = z.object({
     .optional()
     .or(z.literal("").transform(() => undefined)),
   // Optional per the API (TwinClassCreateV1 only requires key + nameI18n).
+  // The combobox starts out `undefined` (or `""`), so both must pass as "not picked".
   ownerType: z
-    .array(
-      z.object({
-        id: z.enum(OWNER_TYPES),
-      })
-    )
+    .union([z.literal(""), z.array(z.object({ id: z.enum(OWNER_TYPES) }))])
+    .optional()
     .transform((arr) =>
       isPopulatedArray<{ id: TwinClass["ownerType"] }>(arr)
         ? arr[0].id
@@ -53,9 +52,10 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   segment: z.boolean().default(false),
   assigneeRequired: z.boolean().default(false),
   headTwinClass: z.array(z.object({ id: z.string().uuid() })).nullable(),
-  headHunterFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR).optional(),
+  headHunterFeaturerId: OPTIONAL_FEATURER_ID_EXTRACTOR,
   headHunterParams: FEATURER_PARAMS_VALUE,
-  extendsTwinClassId: z.string().uuid().nullable().or(FIRST_ID_EXTRACTOR),
+  // Both create forms default it to `null`.
+  extendsTwinClassId: OPTIONAL_FIRST_ID_EXTRACTOR.nullable(),
   logo: z
     .string()
     .url()
@@ -65,10 +65,10 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   twinflowSchemaSpace: z.boolean().default(false),
   twinClassSchemaSpace: z.boolean().default(false),
   aliasSpace: z.boolean().default(false),
-  markerDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  tagDataListId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  viewPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  createPermissionId: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
+  markerDataListId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  tagDataListId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  viewPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  createPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
   autoCreateTwinflow: z.boolean().default(false),
   autoCreatePermissions: z.boolean().default(true),
   space: z.boolean().default(false),

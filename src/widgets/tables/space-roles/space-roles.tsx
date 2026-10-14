@@ -121,6 +121,8 @@ export function SpaceRolesTable({ title }: { title?: string }) {
     resolver: zodResolver(SPACE_ROLE_SHEMA),
     defaultValues: {
       key: "",
+      name: "",
+      description: "",
       twinClassId: twinClass?.id || "",
       businessAccountId: "",
     },
@@ -140,10 +142,9 @@ export function SpaceRolesTable({ title }: { title?: string }) {
               translationInCurrentLocale: name,
               translations: {},
             },
-            descriptionI18n: {
-              translationInCurrentLocale: description,
-              translations: {},
-            },
+            descriptionI18n: description
+              ? { translationInCurrentLocale: description, translations: {} }
+              : undefined,
           },
         ],
       },

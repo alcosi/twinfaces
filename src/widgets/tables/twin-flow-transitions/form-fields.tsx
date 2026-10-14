@@ -174,7 +174,6 @@ export function TwinFlowTransitionFormFields({
         selectPlaceholder="Select Alias"
         searchPlaceholder="Search Alias..."
         noItemsText="No Alias found"
-        required={true}
         creatable
         {...transitionAliasAdapter}
       />

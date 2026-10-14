@@ -241,11 +241,15 @@ export function DatalistGeneral() {
     const requestBody: Omit<DataListUpdate, "id"> = {
       ...rest,
       ["attribute" + Number(keyCountAttribute + 1)]: {
-        key: key,
-        nameI18n: {
-          translationInCurrentLocale: name as string,
-          translations: {},
-        },
+        key,
+        ...(name
+          ? {
+              nameI18n: {
+                translationInCurrentLocale: name,
+                translations: {},
+              },
+            }
+          : {}),
       },
     };
 

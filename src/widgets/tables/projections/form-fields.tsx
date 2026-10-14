@@ -114,18 +114,21 @@ export function ProjectionFormFields({
         control={control}
         name="srcTwinClassFieldId"
         info={srcFieldInfo}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
         info={dstTwinClassInfo}
+        required
       />
 
       <ComplexComboboxFormField
         control={control}
         name="dstTwinClassFieldId"
         info={dstFieldInfo}
+        required
       />
 
       <SwitchFormField control={control} name="active" label="Active" />
@@ -136,6 +139,7 @@ export function ProjectionFormFields({
         label="Projector"
         name="fieldProjectorFeaturerId"
         paramsFieldName="fieldProjectorParams"
+        required
       />
     </>
   );

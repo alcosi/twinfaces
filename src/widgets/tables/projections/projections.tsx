@@ -154,6 +154,7 @@ export function ProjectionsTable({
       dstTwinClassId: "",
       dstTwinClassFieldId:
         twinFieldId && title === "Outgoing" ? twinFieldId : "",
+      active: true,
     },
   });
 

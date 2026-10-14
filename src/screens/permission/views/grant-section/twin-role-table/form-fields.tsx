@@ -92,18 +92,21 @@ export function TwinRoleTableFormFields({
       <ComplexComboboxFormField
         control={control}
         name="permissionId"
+        required
         info={permissionInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="permissionSchemaId"
+        required
         info={permissionSchemaInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="twinClassId"
+        required
         info={twinClassInfo}
       />
 

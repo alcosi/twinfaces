@@ -27,7 +27,7 @@ export function buildTwinClassFieldCreateRq(
         viewPermissionId: values.viewPermissionId,
         editPermissionId: values.editPermissionId,
         externalId: values.externalId,
-        fieldInitializerFeaturerId: Number(values.fieldInitializerFeaturerId),
+        fieldInitializerFeaturerId: values.fieldInitializerFeaturerId,
         fieldInitializerParams: values.fieldInitializerParams,
       },
     ],

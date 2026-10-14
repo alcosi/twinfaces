@@ -61,6 +61,7 @@ export function TwinValidatorFormFields({
         control={control}
         name="twinValidatorSetId"
         info={validatorSetInfo}
+        required
       />
 
       <FeaturerFormField
@@ -69,6 +70,7 @@ export function TwinValidatorFormFields({
         label="Featurer"
         name="validatorFeaturerId"
         paramsFieldName="validatorParams"
+        required
       />
 
       <TextAreaFormField
@@ -86,6 +88,7 @@ export function TwinValidatorFormFields({
         name="order"
         label="Order"
         type="number"
+        required
       />
     </>
   );

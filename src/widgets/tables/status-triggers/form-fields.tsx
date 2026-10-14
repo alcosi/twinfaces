@@ -82,6 +82,7 @@ export function StatusTriggerFormFields({
         control={control}
         name="incomingElseOutgoing"
         label="Incoming else outgoint"
+        required
       />
       <TextFormField
         control={control}

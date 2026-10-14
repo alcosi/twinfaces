@@ -66,9 +66,9 @@ export function SpaceRolesFormFields({
 
   return (
     <>
-      <TextFormField control={control} name="key" label="Key" />
+      <TextFormField control={control} name="key" label="Key" required />
 
-      <TextFormField control={control} name="name" label="Name" />
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}
@@ -79,6 +79,7 @@ export function SpaceRolesFormFields({
       <ComplexComboboxFormField
         control={control}
         name="twinClassId"
+        required
         info={twinClassInfo}
       />
 

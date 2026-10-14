@@ -30,7 +30,11 @@ import {
 
 const SCHEMA = z.object({
   originalFactoryId: z.string().uuid(),
-  newKey: z.string().trim().min(1, "Key is required"),
+  newKey: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined),
   duplicateBranches: z.boolean(),
   duplicateMultipliers: z.boolean(),
   duplicatePipelines: z.boolean(),

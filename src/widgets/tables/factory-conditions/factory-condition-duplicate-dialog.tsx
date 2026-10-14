@@ -21,7 +21,7 @@ import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { FactoryCondition_DETAILED } from "@/entities/factory-condition";
 import { useFactoryConditionSetSelectAdapterWithFilters } from "@/entities/factory-condition-set";
 import { PrivateApiContext } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -35,7 +35,7 @@ import {
 
 const SCHEMA = z.object({
   originalFactoryConditionId: z.string().uuid(),
-  newTwinFactoryConditionSetId: z.string().optional().or(FIRST_ID_EXTRACTOR),
+  newTwinFactoryConditionSetId: OPTIONAL_FIRST_ID_EXTRACTOR,
 });
 
 type FormValues = z.infer<typeof SCHEMA>;

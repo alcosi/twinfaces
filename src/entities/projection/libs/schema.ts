@@ -4,17 +4,14 @@ import {
   FEATURER_ID_EXTRACTOR,
   FEATURER_PARAMS_VALUE,
 } from "@/entities/featurer";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { FIRST_ID_EXTRACTOR, OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const PROJECTION_SCHEMA = z.object({
   srcTwinPointerId: z
     .string()
     .uuid("Src pointed twin ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
-  projectionTypeId: z
-    .string()
-    .uuid("Projection type ID must be a valid UUID")
-    .or(FIRST_ID_EXTRACTOR),
+  projectionTypeId: OPTIONAL_FIRST_ID_EXTRACTOR,
   srcTwinClassFieldId: z
     .string()
     .uuid("Src twin class field ID must be a valid UUID")
@@ -28,6 +25,6 @@ export const PROJECTION_SCHEMA = z.object({
     .uuid("Dst twin class field ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
   fieldProjectorFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
-  active: z.boolean(),
+  active: z.boolean().default(true),
   fieldProjectorParams: FEATURER_PARAMS_VALUE,
 });

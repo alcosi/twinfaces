@@ -69,11 +69,13 @@ export function CreateLinkFormFields({
         control={control}
         name="srcTwinClassId"
         info={srcTwinClassInfo}
+        required
       />
       <ComplexComboboxFormField
         control={control}
         name="dstTwinClassId"
         info={dstTwinClassInfo}
+        required
       />
 
       <TextFormField control={control} name="name" label="Link Name" />
@@ -86,6 +88,7 @@ export function CreateLinkFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         {...typeAdapter}
+        required
       />
 
       <ComboboxFormField
