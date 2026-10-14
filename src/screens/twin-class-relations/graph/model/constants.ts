@@ -1,0 +1,155 @@
+import { TwinClass_DETAILED } from "@/entities/twin-class";
+
+import { GraphMode } from "./types";
+
+/**
+ * Card geometry. Every number here is also a layout input: positions are
+ * computed before anything renders, so these have to match what the card
+ * components actually draw — otherwise cards overlap or the lines miss them.
+ */
+export const CARD = {
+  simpleWidth: 224,
+  advancedWidth: 248,
+  /** Padding inside a card, and the gap between a header and its first block. */
+  padding: 12,
+  /** Icon tile beside the title. */
+  iconSize: 28,
+  titleLineHeight: 18,
+  sublabelLineHeight: 15,
+  descriptionLineHeight: 14,
+  /** Longer blurbs are clamped rather than measured — see `countLines`. */
+  descriptionLines: 2,
+  /** Rough character budget of one description line at the header's width. */
+  descriptionCharsPerLine: 30,
+  sectionLabelHeight: 18,
+  sectionGap: 8,
+  chipHeight: 24,
+  chipGap: 6,
+  /**
+   * Chips a block lists before the rest collapse into a "+N more" row — a class
+   * with forty fields would otherwise be a card taller than the whole canvas.
+   */
+  chipLimit: 4,
+  /** Border between two blocks of a card. */
+  dividerHeight: 1,
+} as const;
+
+export const PLACEHOLDER_SIZE = { width: 168, height: 36 } as const;
+
+/**
+ * Spacing of the canvas. The captions — "Head", "Children", "forward",
+ * "backward" — are always drawn on their lines, so those lines are always long
+ * enough to carry them. Only the branch to a linked card depends on the "Link
+ * labels" switch: it carries the link's chip, and without one the same length
+ * is just empty space.
+ */
+export const SPACING = {
+  /** Between two cards stacked on one side. */
+  stackGap: 16,
+  /** Between two children in their row. */
+  childGap: 24,
+  /** From the children's bus line down to the children themselves. */
+  busToChild: 40,
+  /** Kept clear between the side stacks and the children's bus line. */
+  stackToBus: 32,
+  /** From the trunk to a create affordance. */
+  trunkToPlaceholder: 48,
+  /** From the centre card's side to the trunk — carries "forward". */
+  sideReach: 120,
+  /** Between the centre card and its head — carries "Head". */
+  headGap: 72,
+  /** From the centre card down to the bus line — carries "Children". */
+  childDrop: 72,
+  /** From the trunk to a linked card — carries the link's chip when shown. */
+  branchReach: {
+    withLabels: 200,
+    withoutLabels: 48,
+  },
+} as const;
+
+/** Widest a link chip may grow on its line before its name ellipsises. */
+export const LINK_PILL_MAX_WIDTH = SPACING.branchReach.withLabels - 48;
+
+export function getClassTitle(twinClass: TwinClass_DETAILED): string {
+  return twinClass.name || twinClass.key || twinClass.id;
+}
+
+/**
+ * The line (or two) of context under a card's title: the description if the
+ * class has one, its key otherwise. Shared by the card and by `measureCard` — if
+ * the two disagreed on whether there is a subtitle, the card would be
+ * mismeasured.
+ */
+export function getClassSubtitle(
+  twinClass: TwinClass_DETAILED
+): string | undefined {
+  const text = twinClass.description || twinClass.key;
+  return text && text !== getClassTitle(twinClass) ? text : undefined;
+}
+
+function countLines(
+  text: string | undefined,
+  charsPerLine: number,
+  max: number
+) {
+  if (!text) return 0;
+  return Math.min(Math.ceil(text.length / charsPerLine), max);
+}
+
+/** Rows a block of chips takes: the chips shown, plus the "+N more" row. */
+export function visibleChipRows(total: number): number {
+  return Math.min(total, CARD.chipLimit) + (total > CARD.chipLimit ? 1 : 0);
+}
+
+function measureSection(total: number): number {
+  if (total === 0) return 0;
+
+  const rows = visibleChipRows(total);
+
+  return (
+    CARD.dividerHeight +
+    CARD.padding +
+    CARD.sectionLabelHeight +
+    CARD.sectionGap +
+    rows * CARD.chipHeight +
+    Math.max(rows - 1, 0) * CARD.chipGap +
+    CARD.padding
+  );
+}
+
+/**
+ * Footprint of one class card, derived from its own content: the header, plus
+ * in advanced mode a block of fields and a block of statuses.
+ */
+export function measureCard(
+  twinClass: TwinClass_DETAILED,
+  mode: GraphMode
+): { width: number; height: number } {
+  const subtitle = getClassSubtitle(twinClass);
+
+  if (mode === "simple") {
+    const textHeight =
+      CARD.titleLineHeight + (subtitle ? CARD.sublabelLineHeight : 0);
+
+    return {
+      width: CARD.simpleWidth,
+      height: Math.max(textHeight, CARD.iconSize) + CARD.padding * 2,
+    };
+  }
+
+  const descriptionHeight =
+    countLines(subtitle, CARD.descriptionCharsPerLine, CARD.descriptionLines) *
+    CARD.descriptionLineHeight;
+
+  const headerHeight =
+    Math.max(CARD.titleLineHeight + descriptionHeight, CARD.iconSize) +
+    CARD.padding * 2;
+
+  return {
+    width: CARD.advancedWidth,
+    height:
+      headerHeight +
+      measureSection(twinClass.fields?.length ?? 0) +
+      measureSection(twinClass.statuses?.length ?? 0),
+  };
+}
