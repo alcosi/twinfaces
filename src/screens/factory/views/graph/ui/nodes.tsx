@@ -3,7 +3,7 @@
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { MouseEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 import { FactoryBranchResourceLink } from "@/features/factory-branch/ui";
 import { FactoryConditionSetResourceLink } from "@/features/factory-condition-set/ui";
@@ -19,11 +19,10 @@ import { TwinFlowTransitionResourceLink } from "@/features/twin-flow-transition/
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { TwinFlowFactoryResourceLink } from "@/features/twinflow-factory/ui";
 import { cn, isPopulatedString } from "@/shared/libs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui";
+import { DashedOutline, TruncatedText } from "@/shared/ui/diagram";
 
 import {
   CARD,
-  DASHED_STROKE,
   DiagramGroup,
   DiagramNode,
   FactoryCreateTarget,
@@ -71,119 +70,6 @@ function FlowHandles() {
         className="!opacity-0"
       />
     </>
-  );
-}
-
-/**
- * The dashed outline of a create affordance and of a group box, drawn as SVG so
- * it carries the exact same dash pattern as the edge arriving at it —
- * `border-dashed` would leave the browser to pick its own pattern.
- *
- * Takes its colour from `currentColor`, so hover states come from the parent.
- */
-function DashedOutline({
-  width,
-  height,
-  radius = 8,
-  opacity,
-  className,
-}: {
-  width: number;
-  height: number;
-  radius?: number;
-  opacity?: number;
-  className?: string;
-}) {
-  // A stroke straddles its path, so inset by half of it or the outer edge clips.
-  const inset = DASHED_STROKE.width / 2;
-
-  return (
-    <svg
-      width={width}
-      height={height}
-      className={cn("pointer-events-none absolute inset-0", className)}
-      aria-hidden
-    >
-      <rect
-        x={inset}
-        y={inset}
-        width={width - DASHED_STROKE.width}
-        height={height - DASHED_STROKE.width}
-        rx={radius}
-        fill="none"
-        stroke="currentColor"
-        strokeOpacity={opacity}
-        strokeWidth={DASHED_STROKE.width}
-        strokeDasharray={DASHED_STROKE.dashArray}
-      />
-    </svg>
-  );
-}
-
-/**
- * Text that ellipsises, and reveals itself in a tooltip — but only when it is
- * actually clipped. Cards are fixed-width, so long factory and pipeline names
- * are routinely cut off and unreadable; a tooltip on every one regardless would
- * pop up over text that is already whole.
- */
-function TruncatedText({
-  text,
-  className,
-  lines = 1,
-}: {
-  text: string;
-  className?: string;
-  lines?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isClipped, setIsClipped] = useState(false);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    // Layout sizes, so the canvas zoom — a CSS transform — cannot skew them.
-    const measure = () =>
-      setIsClipped(
-        element.scrollWidth > element.clientWidth + 1 ||
-          element.scrollHeight > element.clientHeight + 1
-      );
-
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [text]);
-
-  return (
-    // The trigger stays mounted whether or not the text is clipped: re-parenting
-    // it would hand the effect a stale node and leave the observer detached.
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          ref={ref}
-          className={cn(
-            lines === 1 ? "truncate" : "overflow-hidden",
-            className
-          )}
-          style={
-            lines > 1
-              ? {
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  WebkitLineClamp: lines,
-                }
-              : undefined
-          }
-        >
-          {text}
-        </div>
-      </TooltipTrigger>
-      {isClipped && (
-        <TooltipContent className="max-w-xs break-words">{text}</TooltipContent>
-      )}
-    </Tooltip>
   );
 }
 

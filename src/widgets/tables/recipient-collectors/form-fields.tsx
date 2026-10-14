@@ -33,6 +33,7 @@ export function RecipientCollectorFormFields({
         searchPlaceholder="Search..."
         noItemsText="No data found"
         disabled={disabled}
+        required
         {...notificationRecipientAdapter}
       />
 
@@ -42,6 +43,7 @@ export function RecipientCollectorFormFields({
         label="Recipient resolver featurer"
         name="recipientResolverFeaturerId"
         paramsFieldName="recipientResolverParams"
+        required
       />
       <SwitchFormField control={control} name="exclude" label="Exclude" />
     </>

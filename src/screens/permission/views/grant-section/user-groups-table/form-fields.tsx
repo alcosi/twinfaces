@@ -70,18 +70,21 @@ export function UserGroupTableFormFields({
       <ComplexComboboxFormField
         control={control}
         name="permissionId"
+        required
         info={permissionInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="permissionSchemaId"
+        required
         info={permissionSchemaInfo}
       />
 
       <ComboboxFormField
         control={control}
         name="userGroupId"
+        required
         label="User group"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."

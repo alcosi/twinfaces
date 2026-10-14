@@ -18,7 +18,11 @@ export const RECIPIENT_COLLECTOR_SCHEMA = z.object({
     .string()
     .uuid("Recipient ID must be a valid UUID")
     .or(FIRST_ID_EXTRACTOR),
-  recipientResolverFeaturerId: z.number().or(FEATURER_ID_EXTRACTOR),
+  // An untouched combobox holds `undefined`, which fails both branches; without
+  // the error map the user would only see zod's generic "Invalid input".
+  recipientResolverFeaturerId: z.union([z.number(), FEATURER_ID_EXTRACTOR], {
+    errorMap: () => ({ message: "Recipient resolver featurer is required" }),
+  }),
   recipientResolverParams: FEATURER_PARAMS_VALUE,
   exclude: z.boolean(),
 });

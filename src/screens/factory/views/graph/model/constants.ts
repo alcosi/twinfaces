@@ -1,5 +1,18 @@
 import { DiagramNode, GraphMode, GraphSection } from "./types";
 
+// The stroke, the shadow and the hover are shared with every other diagram of
+// the app, so they live in `shared/ui/diagram`. Re-exported so the factory
+// graph keeps reading all of its geometry from one place.
+export {
+  DASHED_STROKE,
+  DIAGRAM_STROKE,
+  DIAGRAM_STROKE_COLOR,
+  DIAGRAM_STROKE_VAR,
+  NODE_INTERACTIVE_HOVER,
+  NODE_SHADOW,
+  SOLID_EDGE_WIDTH,
+} from "@/shared/ui/diagram/constants";
+
 /**
  * Card geometry. Every number here is also a layout input: elk is told how big
  * each node is before anything renders, so these have to match what the node
@@ -137,46 +150,6 @@ export function measureNode(
 }
 
 /**
- * The one dashed stroke of the diagram, shared by the edges that lead to create
- * affordances, by those affordances' own outlines, and by the group boxes. CSS
- * `border-style: dashed` cannot be given a pattern, so the outlines are drawn as
- * SVG instead — that is the only way the two can be guaranteed to match.
- */
-export const DASHED_STROKE = {
-  dashArray: "5 4",
-  width: 1.5,
-} as const;
-
-/**
- * Solid edges are drawn a touch heavier than the dashed ones. Partly hierarchy —
- * a real connection outranks a create hint — and partly coverage: solid and
- * dashed edges share the trunk exactly, and at equal widths the dashes' own
- * antialiased fringes still show past the solid line laid over them.
- */
-export const SOLID_EDGE_WIDTH = 1.5;
-
-/**
- * The diagram's line colour, for every edge and for the dashed outlines alike.
- *
- * Published as a CSS variable on the canvas because the two consumers cannot
- * share a value any other way: an edge takes a plain CSS string in React Flow's
- * `style`, while an outline needs a Tailwind text colour so `currentColor` and
- * the brand hover keep working. Derived from a theme token, so it still follows
- * light and dark mode — React Flow's own default is a hard-coded grey that sits
- * visibly darker than `--border`.
- */
-export const DIAGRAM_STROKE_VAR = "--diagram-stroke";
-/**
- * Mixed towards the background rather than towards `transparent`: the rendered
- * colour is the same, but it is opaque. A translucent stroke would let a dashed
- * edge sitting under a solid one add up through it, banding the shared trunk.
- */
-export const DIAGRAM_STROKE_COLOR =
-  "color-mix(in srgb, var(--muted-foreground) 55%, var(--background))";
-/** Reference to the variable above, for `style` values and Tailwind classes. */
-export const DIAGRAM_STROKE = `var(${DIAGRAM_STROKE_VAR})`;
-
-/**
  * Routing for every edge: one trunk straight down from the source, fanning out
  * just above the row it lands in.
  *
@@ -217,16 +190,3 @@ export const TRUNK_DESCENT = 56;
 
 /** Gap elk leaves between layers: the trunk's own offset plus the descent. */
 export const LAYER_SPACING = EDGE_PATH_OPTIONS.offset + TRUNK_DESCENT;
-
-/**
- * Soft drop shadow of the design's cards. Pure decoration — every solid node
- * carries it, whether or not it does anything when clicked.
- */
-export const NODE_SHADOW = "shadow-[0_1px_2px_0_rgba(15,23,42,0.06)]";
-
-/**
- * Hover affordance for a card that navigates somewhere. Deliberately quiet: the
- * design's cards are flat, so hover lifts the border rather than the card.
- */
-export const NODE_INTERACTIVE_HOVER =
-  "hover:border-brand-400 hover:shadow-[0_4px_12px_-4px_rgba(15,23,42,0.12)]";

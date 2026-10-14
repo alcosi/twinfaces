@@ -87,18 +87,21 @@ export function UserTableFormFields({
       <ComplexComboboxFormField
         control={control}
         name="permissionId"
+        required
         info={permissionInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="permissionSchemaId"
+        required
         info={permissionSchemaInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="userId"
+        required
         info={userInfo}
       />
     </>

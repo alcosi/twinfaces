@@ -17,3 +17,17 @@ export const OPTIONAL_FIRST_ID_EXTRACTOR = z
     if (isPopulatedArray<{ id: string }>(value)) return value[0].id;
     return typeof value === "string" && value.length > 0 ? value : undefined;
   });
+
+// Same as OPTIONAL_FIRST_ID_EXTRACTOR for user comboboxes, whose items carry
+// `userId` instead of `id`.
+export const OPTIONAL_FIRST_USER_ID_EXTRACTOR = z
+  .union([
+    z.literal(""),
+    z.array(z.object({ userId: z.string().uuid("Please enter a valid UUID") })),
+    z.string().uuid("Please enter a valid UUID"),
+  ])
+  .optional()
+  .transform((value) => {
+    if (isPopulatedArray<{ userId: string }>(value)) return value[0].userId;
+    return typeof value === "string" && value.length > 0 ? value : undefined;
+  });

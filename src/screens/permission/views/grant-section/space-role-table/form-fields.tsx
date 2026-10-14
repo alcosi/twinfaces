@@ -70,18 +70,21 @@ export function SpaceRoleTableFormFields({
       <ComplexComboboxFormField
         control={control}
         name="permissionId"
+        required
         info={permissionInfo}
       />
 
       <ComplexComboboxFormField
         control={control}
         name="permissionSchemaId"
+        required
         info={permissionSchemaInfo}
       />
 
       <ComboboxFormField
         control={control}
         name="spaceRoleId"
+        required
         label="Space role"
         selectPlaceholder="Select..."
         searchPlaceholder="Search..."

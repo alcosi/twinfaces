@@ -48,7 +48,7 @@ export function TierFormFields({
 
   return (
     <>
-      <TextFormField control={control} name="name" label="Name" required />
+      <TextFormField control={control} name="name" label="Name" />
 
       <TextAreaFormField
         control={control}
@@ -92,7 +92,6 @@ export function TierFormFields({
         name="attachmentsStorageQuotaSize"
         label="Attachments storage quota size"
         type="number"
-        required
       />
 
       <TextFormField
@@ -100,7 +99,6 @@ export function TierFormFields({
         name="attachmentsStorageQuotaCount"
         label="Attachments storage quota count"
         type="number"
-        required
       />
 
       <TextFormField
@@ -108,7 +106,6 @@ export function TierFormFields({
         name="userCountQuota"
         label="User count quota"
         type="number"
-        required
       />
     </>
   );

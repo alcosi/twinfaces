@@ -126,7 +126,6 @@ export function TriggersFormFields({
         control={control}
         name="twinFactoryConditionSetId"
         info={twinFactoryConditionSetInfo}
-        required
       />
       <SwitchFormField
         control={control}

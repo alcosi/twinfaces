@@ -88,6 +88,7 @@ export function TwinFormFields({
         control={control}
         name="classId"
         info={twinClassInfo}
+        required
       />
 
       {hasHeadClass && (
@@ -96,7 +97,6 @@ export function TwinFormFields({
           control={control}
           label="Head"
           {...headAdapter}
-          required
         />
       )}
 

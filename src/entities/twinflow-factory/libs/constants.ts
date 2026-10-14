@@ -55,7 +55,10 @@ export const LAUNCHER_TYPES_ENUM: Array<{
 ] as const;
 
 export const TWINFLOW_FACTORY_SCHEMA = z.object({
-  twinflowId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+  twinflowId: z
+    .string()
+    .uuid("Twinflow ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
   twinFactoryLauncherId: z
     .array(z.object({ id: LAUNCHER_TYPES_SCHEMA }))
     .min(1, "Required")
@@ -65,5 +68,8 @@ export const TWINFLOW_FACTORY_SCHEMA = z.object({
         : LauncherTypesEnum.afterSketchCreate
     )
     .or(LAUNCHER_TYPES_SCHEMA),
-  factoryId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+  factoryId: z
+    .string()
+    .uuid("Factory ID must be a valid UUID")
+    .or(FIRST_ID_EXTRACTOR),
 });

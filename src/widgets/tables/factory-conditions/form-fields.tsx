@@ -58,6 +58,7 @@ export function FactoryConditionFormFields({
         control={control}
         name="factoryConditionSetId"
         info={conditionSetInfo}
+        required
       />
 
       <FeaturerFormField
@@ -66,6 +67,7 @@ export function FactoryConditionFormFields({
         label="Condition featurer"
         name="conditionerFeatureId"
         paramsFieldName="conditionerParams"
+        required
       />
 
       <TextAreaFormField

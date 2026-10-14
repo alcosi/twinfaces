@@ -6,16 +6,12 @@ import {
 } from "@/entities/featurer";
 import {
   FIRST_ID_EXTRACTOR,
+  OPTIONAL_FIRST_ID_EXTRACTOR,
   isPopulatedArray,
   isPopulatedString,
 } from "@/shared/libs";
 
 import { TransitionType, TransitionTypesEnum } from "./types";
-
-const TRANSITION_TYPE_EXTRACTOR = z
-  .array(z.object({ id: z.string() }))
-  .min(1)
-  .transform((arr) => arr[0]?.id as TransitionType);
 
 export const TRANSITION_TYPES_ENUM: Array<{
   id: TransitionType;
@@ -31,6 +27,19 @@ export const TRANSITION_TYPES_ENUM: Array<{
   },
 ] as const;
 
+const TRANSITION_TYPE_ID = z.enum(
+  [
+    TransitionTypesEnum.MARKETING,
+    TransitionTypesEnum.OPERATION,
+    TransitionTypesEnum.OPERATION_DISABLE,
+    TransitionTypesEnum.STATUS_CHANGE,
+    TransitionTypesEnum.STATUS_CHANGE_MARKETING,
+  ],
+  { message: "Invalid type" }
+);
+
+// Field optionality mirrors TransitionCreateV1: only twinflowId, nameI18n and
+// dstStatusId are required.
 export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
   twinflow: z
     .array(
@@ -39,47 +48,40 @@ export const TWIN_FLOW_TRANSITION_SCHEMA = z.object({
         twinClassId: z.string().uuid(),
       })
     )
-    .min(1, "Please enter a valid UUID"),
+    .min(1, "Twinflow is required"),
   alias: z
-    .array(z.union([z.object({ alias: z.string() }), z.string()]))
-    .min(1, "Required")
-    .transform((arr) => {
-      if (isPopulatedArray(arr) && isPopulatedString(arr[0])) {
-        return arr[0];
-      }
-
-      return isPopulatedArray<{ alias: string }>(arr) ? arr[0].alias : "";
+    .union([
+      z.literal(""),
+      z.array(z.union([z.object({ alias: z.string() }), z.string()])),
+    ])
+    .optional()
+    .transform((value) => {
+      const first = isPopulatedArray<{ alias: string } | string>(value)
+        ? value[0]
+        : undefined;
+      const alias = typeof first === "string" ? first : first?.alias;
+      return isPopulatedString(alias) ? alias : undefined;
     }),
   name: z.string().min(1, "Name can not be empty"),
   description: z.string().optional(),
-  factory: z.string().uuid().optional().or(FIRST_ID_EXTRACTOR),
-  srcTwinStatusId: z
-    .string()
-    .uuid("Source Status ID must be a valid UUID")
-    .optional()
-    .or(FIRST_ID_EXTRACTOR),
+  factory: OPTIONAL_FIRST_ID_EXTRACTOR,
+  srcTwinStatusId: OPTIONAL_FIRST_ID_EXTRACTOR,
   dstTwinStatusId: z
     .string()
-    .uuid("Destination Status ID must be a valid UUID")
+    .uuid("Destination status is required")
     .or(FIRST_ID_EXTRACTOR),
-  permissionId: z
-    .string()
-    .uuid("Permission ID must be a valid UUID")
-    .optional()
-    .or(FIRST_ID_EXTRACTOR),
+  permissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
   twinflowTransitionTypeId: z
-    .enum(
-      [
-        TransitionTypesEnum.MARKETING,
-        TransitionTypesEnum.OPERATION,
-        TransitionTypesEnum.OPERATION_DISABLE,
-        TransitionTypesEnum.STATUS_CHANGE,
-        TransitionTypesEnum.STATUS_CHANGE_MARKETING,
-      ],
-      { message: "Invalid type" }
-    )
+    .union([
+      z.literal(""),
+      TRANSITION_TYPE_ID,
+      z.array(z.object({ id: TRANSITION_TYPE_ID })),
+    ])
     .optional()
-    .or(TRANSITION_TYPE_EXTRACTOR),
+    .transform((value) => {
+      if (Array.isArray(value)) return value[0]?.id;
+      return value || undefined;
+    }),
 });
 
 export const TRIGGER_SCHEMA = z.object({

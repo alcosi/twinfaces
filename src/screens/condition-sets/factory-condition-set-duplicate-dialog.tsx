@@ -22,7 +22,7 @@ import { SwitchFormField } from "@/components/form-fields";
 import { useFactorySelectAdapterWithFilters } from "@/entities/factory";
 import { FactoryConditionSet } from "@/entities/factory-condition-set";
 import { PrivateApiContext } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -36,7 +36,7 @@ import {
 
 const SCHEMA = z.object({
   originalFactoryConditionSetId: z.string().uuid(),
-  newTwinFactoryId: z.string().optional().or(FIRST_ID_EXTRACTOR),
+  newTwinFactoryId: OPTIONAL_FIRST_ID_EXTRACTOR,
   duplicateConditions: z.boolean(),
 });
 

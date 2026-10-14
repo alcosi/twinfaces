@@ -4,10 +4,14 @@ import {
   FEATURER_PARAMS_VALUE,
   OPTIONAL_FEATURER_ID_EXTRACTOR,
 } from "@/entities/featurer";
-import { FIRST_ID_EXTRACTOR, REGEX_PATTERNS } from "@/shared/libs";
+import {
+  FIRST_ID_EXTRACTOR,
+  OPTIONAL_FIRST_ID_EXTRACTOR,
+  REGEX_PATTERNS,
+} from "@/shared/libs";
 
 export const TWIN_CLASS_FIELD_SCHEMA = z.object({
-  twinClassId: z.string().uuid().or(FIRST_ID_EXTRACTOR),
+  twinClassId: z.string().uuid("Twin class is required").or(FIRST_ID_EXTRACTOR),
   key: z
     .string()
     .min(1)
@@ -24,9 +28,12 @@ export const TWIN_CLASS_FIELD_SCHEMA = z.object({
   fieldTyperParams: FEATURER_PARAMS_VALUE,
   twinSorterFeaturerId: OPTIONAL_FEATURER_ID_EXTRACTOR,
   twinSorterParams: FEATURER_PARAMS_VALUE,
-  viewPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
-  editPermissionId: z.string().optional().or(FIRST_ID_EXTRACTOR),
-  externalId: z.string().optional(),
+  viewPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  editPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  externalId: z
+    .string()
+    .optional()
+    .transform((value) => value || undefined),
   fieldInitializerFeaturerId: OPTIONAL_FEATURER_ID_EXTRACTOR,
   fieldInitializerParams: FEATURER_PARAMS_VALUE,
 });

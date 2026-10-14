@@ -185,18 +185,12 @@ export function TwinClassRelations() {
   const handleOnCreateSubmit = async (
     formValues: z.infer<typeof LINK_SCHEMA>
   ) => {
+    const { name, ...rest } = formValues;
+    const nameI18n = name ? { translations: { en: name } } : undefined;
     const body: CreateLinkRequestBody = {
-      forwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      backwardNameI18n: {
-        translations: {
-          en: formValues.name,
-        },
-      },
-      ...formValues,
+      ...rest,
+      forwardNameI18n: nameI18n,
+      backwardNameI18n: nameI18n,
     };
 
     await createLink(body);

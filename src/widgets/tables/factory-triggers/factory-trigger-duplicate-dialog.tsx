@@ -21,7 +21,7 @@ import { ComplexComboboxFormField } from "@/components/complex-combobox";
 import { useFactorySelectAdapterWithFilters } from "@/entities/factory";
 import { FactoryTrigger_DETAILED } from "@/entities/factory-trigger";
 import { PrivateApiContext } from "@/shared/api";
-import { FIRST_ID_EXTRACTOR } from "@/shared/libs";
+import { OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 import {
   Button,
   Dialog,
@@ -35,7 +35,7 @@ import {
 
 const SCHEMA = z.object({
   originalFactoryTriggerId: z.string().uuid(),
-  newTwinFactoryId: z.string().optional().or(FIRST_ID_EXTRACTOR),
+  newTwinFactoryId: OPTIONAL_FIRST_ID_EXTRACTOR,
 });
 
 type FormValues = z.infer<typeof SCHEMA>;
