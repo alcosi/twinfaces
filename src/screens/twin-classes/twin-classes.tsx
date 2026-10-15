@@ -107,6 +107,7 @@ const colDefs: Record<
     | "aliasSpace"
     | "markersDataListId"
     | "tagsDataListId"
+    | "flavorsDataListId"
     | "viewPermissionId"
     | "createPermissionId"
     | "ownerType"
@@ -259,6 +260,19 @@ const colDefs: Record<
       original.tagMap ? (
         <div className="inline-flex max-w-48">
           <DatalistResourceLink data={original.tagMap} withTooltip />
+        </div>
+      ) : null,
+  },
+  flavorsDataListId: {
+    id: "flavorsDataListId",
+    accessorKey: "flavorsDataListId",
+    header: () => (
+      <SortableHeader title="Flavors list" sortField="flavorDataListName" />
+    ),
+    cell: ({ row: { original } }) =>
+      original.flavorMap ? (
+        <div className="inline-flex max-w-48">
+          <DatalistResourceLink data={original.flavorMap} withTooltip />
         </div>
       ) : null,
   },
@@ -594,6 +608,28 @@ export function TwinClasses({ type }: { type?: string }) {
           ),
         },
         {
+          key: "flavorDataList",
+          label: "Flavors list",
+          load: buildCountGroupingLoad(
+            ({ offset, limit }) =>
+              countTwinClass({
+                filters: scopedFilters,
+                groupField: "flavorDataListId",
+                offset,
+                limit,
+              }),
+            (g) => g.flavorDataListId,
+            (g) => g.flavorDataList?.name,
+            (g) =>
+              g.flavorDataList && (
+                <DatalistResourceLink
+                  data={g.flavorDataList as DataList}
+                  withTooltip
+                />
+              )
+          ),
+        },
+        {
           key: "headHunterFeaturer",
           label: "Head hunter",
           load: buildCountGroupingLoad(
@@ -919,6 +955,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.aliasSpace,
             colDefs.markersDataListId,
             colDefs.tagsDataListId,
+            colDefs.flavorsDataListId,
             colDefs.viewPermissionId,
             colDefs.createPermissionId,
             colDefs.externalId,
@@ -948,6 +985,7 @@ export function TwinClasses({ type }: { type?: string }) {
             colDefs.abstractClass,
             colDefs.markersDataListId,
             colDefs.tagsDataListId,
+            colDefs.flavorsDataListId,
             colDefs.externalId,
             colDefs.segment,
             colDefs.hasSegment,
