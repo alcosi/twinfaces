@@ -41,6 +41,8 @@ const SCHEMA = z.object({
   duplicateErasers: z.boolean(),
   duplicateTriggers: z.boolean(),
   duplicateConditionSets: z.boolean(),
+  duplicateNextFactoryCascade: z.boolean(),
+  duplicateAfterCommitFactory: z.boolean(),
 });
 
 type FormValues = z.infer<typeof SCHEMA>;
@@ -71,6 +73,8 @@ function Component(
       duplicateErasers: false,
       duplicateTriggers: false,
       duplicateConditionSets: false,
+      duplicateNextFactoryCascade: false,
+      duplicateAfterCommitFactory: false,
     },
   });
 
@@ -93,6 +97,8 @@ function Component(
         duplicateErasers: false,
         duplicateTriggers: false,
         duplicateConditionSets: false,
+        duplicateNextFactoryCascade: false,
+        duplicateAfterCommitFactory: false,
       });
       setOpen(true);
     },
@@ -181,6 +187,16 @@ function Component(
                 control={form.control}
                 name="duplicateConditionSets"
                 label="Duplicate condition sets"
+              />
+              <SwitchFormField
+                control={form.control}
+                name="duplicateNextFactoryCascade"
+                label="Duplicate next factory cascade"
+              />
+              <SwitchFormField
+                control={form.control}
+                name="duplicateAfterCommitFactory"
+                label="Duplicate after commit factory"
               />
             </div>
             <DialogFooter className="bg-background rounded-b-md p-6 sm:justify-end">
