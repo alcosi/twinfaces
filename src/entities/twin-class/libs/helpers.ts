@@ -49,6 +49,12 @@ export const hydrateTwinClassFromMap = (
     ] as DataListsMap;
   }
 
+  if (dto.flavorsDataListId && relatedObjects.dataListsMap) {
+    hydrated.flavorMap = relatedObjects.dataListsMap[
+      dto.flavorsDataListId
+    ] as DataListsMap;
+  }
+
   if (dto.headHunterFeaturerId && relatedObjects.featurerMap) {
     hydrated.headHunterFeaturer = relatedObjects.featurerMap[
       dto.headHunterFeaturerId
@@ -184,6 +190,8 @@ export function buildTwinClassCreateRq(
         extendsTwinClassId: values.extendsTwinClassId || undefined,
         markerDataListId: values.markerDataListId || undefined,
         tagDataListId: values.tagDataListId || undefined,
+        // Create DTO spells it singular, while TwinClassV1 response uses flavorsDataListId.
+        flavorDataListId: values.flavorDataListId || undefined,
         autoCreatePermissions: values.autoCreatePermissions,
         uniqueName: values.uniqueName,
         autoCreateTwinflow: values.autoCreateTwinflow,

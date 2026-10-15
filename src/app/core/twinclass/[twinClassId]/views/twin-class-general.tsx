@@ -66,8 +66,12 @@ export function TwinClassGeneral() {
       title: "Update head",
       onSubmit: (values) => {
         return update({
-          headTwinClassUpdate: { newId: values.headClassId[0].id },
-          headHunterFeaturerId: values.headHunterFeaturerId[0].id,
+          headTwinClassUpdate: {
+            newId:
+              values.headClassId[0]?.id ??
+              "ffffffff-ffff-ffff-ffff-ffffffffffff",
+          },
+          headHunterFeaturerId: values.headHunterFeaturerId[0]?.id,
           headHunterParams: values.headHunterParams,
         });
       },
@@ -236,6 +240,50 @@ export function TwinClassGeneral() {
     },
   };
 
+  const extendsSettings: InPlaceEditProps<any> = {
+    id: "extendsClassId",
+    value: twinClass.extendsClass
+      ? [{ name: twinClass.extendsClass.name, key: twinClass.extendsClass.key }]
+      : undefined,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select twin class...",
+      ...tcAdapter,
+    },
+    renderPreview: twinClass.extendsClass
+      ? () => (
+          <TwinClassResourceLink
+            data={twinClass.extendsClass as TwinClass_DETAILED}
+          />
+        )
+      : undefined,
+    onSubmit: async (value) => {
+      // ffffffff-… is the backend's nullify marker — an empty pick detaches the parent class.
+      const newId =
+        (value as Array<{ id: string }>)[0]?.id ??
+        "ffffffff-ffff-ffff-ffff-ffffffffffff";
+      return update({ extendsTwinClassUpdate: { newId } });
+    },
+  };
+
+  const flavorListSettings: InPlaceEditProps<any> = {
+    id: "flavorDataListId",
+    value: twinClass.flavorMap
+      ? [{ name: twinClass.flavorMap.name, key: twinClass.flavorMap.key }]
+      : undefined,
+    valueInfo: {
+      type: AutoFormValueType.combobox,
+      selectPlaceholder: "Select flavor...",
+      ...dlAdapter,
+    },
+    renderPreview: twinClass.flavorMap
+      ? () => <DatalistResourceLink data={twinClass.flavorMap as DataList} />
+      : undefined,
+    onSubmit: async (value) => {
+      return update({ flavorDataListUpdate: { newId: value[0].id } });
+    },
+  };
+
   function openWithSettings(settings: AutoEditDialogSettings) {
     setCurrentAutoEditDialogSettings(settings);
     setEditFieldDialogOpen(true);
@@ -395,12 +443,7 @@ export function TwinClassGeneral() {
           <TableRow>
             <TableCell>Extends</TableCell>
             <TableCell>
-              {twinClass.extendsClass && (
-                <TwinClassResourceLink
-                  data={twinClass.extendsClass as TwinClass_DETAILED}
-                  withTooltip
-                />
-              )}
+              <InPlaceEdit {...extendsSettings} />
             </TableCell>
           </TableRow>
 
@@ -415,6 +458,13 @@ export function TwinClassGeneral() {
             <TableCell>Tags list</TableCell>
             <TableCell>
               <InPlaceEdit {...tagListSettings} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>Flavors list</TableCell>
+            <TableCell>
+              <InPlaceEdit {...flavorListSettings} />
             </TableCell>
           </TableRow>
 

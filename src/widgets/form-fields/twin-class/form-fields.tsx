@@ -47,6 +47,7 @@ export function TwinClassFormFields({
   const extendsTwinClassAdapter = useTwinClassSelectAdapterWithFilters();
   const markerDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const tagDatalistAdapter = useDatalistSelectAdapterWithFilters();
+  const flavorDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const createPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const twinClassOwnerTypeAdapter = useTwinClassOwnerTypeSelectAdapter();
@@ -104,6 +105,18 @@ export function TwinClassFormFields({
     type: AutoFormValueType.complexCombobox,
     label: "Tags list",
     adapter: tagDatalistAdapter,
+    create: { entity: "datalist" },
+    extraFilters: buildDatalistFilters(),
+    mapExtraFilters: (filters) => mapDatalistFilters(filters),
+    searchPlaceholder: "Search datalist...",
+    selectPlaceholder: "Select datalist",
+    multi: false,
+  };
+
+  const flavorDataListInfo: AutoFormComplexComboboxValueInfo = {
+    type: AutoFormValueType.complexCombobox,
+    label: "Flavors list",
+    adapter: flavorDatalistAdapter,
     create: { entity: "datalist" },
     extraFilters: buildDatalistFilters(),
     mapExtraFilters: (filters) => mapDatalistFilters(filters),
@@ -216,6 +229,12 @@ export function TwinClassFormFields({
         control={control}
         name="tagDataListId"
         info={tagDataListInfo}
+      />
+
+      <ComplexComboboxFormField
+        control={control}
+        name="flavorDataListId"
+        info={flavorDataListInfo}
       />
 
       <SwitchFormField

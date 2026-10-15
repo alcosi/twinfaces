@@ -49,6 +49,7 @@ export function TwinClassContextProvider({
           showTwinClassFieldDescriptor2DataListOptionMode: "DETAILED",
           showTwinClassMarker2DataListMode: "DETAILED",
           showTwinClassTag2DataListMode: "DETAILED",
+          showTwinClassFlavor2DataListMode: "DETAILED",
           showTwinClass2PermissionMode: "DETAILED",
           showTwinClassFreeze2StatusMode: "DETAILED",
           showTwinClassField2FeaturerMode: "DETAILED",

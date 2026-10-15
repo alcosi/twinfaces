@@ -21,6 +21,7 @@ export type TwinClassCountGroup = TwinClassCountV1 & {
   twinClassFreeze?: TwinClassFreeze;
   markerDataList?: DataList;
   tagDataList?: DataList;
+  flavorDataList?: DataList;
   headHunterFeaturer?: Featurer;
   viewPermission?: Permission;
 };
@@ -89,6 +90,10 @@ export function useTwinClassCount() {
           tagDataList:
             group.tagDataListId && dataListsMap
               ? (dataListsMap[group.tagDataListId] as DataList)
+              : undefined,
+          flavorDataList:
+            group.flavorDataListId && dataListsMap
+              ? (dataListsMap[group.flavorDataListId] as DataList)
               : undefined,
           headHunterFeaturer:
             group.headHunterFeaturerId != null && featurerMap

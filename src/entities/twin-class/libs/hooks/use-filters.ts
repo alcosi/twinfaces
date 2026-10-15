@@ -35,6 +35,7 @@ export function useTwinClassFilters(): FilterFeature<
   const viewPermissionAdapter = usePermissionSelectAdapterWithFilters();
   const markerDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const tagDatalistAdapter = useDatalistSelectAdapterWithFilters();
+  const flavorDatalistAdapter = useDatalistSelectAdapterWithFilters();
   const fAdapter = useTwinClassFreezeSelectAdapter();
 
   const {
@@ -173,6 +174,16 @@ export function useTwinClassFilters(): FilterFeature<
         selectPlaceholder: "Select...",
         multi: true,
       },
+      flavorDatalistIdList: {
+        type: AutoFormValueType.complexCombobox,
+        label: "Flavors list",
+        adapter: flavorDatalistAdapter,
+        extraFilters: buildDatalistFilters(),
+        mapExtraFilters: (filters) => mapDatalistFilters(filters),
+        searchPlaceholder: "Search...",
+        selectPlaceholder: "Select...",
+        multi: true,
+      },
       segment: {
         type: AutoFormValueType.boolean,
         label: "Segment",
@@ -259,6 +270,10 @@ export function useTwinClassFilters(): FilterFeature<
       ),
       tagDatalistIdList: toArrayOfString(
         toArray(filters.tagDatalistIdList),
+        "id"
+      ),
+      flavorDatalistIdList: toArrayOfString(
+        toArray(filters.flavorDatalistIdList),
         "id"
       ),
       segment: mapToChoice(filters.segment),

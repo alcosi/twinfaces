@@ -67,6 +67,7 @@ export const TWIN_CLASSES_SCHEMA = z.object({
   aliasSpace: z.boolean().default(false),
   markerDataListId: OPTIONAL_FIRST_ID_EXTRACTOR,
   tagDataListId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  flavorDataListId: OPTIONAL_FIRST_ID_EXTRACTOR,
   viewPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
   createPermissionId: OPTIONAL_FIRST_ID_EXTRACTOR,
   autoCreateTwinflow: z.boolean().default(false),

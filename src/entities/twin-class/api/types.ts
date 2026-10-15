@@ -37,6 +37,7 @@ export type TwinClass_DETAILED = RequireFields<
   twinClassFreeze?: TwinClassBaseV1;
   headHunterDetailedParams?: ExtendedFeaturerParam[];
   tagMap?: DataList;
+  flavorMap?: DataList;
 };
 export type TwinClass_MANAGED = RequireFields<
   TwinClass,
@@ -110,6 +111,7 @@ export type TwinClassFilterKeys =
   | "createPermissionIdList"
   | "markerDatalistIdList"
   | "tagDatalistIdList"
+  | "flavorDatalistIdList"
   | "headHierarchyChildsForTwinClassSearch"
   | "hasSegments"
   | "segment"
