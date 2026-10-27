@@ -32,7 +32,10 @@ import { DatalistResourceLink } from "@/features/datalist/ui";
 import { FeaturerResourceLink } from "@/features/featurer/ui";
 import { PermissionResourceLink } from "@/features/permission/ui";
 import { TwinClassFreezeResourceLink } from "@/features/twin-class-freeze/ui";
-import { TwinClassResourceLink } from "@/features/twin-class/ui";
+import {
+  TwinClassResourceLink,
+  getTwinClassCardHeader,
+} from "@/features/twin-class/ui";
 import { ImageWithFallback } from "@/features/ui/image-with-fallback";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { PlatformArea } from "@/shared/config";
@@ -972,6 +975,10 @@ export function TwinClasses({ type }: { type?: string }) {
             router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
           }
           getRowHref={(row) => `/${PlatformArea.core}/twinclass/${row.id}`}
+          cardHeader={{
+            get: getTwinClassCardHeader,
+            columnIds: ["logo", "name", "key"],
+          }}
           filters={{
             filtersInfo: buildFilterFields(),
           }}

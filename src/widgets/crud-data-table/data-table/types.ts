@@ -3,6 +3,17 @@ import { ReactNode } from "react";
 
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { Identifiable } from "@/shared/libs";
+import { EntityCardHeaderProps } from "@/shared/ui/entity-card";
+
+/**
+ * The header of a row's card in the card ("list") layout, and the columns it
+ * already shows — those are left out of the card's body rather than repeated.
+ */
+export type DataTableCardHeader<TData> = {
+  get: (row: TData) => Omit<EntityCardHeaderProps, "actions" | "href">;
+  /** Ids of the columns the header stands in for. */
+  columnIds?: string[];
+};
 
 export type DataTableHandle = {
   refresh: () => void;
@@ -47,4 +58,10 @@ export type DataTableProps<TData extends DataTableRow<TData>, TValue> = {
    * pie-chart view. Ignored in the grid (table) layout.
    */
   renderListItem?: (row: TData) => ReactNode;
+  /**
+   * Gives every card of the card layout an entity card header — icon, title,
+   * subtitle — with the row's actions menu in its corner. Without it, a card
+   * is just the row's columns as fields.
+   */
+  cardHeader?: DataTableCardHeader<TData>;
 };
