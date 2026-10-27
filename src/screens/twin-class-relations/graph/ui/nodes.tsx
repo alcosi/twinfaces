@@ -26,6 +26,7 @@ import {
 import {
   CARD,
   CaptionNode,
+  CardSection,
   ClassCardNode,
   GraphMode,
   LINK_PILL_MAX_WIDTH,
@@ -37,7 +38,10 @@ import {
   getClassTitle,
 } from "../model";
 
-export type ClassCardData = ClassCardNode & { mode: GraphMode };
+export type ClassCardData = ClassCardNode & {
+  mode: GraphMode;
+  onToggleSection: (nodeId: string, section: CardSection) => void;
+};
 export type PlaceholderData = PlaceholderNode & {
   onCreate: (side: LinkSide) => void;
 };
@@ -111,22 +115,34 @@ function HeaderLink({
 
 /**
  * One block of an advanced card: a caption with the count, the first few chips,
- * and a "+N more" row leading to the tab that lists them all.
+ * and a "+N more" row that unfolds the rest right in the card.
+ *
+ * Unfolding changes the card's height, which the layout needs to know before
+ * anything renders — so the state lives with the graph, not in here.
  */
 function SectionView<T extends { id?: string }>({
   label,
   items,
-  moreHref,
+  expanded,
+  onToggle,
   renderItem,
 }: {
   label: string;
   items: T[];
-  moreHref: string;
+  expanded: boolean;
+  onToggle: () => void;
   renderItem: (item: T) => ReactNode;
 }) {
   if (items.length === 0) return null;
 
-  const hidden = items.length - CARD.chipLimit;
+  const foldable = items.length > CARD.chipLimit;
+  const visible =
+    foldable && !expanded ? items.slice(0, CARD.chipLimit) : items;
+
+  function handleToggle(event: MouseEvent) {
+    event.stopPropagation();
+    onToggle();
+  }
 
   return (
     <div className="border-border border-t" style={{ padding: CARD.padding }}>
@@ -143,7 +159,7 @@ function SectionView<T extends { id?: string }>({
         className="flex flex-col"
         style={{ gap: CARD.chipGap, marginTop: CARD.sectionGap }}
       >
-        {items.slice(0, CARD.chipLimit).map((item, index) => (
+        {visible.map((item, index) => (
           <div
             key={item.id ?? index}
             className="flex min-w-0"
@@ -152,16 +168,15 @@ function SectionView<T extends { id?: string }>({
             {renderItem(item)}
           </div>
         ))}
-        {hidden > 0 && (
-          <Link
-            href={moreHref}
-            prefetch={false}
-            onClick={(event) => event.stopPropagation()}
-            className="text-muted-foreground hover:text-foreground flex items-center text-[11px] transition-colors"
+        {foldable && (
+          <button
+            type="button"
+            onClick={handleToggle}
+            className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center self-start text-[11px] transition-colors"
             style={{ height: CARD.chipHeight }}
           >
-            +{hidden} more
-          </Link>
+            {expanded ? "Hide" : `+${items.length - CARD.chipLimit} more`}
+          </button>
         )}
       </div>
     </div>
@@ -212,7 +227,8 @@ function ClassCard({ data }: NodeProps<Node<ClassCardData, "classCard">>) {
           <SectionView
             label="Fields"
             items={twinClass.fields ?? []}
-            moreHref={`${classHref(twinClass)}#fields`}
+            expanded={Boolean(data.expansion.fields)}
+            onToggle={() => data.onToggleSection(data.id, "fields")}
             renderItem={(field) => (
               <TwinClassFieldResourceLink
                 data={field as TwinClassField_DETAILED}
@@ -223,7 +239,8 @@ function ClassCard({ data }: NodeProps<Node<ClassCardData, "classCard">>) {
           <SectionView
             label="Statuses"
             items={twinClass.statuses ?? []}
-            moreHref={`${classHref(twinClass)}#statuses`}
+            expanded={Boolean(data.expansion.statuses)}
+            onToggle={() => data.onToggleSection(data.id, "statuses")}
             renderItem={(status) => (
               <TwinClassStatusResourceLink data={status} withTooltip />
             )}
@@ -304,14 +321,6 @@ function LinkPill({ data }: NodeProps<Node<LinkPillNode, "linkPill">>) {
  * cards at all.
  */
 function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
-  const toPath = (wire: Wire) =>
-    wire.points
-      .map(
-        ([x, y], index) =>
-          `${index === 0 ? "M" : "L"} ${x - data.originX} ${y - data.originY}`
-      )
-      .join(" ");
-
   // Dashed first: where a dashed wire shares a run with a solid one, the solid
   // one wins.
   const ordered = [...data.wires].sort(
@@ -328,7 +337,7 @@ function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
       {ordered.map((wire) => (
         <path
           key={wire.id}
-          d={toPath(wire)}
+          d={toPath(wire, data.originX, data.originY)}
           fill="none"
           stroke={DIAGRAM_STROKE}
           strokeWidth={wire.dashed ? DASHED_STROKE.width : SOLID_EDGE_WIDTH}
@@ -337,6 +346,47 @@ function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
       ))}
     </svg>
   );
+}
+
+/** Radius of the rounded corners at the far ends of a trunk. */
+const CORNER_RADIUS = 10;
+
+/**
+ * The wire as an SVG path, relative to the layer's origin. A corner marked
+ * rounded is cut short on both sides and joined by a quadratic curve — never by
+ * more than the shorter of its two runs, so a corner on a short run still
+ * meets the card it leads to.
+ */
+function toPath(wire: Wire, originX: number, originY: number): string {
+  const points = wire.points.map(
+    ([x, y]) => [x - originX, y - originY] as const
+  );
+  const rounded = new Set(wire.rounded ?? []);
+
+  return points
+    .map(([x, y], index) => {
+      if (index === 0) return `M ${x} ${y}`;
+
+      const previous = points[index - 1];
+      const next = points[index + 1];
+      if (!rounded.has(index) || !previous || !next) return `L ${x} ${y}`;
+
+      const [px, py] = previous;
+      const [nx, ny] = next;
+      const lengthIn = Math.hypot(x - px, y - py);
+      const lengthOut = Math.hypot(nx - x, ny - y);
+      const radius = Math.min(CORNER_RADIUS, lengthIn, lengthOut);
+      // A corner with no run on one side is no corner at all.
+      if (radius < 1) return `L ${x} ${y}`;
+
+      const startX = x - ((x - px) / lengthIn) * radius;
+      const startY = y - ((y - py) / lengthIn) * radius;
+      const endX = x + ((nx - x) / lengthOut) * radius;
+      const endY = y + ((ny - y) / lengthOut) * radius;
+
+      return `L ${startX} ${startY} Q ${x} ${y} ${endX} ${endY}`;
+    })
+    .join(" ");
 }
 
 export const classNodeTypes = {

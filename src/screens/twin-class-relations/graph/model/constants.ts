@@ -1,6 +1,6 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 
-import { GraphMode } from "./types";
+import { CardExpansion, GraphMode } from "./types";
 
 /**
  * Card geometry. Every number here is also a layout input: positions are
@@ -96,15 +96,19 @@ function countLines(
   return Math.min(Math.ceil(text.length / charsPerLine), max);
 }
 
-/** Rows a block of chips takes: the chips shown, plus the "+N more" row. */
-export function visibleChipRows(total: number): number {
-  return Math.min(total, CARD.chipLimit) + (total > CARD.chipLimit ? 1 : 0);
+/**
+ * Rows a block of chips takes. Folded, it is the first few chips plus the
+ * "+N more" row; unfolded, every chip plus the "Hide" row.
+ */
+export function visibleChipRows(total: number, expanded = false): number {
+  if (total <= CARD.chipLimit) return total;
+  return (expanded ? total : CARD.chipLimit) + 1;
 }
 
-function measureSection(total: number): number {
+function measureSection(total: number, expanded = false): number {
   if (total === 0) return 0;
 
-  const rows = visibleChipRows(total);
+  const rows = visibleChipRows(total, expanded);
 
   return (
     CARD.dividerHeight +
@@ -119,11 +123,13 @@ function measureSection(total: number): number {
 
 /**
  * Footprint of one class card, derived from its own content: the header, plus
- * in advanced mode a block of fields and a block of statuses.
+ * in advanced mode a block of fields and a block of statuses — each as long as
+ * its expansion makes it.
  */
 export function measureCard(
   twinClass: TwinClass_DETAILED,
-  mode: GraphMode
+  mode: GraphMode,
+  expansion: CardExpansion = {}
 ): { width: number; height: number } {
   const subtitle = getClassSubtitle(twinClass);
 
@@ -149,7 +155,7 @@ export function measureCard(
     width: CARD.advancedWidth,
     height:
       headerHeight +
-      measureSection(twinClass.fields?.length ?? 0) +
-      measureSection(twinClass.statuses?.length ?? 0),
+      measureSection(twinClass.fields?.length ?? 0, expansion.fields) +
+      measureSection(twinClass.statuses?.length ?? 0, expansion.statuses),
   };
 }
