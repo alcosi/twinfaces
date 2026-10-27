@@ -12,19 +12,32 @@ import { CSSProperties, useEffect, useMemo, useRef } from "react";
 
 import { DIAGRAM_STROKE_COLOR, DIAGRAM_STROKE_VAR } from "@/shared/ui/diagram";
 
-import { ClassGraphLayout, GraphMode, LinkSide } from "../model";
+import { CardSection, ClassGraphLayout, GraphMode, LinkSide } from "../model";
 import { ClassFlowNode, classNodeTypes } from "./nodes";
 
 type Props = {
   layout: ClassGraphLayout;
   mode: GraphMode;
   onCreate: (side: LinkSide) => void;
+  onToggleSection: (nodeId: string, section: CardSection) => void;
+  /**
+   * The view is re-fitted whenever this changes. Kept apart from `layout`
+   * because unfolding a card's block changes the layout too, and jumping the
+   * zoom under the cursor that just clicked "+N more" would lose the user.
+   */
+  fitKey: unknown;
 };
 
 /** Breathing room around the wires layer, so a stroke on its edge is not clipped. */
 const WIRES_PADDING = 4;
 
-export function ClassDiagram({ layout, mode, onCreate }: Props) {
+export function ClassDiagram({
+  layout,
+  mode,
+  onCreate,
+  onToggleSection,
+  fitKey,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const flowRef = useRef<ReactFlowInstance<ClassFlowNode> | null>(null);
 
@@ -74,7 +87,7 @@ export function ClassDiagram({ layout, mode, onCreate }: Props) {
             width: node.width,
             height: node.height,
             zIndex: 1,
-            data: { ...node, mode },
+            data: { ...node, mode, onToggleSection },
           };
         case "placeholder":
           return {
@@ -93,14 +106,14 @@ export function ClassDiagram({ layout, mode, onCreate }: Props) {
     });
 
     return [...wires, ...rest];
-  }, [layout, mode, onCreate]);
+  }, [layout, mode, onCreate, onToggleSection]);
 
   // `fitView` only runs on mount, but the canvas changes size with the tab's
   // own layout, and the diagram changes size with the mode and the labels.
   useEffect(() => {
     const frame = requestAnimationFrame(() => flowRef.current?.fitView());
     return () => cancelAnimationFrame(frame);
-  }, [layout]);
+  }, [fitKey]);
 
   useEffect(() => {
     const container = containerRef.current;

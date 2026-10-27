@@ -1,16 +1,23 @@
-import { css } from "@emotion/css";
+"use client";
+
 import { Copy, Link } from "lucide-react";
 import React, {
   ElementType,
   PropsWithChildren,
   ReactNode,
-  createElement,
-  isValidElement,
+  createContext,
+  useContext,
 } from "react";
 import { toast } from "sonner";
 
-import { cn, isElementType, stopPropagation } from "@/shared/libs";
+import { stopPropagation } from "@/shared/libs";
 import { Button } from "@/shared/ui/button";
+import {
+  EntityCardField,
+  EntityCardFooter,
+  EntityCardHeader,
+  EntityCardSection,
+} from "@/shared/ui/entity-card";
 
 export const RESOURCE_LINK_TOOLTIP_DELAY_MS = 500;
 
@@ -20,14 +27,12 @@ export type ResourceLinkTooltipProps = PropsWithChildren<{
   actions?: ReactNode;
 }>;
 
-const brandGradient = css`
-  background: linear-gradient(
-    to bottom,
-    var(--brand-500) 0px,
-    var(--brand-500) 56px,
-    transparent 56px
-  );
-`;
+/**
+ * The entity's own actions — the duplicate/export menu. Handed to the root but
+ * drawn in the header's corner, the way the graph cards carry their menu, so
+ * it travels to the header through context rather than through every tooltip.
+ */
+const ActionsContext = createContext<ReactNode>(null);
 
 export function ResourceLinkTooltip({
   uuid,
@@ -52,14 +57,16 @@ export function ResourceLinkTooltip({
     });
   }
 
+  // The app's entity card, the same one the graphs and the table card view
+  // draw: header, sections under hairlines, the copy buttons at the bottom.
+  // The frame itself — background, border, radius — is the tooltip's own.
   return (
-    <div
-      className={cn("w-72 space-y-1.5 px-4 py-2 text-xs", brandGradient)}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {children}
+    <div className="w-72 text-xs" onClick={(e) => e.stopPropagation()}>
+      <ActionsContext.Provider value={actions}>
+        {children}
+      </ActionsContext.Provider>
 
-      <footer className="flex justify-between gap-x-2">
+      <EntityCardFooter>
         <Button
           variant="outline"
           size="xs"
@@ -79,8 +86,7 @@ export function ResourceLinkTooltip({
           <Link className="h-3.5 w-3.5" />
           Copy Link
         </Button>
-        {actions}
-      </footer>
+      </EntityCardFooter>
     </div>
   );
 }
@@ -96,49 +102,48 @@ ResourceLinkTooltip.Header = function Header({
   subTitle,
   iconSource,
 }: HeaderProps) {
-  const renderIcon = () => {
-    if (isValidElement(iconSource)) {
-      return iconSource;
-    }
-
-    if (isElementType(iconSource)) {
-      return createElement(iconSource, {
-        className: "w-8 h-8",
-      });
-    }
-
-    return null;
-  };
+  const actions = useContext(ActionsContext);
 
   return (
-    <header className="text-primary-foreground flex h-16 gap-x-4 text-base">
-      <div className="bg-muted text-link-enabled flex h-16 w-16 shrink-0 items-center justify-center rounded-full">
-        {renderIcon()}
-      </div>
-
-      <div className="flex h-12 flex-col justify-end overflow-hidden">
-        <div className="truncate font-semibold whitespace-nowrap">{title}</div>
-        <div className="truncate text-sm whitespace-nowrap">{subTitle}</div>
-      </div>
-    </header>
+    <EntityCardHeader
+      title={title}
+      subtitle={subTitle}
+      icon={iconSource}
+      actions={actions}
+    />
   );
 };
 
 type MainProps = PropsWithChildren<{}>;
 
+/** A section with no caption — the tooltip's details block. */
 ResourceLinkTooltip.Main = function Main({ children }: MainProps) {
-  return <main className="space-y-1.5 py-1.5 text-xs">{children}</main>;
+  return (
+    <EntityCardSection className="text-foreground space-y-1">
+      {children}
+    </EntityCardSection>
+  );
 };
+
+/** A captioned section — a list, or a parameter with values of its own. */
+ResourceLinkTooltip.Section = EntityCardSection;
 
 type ItemProps = PropsWithChildren<{
   title?: string;
 }>;
 
 ResourceLinkTooltip.Item = function Item({ title, children }: ItemProps) {
+  if (!title) {
+    return (
+      <div className="flex min-w-0 flex-wrap items-center gap-1">
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex max-w-48 flex-row items-center gap-2">
-      {title && <strong>{title}:</strong>}
+    <EntityCardField label={title} labelWidth={88}>
       {children}
-    </div>
+    </EntityCardField>
   );
 };

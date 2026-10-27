@@ -2,6 +2,8 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 
 import { PLACEHOLDER_SIZE, SPACING, measureCard } from "./constants";
 import {
+  CardExpansion,
+  CardSection,
   ClassCardNode,
   ClassGraphData,
   ClassGraphLayout,
@@ -15,7 +17,19 @@ import {
 type Options = {
   mode: GraphMode;
   showLinkLabels: boolean;
+  /** Keys from {@link expansionKey} of every block the user has unfolded. */
+  expanded: ReadonlySet<string>;
 };
+
+/** Names one block of one card, for keeping track of which are unfolded. */
+export function expansionKey(nodeId: string, section: CardSection): string {
+  return `${nodeId}:${section}`;
+}
+
+type SizeOf = (
+  nodeId: string,
+  twinClass: TwinClass_DETAILED
+) => { width: number; height: number; expansion: CardExpansion };
 
 /**
  * Places the class and everything around it: heads stacked above, children in
@@ -28,13 +42,24 @@ type Options = {
  */
 export function layoutClassGraph(
   data: ClassGraphData,
-  { mode, showLinkLabels }: Options
+  { mode, showLinkLabels, expanded }: Options
 ): ClassGraphLayout {
   const branchReach = showLinkLabels
     ? SPACING.branchReach.withLabels
     : SPACING.branchReach.withoutLabels;
   const nodes: ClassGraphNode[] = [];
   const wires: Wire[] = [];
+
+  // Measured by node id rather than by class: the same class can be drawn
+  // twice — as a head and behind a link — and each card unfolds on its own.
+  const sizeOf: SizeOf = (nodeId, twinClass) => {
+    const expansion: CardExpansion = {
+      fields: expanded.has(expansionKey(nodeId, "fields")),
+      statuses: expanded.has(expansionKey(nodeId, "statuses")),
+    };
+
+    return { ...measureCard(twinClass, mode, expansion), expansion };
+  };
 
   const cardOf = (
     id: string,
@@ -49,7 +74,7 @@ export function layoutClassGraph(
     isCenter,
     x,
     y,
-    ...measureCard(twinClass, mode),
+    ...sizeOf(id, twinClass),
   });
 
   const center = cardOf(`center:${data.center.id}`, data.center, 0, 0, true);
@@ -63,9 +88,10 @@ export function layoutClassGraph(
   // relation repeated.
   let headAnchorY = center.y;
   data.heads.forEach((head, index) => {
-    const size = measureCard(head, mode);
+    const id = `head:${head.id}:${index}`;
+    const size = sizeOf(id, head);
     const card = cardOf(
-      `head:${head.id}:${index}`,
+      id,
       head,
       centerX - size.width / 2,
       headAnchorY - SPACING.headGap - size.height
@@ -100,7 +126,12 @@ export function layoutClassGraph(
   const busY = centerBottom + SPACING.childDrop;
 
   if (data.children.length > 0) {
-    const sizes = data.children.map((child) => measureCard(child, mode));
+    const ids = data.children.map(
+      (child, index) => `child:${child.id}:${index}`
+    );
+    const sizes = data.children.map((child, index) =>
+      sizeOf(ids[index]!, child)
+    );
     const rowWidth =
       sizes.reduce((total, size) => total + size.width, 0) +
       (sizes.length - 1) * SPACING.childGap;
@@ -108,7 +139,8 @@ export function layoutClassGraph(
 
     let x = centerX - rowWidth / 2;
     data.children.forEach((child, index) => {
-      const card = cardOf(`child:${child.id}:${index}`, child, x, childTop);
+      const card = cardOf(ids[index]!, child, x, childTop);
+      const isOutermost = index === 0 || index === data.children.length - 1;
       nodes.push(card);
 
       const childX = card.x + card.width / 2;
@@ -120,6 +152,8 @@ export function layoutClassGraph(
           [childX, busY],
           [childX, childTop],
         ],
+        // The bus ends at the outermost children; everywhere else it runs on.
+        rounded: isOutermost ? [2] : undefined,
       });
 
       x += card.width + SPACING.childGap;
@@ -142,7 +176,7 @@ export function layoutClassGraph(
   const sideInput = {
     center,
     centerY,
-    mode,
+    sizeOf,
     branchReach,
     showLinkLabels,
     stackBottomLimit,
@@ -157,7 +191,7 @@ export function layoutClassGraph(
 type SideInput = {
   center: ClassCardNode;
   centerY: number;
-  mode: GraphMode;
+  sizeOf: SizeOf;
   branchReach: number;
   /** Whether each link's own chip is drawn on its branch. */
   showLinkLabels: boolean;
@@ -178,7 +212,7 @@ function layoutSide(
   {
     center,
     centerY,
-    mode,
+    sizeOf,
     branchReach,
     showLinkLabels,
     stackBottomLimit,
@@ -224,7 +258,13 @@ function layoutSide(
     return;
   }
 
-  const sizes = links.map(({ twinClass }) => measureCard(twinClass, mode));
+  const ids = links.map(
+    ({ link, twinClass }, index) =>
+      `${side}:${link.id ?? twinClass.id}:${index}`
+  );
+  const sizes = links.map(({ twinClass }, index) =>
+    sizeOf(ids[index]!, twinClass)
+  );
   const stackHeight =
     sizes.reduce((total, size) => total + size.height, 0) +
     links.length * SPACING.stackGap +
@@ -244,7 +284,7 @@ function layoutSide(
     const size = sizes[index]!;
     const card: ClassCardNode = {
       kind: "class",
-      id: `${side}:${link.id ?? twinClass.id}:${index}`,
+      id: ids[index]!,
       twinClass,
       isCenter: false,
       x: boxLeft(branchReach, size.width),
@@ -265,6 +305,8 @@ function layoutSide(
         [trunkX, joinY],
         [nearX, joinY],
       ],
+      // The topmost card is where the trunk ends.
+      rounded: index === 0 ? [2] : undefined,
     });
 
     if (showLinkLabels) {
@@ -304,6 +346,7 @@ function layoutSide(
       [trunkX, placeholderY],
       [placeholderNearX, placeholderY],
     ],
+    rounded: [1],
   });
 
   nodes.push({
