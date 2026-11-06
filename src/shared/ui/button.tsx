@@ -76,8 +76,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={props.disabled || loading}
         {...props}
       >
-        {icon}
-        {children}
+        {/* NOTE: `asChild` merges props into a single child element (Radix
+        Slot) — it must receive exactly one element, so the icon slot is only
+        rendered for real buttons. */}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {icon}
+            {children}
+          </>
+        )}
       </Comp>
     );
   }

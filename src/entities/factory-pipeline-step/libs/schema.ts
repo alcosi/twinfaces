@@ -7,6 +7,7 @@ import {
 import { FIRST_ID_EXTRACTOR, OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const PIPELINE_STEP_SCHEMA = z.object({
+  name: z.string().min(1, "Name can not be empty"),
   factoryPipelineId: z
     .string()
     .uuid("Pipeline step ID must be a valid UUID")

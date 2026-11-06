@@ -78,6 +78,8 @@ export function PipelineStepFormFields({
 
   return (
     <>
+      <TextFormField control={control} name="name" label="Name" required />
+
       <ComplexComboboxFormField
         control={control}
         name="factoryPipelineId"
