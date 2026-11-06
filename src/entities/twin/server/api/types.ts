@@ -4,6 +4,7 @@ import { TwinFlowTransition } from "@/entities/twin-flow-transition";
 import { TwinStatus } from "@/entities/twin-status";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
+import { UserGroup } from "@/entities/user-group";
 import { components, operations } from "@/shared/api/generated/schema";
 import { RequireFields } from "@/shared/libs";
 
@@ -20,6 +21,10 @@ type TwinRelations = {
   tags?: DataListOptionV1[];
   markers?: DataListOptionV1[];
   flavor?: DataListOptionV1;
+  // Forward-linked twins resolved from links.forwardLinks + relatedObjects.twinMap
+  forwardLinkedTwins?: TwinSchema[];
+  // Owner user's groups resolved from user.userGroupIds + relatedObjects.userGroupMap
+  ownerUserGroups?: UserGroup[];
 };
 
 export type Twin = TwinSchema & TwinRelations;

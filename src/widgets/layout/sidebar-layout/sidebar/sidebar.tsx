@@ -2,7 +2,6 @@
 
 import { ChevronUp, ChevronsUpDown, Globe, Pencil, User2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 
 import { DomainView_SHORT } from "@/entities/domain";
 import { FaceNB001 } from "@/entities/face";
@@ -10,7 +9,7 @@ import { DomainUser } from "@/entities/user";
 import { useAuthUser } from "@/features/auth";
 import { CreateDomainButton } from "@/features/domain";
 import { PlatformArea } from "@/shared/config";
-import { isUndefined } from "@/shared/libs";
+import { isUndefined, useLocalStorage } from "@/shared/libs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,7 +56,10 @@ export function AppSidebar({
       : pathname?.startsWith("/core")
         ? PlatformArea.core
         : PlatformArea.workspace;
-  const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
+  const [area, setArea] = useLocalStorage<keyof typeof PlatformArea>(
+    "sidebar-area",
+    initialArea
+  );
 
   function onDomainSwitch(domain: DomainView_SHORT) {
     if (authUser) {

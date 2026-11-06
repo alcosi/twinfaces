@@ -10,6 +10,8 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import {
   $createParagraphNode,
   $getRoot,
+  $isDecoratorNode,
+  $isElementNode,
   EditorState,
   SerializedEditorState,
 } from "lexical";
@@ -94,7 +96,23 @@ function HTMLContentPlugin({ defaultHtml }: { defaultHtml: string }) {
       root.clear();
 
       if (nodes.length > 0) {
-        nodes.forEach((n) => root.append(n));
+        // Root accepts only element/decorator nodes: wrap stray text/linebreak
+        // nodes (e.g. values stored as plain text or markdown) into paragraphs.
+        let para = $createParagraphNode();
+        nodes.forEach((n) => {
+          if ($isElementNode(n) || $isDecoratorNode(n)) {
+            if (para.getChildren().length > 0) {
+              root.append(para);
+              para = $createParagraphNode();
+            }
+            root.append(n);
+          } else {
+            para.append(n);
+          }
+        });
+        if (para.getChildren().length > 0) {
+          root.append(para);
+        }
       } else {
         root.append($createParagraphNode());
       }

@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, isMultiElementArray, safe } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { TWidgetFaceProps } from "../../types";
@@ -56,7 +56,7 @@ export async function TW004(props: TWidgetFaceProps) {
         <TwinFieldEditor
           key={id}
           id={id!}
-          label={el.label || "N/A"}
+          label={label ? undefined : el.label || "N/A"}
           twinId={twidget.pointedTwinId!}
           twin={twin}
           relatedObjects={relatedObjects}
@@ -78,9 +78,9 @@ export async function TW004(props: TWidgetFaceProps) {
 
   return (
     <div data-face-id={id} className={cn(className)}>
-      {isMultiElementArray(fields) && label && (
-        <span className="text-base font-bold">{label}</span>
-      )}
+      {/* Widget caption from label_i18n_id: shown for any fields count,
+          per-field captions are then redundant and hidden above. */}
+      {label && <span className="text-base font-bold">{label}</span>}
       <div className={cn(className, twidget.styleClasses)}>
         {renderedFields}
       </div>

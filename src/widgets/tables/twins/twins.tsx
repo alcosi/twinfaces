@@ -37,6 +37,7 @@ import {
   TwinResourceLink,
   TwinStatusActions,
 } from "@/features/twin/ui";
+import { UserGroupResourceLink } from "@/features/user-group/ui";
 import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import {
@@ -257,14 +258,55 @@ export function TwinsTable({
         TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
         "Assignee"
       ),
-      cell: ({ row: { original } }) =>
-        original.assignerUser && (
+      cell: ({ row: { original } }) => {
+        // TOOL: when back in stock, the tool sits in its linked storage —
+        // show that instead of the assignee (who matters only while in use).
+        const storageTwin =
+          original.twinClass?.key === "TOOL" &&
+          original.status?.key === "available"
+            ? original.forwardLinkedTwins?.[0]
+            : undefined;
+
+        return storageTwin ? (
           <div className="inline-flex max-w-48">
-            <UserResourceLink
-              data={original.assignerUser as User}
+            <TwinResourceLink
+              data={storageTwin}
               withTooltip
               disabled={!resourceNavigationEnabled}
             />
+          </div>
+        ) : (
+          original.assignerUser && (
+            <div className="inline-flex max-w-48">
+              <UserResourceLink
+                data={original.assignerUser as User}
+                withTooltip
+                disabled={!resourceNavigationEnabled}
+              />
+            </div>
+          )
+        );
+      },
+    },
+    // Domain-user twins: the "role" of the owner user, rendered as their user groups.
+    [TWIN_SELF_FIELD_KEY_TO_ID_MAP.ownerUserId]: {
+      id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.ownerUserId,
+      accessorKey: "ownerUserId",
+      header: renderTwinHeader(
+        TWIN_SELF_FIELD_KEY_TO_ID_MAP.ownerUserId,
+        "Owner"
+      ),
+      cell: ({ row: { original } }) =>
+        isPopulatedArray(original.ownerUserGroups) && (
+          <div className="inline-flex max-w-48 flex-wrap gap-2">
+            {original.ownerUserGroups.map((group) => (
+              <UserGroupResourceLink
+                key={group.id}
+                data={group}
+                withTooltip
+                disabled={!resourceNavigationEnabled}
+              />
+            ))}
           </div>
         ),
     },
@@ -308,18 +350,21 @@ export function TwinsTable({
       accessorKey: "markers",
       header: "Markers",
       cell: ({ row: { original } }) =>
-        original.markerIdList && original.markers ? (
-          <div className="inline-flex max-w-48">
-            <DatalistOptionResourceLink
-              data={{
-                ...original.markers,
-                dataListId: original.twinClass?.markersDataListId,
-              }}
-              withTooltip
-              disabled={!resourceNavigationEnabled}
-            />
+        isPopulatedArray(original.markers) && (
+          <div className="inline-flex max-w-48 flex-wrap gap-2">
+            {original.markers.map((marker) => (
+              <DatalistOptionResourceLink
+                key={marker.id}
+                data={{
+                  ...marker,
+                  dataListId: original.twinClass?.markersDataListId,
+                }}
+                withTooltip
+                disabled={!resourceNavigationEnabled}
+              />
+            ))}
           </div>
-        ) : null,
+        ),
     },
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.createdAt,
@@ -388,6 +433,7 @@ export function TwinsTable({
     fetchTwinClassById({
       id: baseTwinClassId,
       query: {
+        lazyRelation: false,
         showTwinClassMode: "SHORT",
         showTwinClass2TwinClassFieldMode: "DETAILED",
         showTwinClassFieldCollectionMode: "SHOW",

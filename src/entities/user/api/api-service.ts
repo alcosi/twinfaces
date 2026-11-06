@@ -28,6 +28,9 @@ export function createUserApi(settings: ApiSettings) {
           lazyRelation: false,
           showDomainUser2UserMode: "DETAILED",
           showDomainUserMode: "DETAILED",
+          // Without this the backend skips user group mapping entirely
+          // (no userGroupIds / userGroupMap in the response).
+          showUser2UserGroupMode: "DETAILED",
           offset: pagination.pageIndex * pagination.pageSize,
           limit: pagination.pageSize,
           sortAsc: false,
