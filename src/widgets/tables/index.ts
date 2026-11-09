@@ -13,6 +13,7 @@ export * from "./permission-groups";
 export * from "./permissions";
 export * from "./pipeline-steps";
 export * from "./recipient-collectors";
+export * from "./resources";
 export * from "./rules";
 export * from "./space-roles";
 export * from "./status-triggers";

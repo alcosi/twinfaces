@@ -9,7 +9,6 @@ export default function Page() {
       title="Resource upload"
       description="Upload files to the platform storage via /private/resource/upload/v1."
       icon={FileUp}
-      variant="flow"
     >
       <ResourceUploadScreen />
     </TablePageLayout>
