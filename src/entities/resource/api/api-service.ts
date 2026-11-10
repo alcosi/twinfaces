@@ -42,7 +42,10 @@ export function createResourceApi(settings: ApiSettings) {
    * Uploads a single file as a domain resource. Uses XHR instead of the typed
    * client to report upload progress (openapi-fetch can't). Goes through the
    * same `/api/proxy` base as the typed client, which attaches the auth/domain
-   * headers from cookies. The multipart field is `files` per the API contract.
+   * headers from cookies. Same multipart contract as the twin attachment flow:
+   * mandatory json `request` part (ResourceCreateRqDTOv1) references the file
+   * part by name via storageLink = "multipart://files"; the file part itself
+   * is named `files`.
    */
   function upload({
     file,
@@ -53,6 +56,10 @@ export function createResourceApi(settings: ApiSettings) {
   }): Promise<ResourceUploadResult[]> {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
+      formData.append(
+        "request",
+        JSON.stringify({ files: [{ storageLink: "multipart://files" }] })
+      );
       formData.append("files", file, file.name);
 
       const xhr = new XMLHttpRequest();
@@ -69,9 +76,9 @@ export function createResourceApi(settings: ApiSettings) {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const data = JSON.parse(xhr.responseText) as {
-              files?: ResourceUploadResult[];
+              resources?: ResourceUploadResult[];
             };
-            resolve(data.files ?? []);
+            resolve(data.resources ?? []);
           } catch {
             resolve([]);
           }

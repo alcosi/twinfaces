@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { ForwardedRef, useRef } from "react";
+import { ForwardedRef, ReactNode, useRef } from "react";
 import { toast } from "sonner";
 
 import {
@@ -108,8 +108,13 @@ const columns = [
   colDefs.createdAt,
 ];
 
+type ResourcesTableProps = {
+  /** Rendered at the end of the table toolbar — e.g. the upload trigger "+". */
+  headerActions?: ReactNode;
+};
+
 function ResourcesTableInternal(
-  _props: object,
+  { headerActions }: ResourcesTableProps,
   ref: ForwardedRef<DataTableHandle>
 ) {
   const tableRef = useRef<DataTableHandle>(null);
@@ -145,10 +150,12 @@ function ResourcesTableInternal(
       filters={{
         filtersInfo: buildFilterFields(),
       }}
+      headerActions={headerActions}
     />
   );
 }
 
-export const ResourcesTable = fixedForwardRef<DataTableHandle, object>(
-  ResourcesTableInternal
-);
+export const ResourcesTable = fixedForwardRef<
+  DataTableHandle,
+  ResourcesTableProps
+>(ResourcesTableInternal);

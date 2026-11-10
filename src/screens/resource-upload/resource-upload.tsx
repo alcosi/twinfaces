@@ -6,6 +6,7 @@ import {
   ExternalLink,
   FileUp,
   Loader2,
+  Plus,
   Trash2,
   UploadCloud,
   XCircle,
@@ -23,7 +24,17 @@ import { toast } from "sonner";
 import { ResourceUploadResult } from "@/entities/resource";
 import { PrivateApiContext } from "@/shared/api";
 import { cn, generateUUID } from "@/shared/libs";
-import { Badge, Button, Progress } from "@/shared/ui";
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Progress,
+} from "@/shared/ui";
 import { DataTableHandle } from "@/widgets/crud-data-table";
 import { ResourcesTable } from "@/widgets/tables";
 
@@ -61,6 +72,7 @@ export function ResourceUploadScreen() {
   const api = useContext(PrivateApiContext);
   const tableRef = useRef<DataTableHandle>(null);
 
+  const [open, setOpen] = useState(false);
   const [items, setItems] = useState<UploadItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -99,6 +111,11 @@ export function ResourceUploadScreen() {
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files?.length) addFiles(event.target.files);
     event.target.value = "";
+  }
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (!nextOpen && isUploading) return; // don't lose the in-flight upload
+    setOpen(nextOpen);
   }
 
   function removeItem(id: string) {
@@ -182,174 +199,193 @@ export function ResourceUploadScreen() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 flex-col gap-4 pt-4">
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={handleFileChange}
-        />
+      {/* Same icon-only "+" button as the CrudDataTable header renders on the twins page,
+          now inside the table toolbar via the headerActions slot */}
+      <ResourcesTable
+        ref={tableRef}
+        headerActions={
+          <Button
+            variant="default"
+            aria-label="Upload files"
+            onClick={() => setOpen(true)}
+          >
+            <Plus />
+          </Button>
+        }
+      />
 
-        <div
-          role="button"
-          tabIndex={0}
-          aria-label="Upload files"
-          onClick={() => fileInputRef.current?.click()}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              fileInputRef.current?.click();
-            }
-          }}
-          onDragEnter={handleDragEnter}
-          onDragOver={(event) => event.preventDefault()}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={cn(
-            "border-border text-muted-foreground flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-8 text-center transition-colors",
-            isDragging && "border-brand-500 bg-brand-500/10 text-brand-500"
-          )}
-        >
-          <UploadCloud className="h-10 w-10" />
-          <p className="text-sm font-medium">
-            Drop files here or click to browse
-          </p>
-          <p className="text-xs">
-            POST /private/resource/upload/v1 (multipart/form-data)
-          </p>
-        </div>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Upload files</DialogTitle>
+            <DialogDescription>
+              Files are stored as domain resources and can be downloaded by
+              their id.
+            </DialogDescription>
+          </DialogHeader>
 
-        {items.length > 0 && (
-          <div className="flex flex-col gap-2">
-            {items.map((item) => {
-              const url = resourceUrl(item.result?.resourceId);
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={handleFileChange}
+          />
 
-              return (
-                <div
-                  key={item.id}
-                  className="border-border bg-card/50 flex flex-col gap-1.5 rounded-lg border p-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="shrink-0">
-                      {item.status === "success" && (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      )}
-                      {item.status === "error" && (
-                        <XCircle className="text-destructive h-4 w-4" />
-                      )}
-                      {item.status === "uploading" && (
-                        <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-                      )}
-                      {item.status === "pending" && (
-                        <FileUp className="text-muted-foreground h-4 w-4" />
-                      )}
-                    </span>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Upload files"
+            onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                fileInputRef.current?.click();
+              }
+            }}
+            onDragEnter={handleDragEnter}
+            onDragOver={(event) => event.preventDefault()}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={cn(
+              "border-border text-muted-foreground flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-8 text-center transition-colors",
+              isDragging && "border-brand-500 bg-brand-500/10 text-brand-500"
+            )}
+          >
+            <UploadCloud className="h-10 w-10" />
+            <p className="text-sm font-medium">
+              Drop files here or click to browse
+            </p>
+          </div>
 
-                    <span className="truncate text-sm font-medium">
-                      {item.file.name}
-                    </span>
+          {items.length > 0 && (
+            <div className="flex max-h-64 flex-col gap-2 overflow-y-auto">
+              {items.map((item) => {
+                const url = resourceUrl(item.result?.id);
 
-                    <span className="text-muted-foreground ml-auto shrink-0 text-xs">
-                      {formatBytes(item.file.size)}
-                    </span>
-
-                    <Badge
-                      variant={
-                        item.status === "error" ? "destructive" : "secondary"
-                      }
-                      className="shrink-0 capitalize"
-                    >
-                      {item.status}
-                    </Badge>
-
-                    {item.status === "pending" && !isUploading && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 shrink-0"
-                        aria-label={`Remove ${item.file.name}`}
-                        onClick={() => removeItem(item.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-
-                  {item.status === "uploading" && (
-                    <Progress value={item.progress} className="h-1" />
-                  )}
-
-                  {item.status === "error" && item.error && (
-                    <p className="text-destructive truncate text-xs">
-                      {item.error}
-                    </p>
-                  )}
-
-                  {item.status === "success" && (
+                return (
+                  <div
+                    key={item.id}
+                    className="border-border bg-card/50 flex flex-col gap-1.5 rounded-lg border p-3"
+                  >
                     <div className="flex items-center gap-2">
-                      {url ? (
-                        <>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-brand-600 hover:text-brand-500 inline-flex items-center gap-1 text-xs font-medium"
-                          >
-                            <ExternalLink className="h-3.5 w-3.5" />
-                            Open
-                          </a>
-                          <a
-                            href={url}
-                            download={item.result?.originalFileName}
-                            className="text-brand-600 hover:text-brand-500 inline-flex items-center gap-1 text-xs font-medium"
-                          >
-                            <Download className="h-3.5 w-3.5" />
-                            Download
-                          </a>
-                          <span className="text-muted-foreground truncate font-mono text-[11px]">
-                            {item.result?.resourceId}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">
-                          Uploaded, but the response contains no resource id.
-                        </span>
+                      <span className="shrink-0">
+                        {item.status === "success" && (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        )}
+                        {item.status === "error" && (
+                          <XCircle className="text-destructive h-4 w-4" />
+                        )}
+                        {item.status === "uploading" && (
+                          <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+                        )}
+                        {item.status === "pending" && (
+                          <FileUp className="text-muted-foreground h-4 w-4" />
+                        )}
+                      </span>
+
+                      <span className="truncate text-sm font-medium">
+                        {item.file.name}
+                      </span>
+
+                      <span className="text-muted-foreground ml-auto shrink-0 text-xs">
+                        {formatBytes(item.file.size)}
+                      </span>
+
+                      <Badge
+                        variant={
+                          item.status === "error" ? "destructive" : "secondary"
+                        }
+                        className="shrink-0 capitalize"
+                      >
+                        {item.status}
+                      </Badge>
+
+                      {item.status === "pending" && !isUploading && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0"
+                          aria-label={`Remove ${item.file.name}`}
+                          onClick={() => removeItem(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
 
-        {items.length > 0 && (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={handleUpload}
-              disabled={isUploading || pendingCount === 0}
-            >
-              {isUploading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <UploadCloud className="h-4 w-4" />
-              )}
-              Upload{pendingCount > 0 && ` (${pendingCount})`}
-            </Button>
+                    {item.status === "uploading" && (
+                      <Progress value={item.progress} className="h-1" />
+                    )}
 
-            <Button
-              variant="outline"
-              onClick={clearFinished}
-              disabled={isUploading}
-            >
-              <Trash2 className="h-4 w-4" />
-              Clear finished
-            </Button>
-          </div>
-        )}
-      </div>
+                    {item.status === "error" && item.error && (
+                      <p className="text-destructive truncate text-xs">
+                        {item.error}
+                      </p>
+                    )}
 
-      <ResourcesTable ref={tableRef} />
+                    {item.status === "success" && (
+                      <div className="flex items-center gap-2">
+                        {url ? (
+                          <>
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-brand-600 hover:text-brand-500 inline-flex items-center gap-1 text-xs font-medium"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                              Open
+                            </a>
+                            <a
+                              href={url}
+                              download={item.result?.originalFileName}
+                              className="text-brand-600 hover:text-brand-500 inline-flex items-center gap-1 text-xs font-medium"
+                            >
+                              <Download className="h-3.5 w-3.5" />
+                              Download
+                            </a>
+                            <span className="text-muted-foreground truncate font-mono text-[11px]">
+                              {item.result?.id}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">
+                            Uploaded, but the response contains no resource id.
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {items.length > 0 && (
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={clearFinished}
+                disabled={isUploading}
+              >
+                <Trash2 className="h-4 w-4" />
+                Clear finished
+              </Button>
+              <Button
+                onClick={handleUpload}
+                disabled={isUploading || pendingCount === 0}
+              >
+                {isUploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <UploadCloud className="h-4 w-4" />
+                )}
+                Upload{pendingCount > 0 && ` (${pendingCount})`}
+              </Button>
+            </DialogFooter>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
