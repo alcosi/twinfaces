@@ -23,6 +23,7 @@ import {
   WT001,
   WT002,
   WT003,
+  WT008,
 } from "./views";
 
 type Props = {
@@ -35,6 +36,7 @@ const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT001,
   WT002,
   WT003,
+  WT008,
 };
 
 const TWIDGETS: Record<string, FC<TWidgetFaceProps>> = {
@@ -52,6 +54,7 @@ const WIDGET_SKELETONS: Record<
   WT001: () => <TableSkeleton />,
   WT002: () => <Skeleton className="h-10 w-20 rounded-md" />,
   WT003: () => <AlertSkeleton />,
+  WT008: () => <TableSkeleton />,
   TW001: () => (
     <>
       <CarouselSkeleton />

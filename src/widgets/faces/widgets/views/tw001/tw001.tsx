@@ -68,7 +68,10 @@ export async function TW001(props: TWidgetFaceProps) {
       <TW001Client
         items={typedMedia}
         twinId={twidget.pointedTwinId!}
-        options={{ imagesTwinClassFieldId: twidget.imagesTwinClassFieldId }}
+        options={{
+          imagesTwinClassFieldId: twidget.imagesTwinClassFieldId,
+          displayType: twidget.key === "image_list" ? "list" : "carousel",
+        }}
       />
     </div>
   );

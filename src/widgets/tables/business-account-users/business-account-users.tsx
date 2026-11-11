@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useCallback, useContext } from "react";
 import { toast } from "sonner";

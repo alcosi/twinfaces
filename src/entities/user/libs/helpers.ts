@@ -49,5 +49,16 @@ export const hydrateDomainUserFromMap = (
     hydrated.user = relatedObjects.userMap[dto.userId]!;
   }
 
+  if (hydrated.user?.userGroupIds && relatedObjects?.userGroupMap) {
+    hydrated.userGroups = hydrated.user.userGroupIds.reduce<
+      NonNullable<DomainUser["userGroups"]>
+    >((acc, groupId) => {
+      const group = relatedObjects.userGroupMap?.[groupId];
+      if (group) acc.push(group);
+
+      return acc;
+    }, []);
+  }
+
   return hydrated;
 };

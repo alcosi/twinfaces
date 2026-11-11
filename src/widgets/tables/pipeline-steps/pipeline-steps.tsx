@@ -74,6 +74,7 @@ const colDefs: Record<
     | "active"
     | "fillerFeaturer"
     | "optional"
+    | "name"
   >,
   ColumnDef<PipelineStep_DETAILED>
 > = {
@@ -82,6 +83,12 @@ const colDefs: Record<
     accessorKey: "id",
     header: "ID",
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
+  },
+  name: {
+    id: "name",
+    accessorKey: "name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
+    cell: ({ row: { original } }) => original.name,
   },
   description: {
     id: "description",
@@ -236,6 +243,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
       active: true,
       optional: false,
       order: 0,
+      name: "",
       description: undefined,
     },
   });
@@ -500,6 +508,7 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
           colDefs.active,
           colDefs.fillerFeaturer,
           colDefs.optional,
+          colDefs.name,
           colDefs.description,
           actionsCol,
         ]}

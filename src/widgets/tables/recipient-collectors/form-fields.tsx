@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { Control } from "react-hook-form";
 import { z } from "zod";

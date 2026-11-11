@@ -203,6 +203,7 @@ export const CASCADE_CREATE_DEFINITIONS: Record<
       active: true,
       outputStatusId: "",
       nextFactoryId: "",
+      name: "",
       description: undefined,
     },
     useCreate: () => {
