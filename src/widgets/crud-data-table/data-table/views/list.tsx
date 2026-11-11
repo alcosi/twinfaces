@@ -57,14 +57,16 @@ export function DataTableList<TData extends DataTableRow<TData>>({
       .map((header) => [header.column.id, header])
   );
 
-  // With a header, the actions column moves into its corner and the columns
-  // it already shows drop out of the body. Without one, every column stays a
-  // field — the actions included — exactly as the row has them.
+  // The actions column is never a field: it goes to the card's top-right
+  // corner — into the header when there is one, over the first field when
+  // there is not. The columns the header already shows drop out of the body.
   const headerColumnIds = new Set(cardHeader?.columnIds ?? []);
   const bodyColumns = visibleColumns.filter(
     (column) =>
-      !cardHeader ||
-      (column.id !== ACTIONS_COLUMN_ID && !headerColumnIds.has(column.id))
+      column.id !== ACTIONS_COLUMN_ID && !headerColumnIds.has(column.id)
+  );
+  const hasActions = visibleColumns.some(
+    (column) => column.id === ACTIONS_COLUMN_ID
   );
 
   return (
@@ -72,33 +74,47 @@ export function DataTableList<TData extends DataTableRow<TData>>({
       {table.getRowModel().rows.map((row) => {
         const cellOf = (columnId: string) =>
           row.getAllCells().find((cell) => cell.column.id === columnId);
-        const actionsCell = cardHeader ? cellOf(ACTIONS_COLUMN_ID) : undefined;
+        const actionsCell = hasActions ? cellOf(ACTIONS_COLUMN_ID) : undefined;
+        const actions =
+          actionsCell &&
+          flexRender(
+            actionsCell.column.columnDef.cell,
+            actionsCell.getContext()
+          );
 
         return (
           <RowContextMenu key={row.id} href={getRowHref?.(row.original)}>
             <EntityCard
               interactive={Boolean(onRowClick)}
               onClick={() => onRowClick?.(row.original)}
-              className="h-full"
+              className="relative h-full"
             >
-              {cardHeader && (
+              {cardHeader ? (
                 <EntityCardHeader
                   {...cardHeader.get(row.original)}
-                  actions={
-                    actionsCell &&
-                    flexRender(
-                      actionsCell.column.columnDef.cell,
-                      actionsCell.getContext()
-                    )
-                  }
+                  actions={actions}
                 />
+              ) : (
+                actions && (
+                  <div
+                    className="absolute top-2.5 right-2.5"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    {actions}
+                  </div>
+                )
               )}
 
               {bodyColumns.length > 0 && (
                 <EntityCardSection
                   // The header draws the divider; the first section of a card
                   // without one has nothing above it to divide from.
-                  className={cn(!cardHeader && "border-t-0")}
+                  // Without a header the actions sit over the first field,
+                  // so the fields keep clear of that corner.
+                  className={cn(
+                    !cardHeader && "border-t-0",
+                    !cardHeader && actions && "pr-10!"
+                  )}
                 >
                   <EntityCardFields>
                     {bodyColumns.map((column) => {
