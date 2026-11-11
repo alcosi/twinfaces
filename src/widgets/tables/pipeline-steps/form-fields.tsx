@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
@@ -117,6 +119,8 @@ export function PipelineStepFormFields({
       <SwitchFormField control={control} name="optional" label="Optional" />
 
       <SwitchFormField control={control} name="active" label="Active" />
+
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}

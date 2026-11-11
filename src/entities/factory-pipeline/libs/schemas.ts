@@ -16,5 +16,6 @@ export const FACTORY_PIPELINE_SCHEMA = z.object({
   active: z.boolean(),
   outputStatusId: OPTIONAL_FIRST_ID_EXTRACTOR,
   nextFactoryId: OPTIONAL_FIRST_ID_EXTRACTOR,
+  name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
 });

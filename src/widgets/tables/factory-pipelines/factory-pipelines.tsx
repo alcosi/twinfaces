@@ -176,6 +176,13 @@ const colDefs: Record<
       ),
   },
 
+  name: {
+    id: "name",
+    accessorKey: "name",
+    header: () => <SortableHeader title="Name" sortField="name" />,
+    cell: ({ row: { original } }) => original.name,
+  },
+
   description: {
     id: "description",
     accessorKey: "description",
@@ -317,6 +324,7 @@ export function FactoryPipelinesTable({
         active: true,
         outputStatusId: outputTwinStatusId || "",
         nextFactoryId: "",
+        name: "",
         description: undefined,
       },
     }
@@ -589,6 +597,7 @@ export function FactoryPipelinesTable({
           colDefs.active,
           ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
+          colDefs.name,
           colDefs.description,
           actionsCol,
         ]}
@@ -607,6 +616,7 @@ export function FactoryPipelinesTable({
           colDefs.active,
           ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
+          colDefs.name,
           colDefs.description,
           actionsCol,
         ]}

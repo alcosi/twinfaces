@@ -79,8 +79,14 @@ export async function TW004(props: TWidgetFaceProps) {
   return (
     <div data-face-id={id} className={cn(className)}>
       {/* Widget caption from label_i18n_id: shown for any fields count,
-          per-field captions are then redundant and hidden above. */}
-      {label && <span className="text-base font-bold">{label}</span>}
+          per-field captions are then redundant and hidden above. Face style
+          classes may restyle the caption (twMerge lets them win conflicts),
+          e.g. a text-lg caption to match table headers. */}
+      {label && (
+        <span className={cn("text-base font-bold", twidget.styleClasses)}>
+          {label}
+        </span>
+      )}
       <div className={cn(className, twidget.styleClasses)}>
         {renderedFields}
       </div>

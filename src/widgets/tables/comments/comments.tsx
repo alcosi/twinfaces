@@ -104,9 +104,14 @@ const colDefs: Record<
 type Props = {
   title?: string;
   baseTwinId?: string;
+  showChart?: boolean;
 };
 
-export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
+export function CommentsTable({
+  title = "Comments",
+  baseTwinId,
+  showChart = true,
+}: Props) {
   const { searchComments } = useCommentSearchV2();
   const { countComment } = useCommentCount();
   const { buildFilterFields, mapFiltersToPayload } = useCommentFilters({
@@ -240,7 +245,7 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
         />
       )}
       sortableFields={sortableFields}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={showChart ? buildChartGroupings : undefined}
       filters={{ filtersInfo: buildFilterFields() }}
     />
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 import { z } from "zod";
@@ -7,7 +9,11 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
+import {
+  SwitchFormField,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
 
 import {
   useFactoryFilters,
@@ -190,6 +196,8 @@ export function FactoryPipelineFormFields({
         name="nextFactoryId"
         info={nextFactoryInfo}
       />
+
+      <TextFormField control={control} name="name" label="Name" required />
 
       <TextAreaFormField
         control={control}

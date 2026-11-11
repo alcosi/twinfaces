@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -288,7 +290,9 @@ export function TwinsTable({
         );
       },
     },
-    // Domain-user twins: the "role" of the owner user, rendered as their user groups.
+    // Domain-user twins: the owner user (their search response never carries
+    // userGroupMap — search requests no user-group mode — so groups alone would
+    // leave the column empty); group chips are appended when they are present.
     [TWIN_SELF_FIELD_KEY_TO_ID_MAP.ownerUserId]: {
       id: TWIN_SELF_FIELD_KEY_TO_ID_MAP.ownerUserId,
       accessorKey: "ownerUserId",
@@ -297,9 +301,16 @@ export function TwinsTable({
         "Owner"
       ),
       cell: ({ row: { original } }) =>
-        isPopulatedArray(original.ownerUserGroups) && (
-          <div className="inline-flex max-w-48 flex-wrap gap-2">
-            {original.ownerUserGroups.map((group) => (
+        (original.ownerUser || isPopulatedArray(original.ownerUserGroups)) && (
+          <div className="inline-flex max-w-48 flex-wrap items-center gap-2">
+            {original.ownerUser && (
+              <UserResourceLink
+                data={original.ownerUser as User}
+                withTooltip
+                disabled={!resourceNavigationEnabled}
+              />
+            )}
+            {original.ownerUserGroups?.map((group) => (
               <UserGroupResourceLink
                 key={group.id}
                 data={group}

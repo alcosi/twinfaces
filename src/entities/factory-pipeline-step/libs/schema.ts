@@ -18,5 +18,6 @@ export const PIPELINE_STEP_SCHEMA = z.object({
   fillerParams: FEATURER_PARAMS_VALUE,
   optional: z.boolean(),
   active: z.boolean(),
+  name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
 });

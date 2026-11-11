@@ -33,9 +33,9 @@ export function NotificationChannelEventResourceTooltip({ data, link }: Props) {
             {data.notificationChannelId}
           </ResourceLinkTooltip.Item>
         )}
-        {data.notificationContextId && (
+        {data.contextId && (
           <ResourceLinkTooltip.Item title="Context Id">
-            {data.notificationContextId}
+            {data.contextId}
           </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
