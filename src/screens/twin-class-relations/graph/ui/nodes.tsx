@@ -2,30 +2,38 @@
 
 import { type Node, type NodeProps } from "@xyflow/react";
 import { Plus } from "lucide-react";
-import Link from "next/link";
 import { MouseEvent, ReactNode } from "react";
 
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import { TwinClassField_DETAILED } from "@/entities/twin-class-field";
 import { LinkResourceLink } from "@/features/link/ui";
 import { TwinClassFieldResourceLink } from "@/features/twin-class-field/ui";
-import { TwinClassIcon } from "@/features/twin-class/ui";
+import {
+  TWIN_CLASS_CARD_PRESETS,
+  TwinClassCardIcon,
+  twinClassCardSections,
+} from "@/features/twin-class/ui";
 import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import { PlatformArea } from "@/shared/config";
-import { cn, isPopulatedString } from "@/shared/libs";
 import {
   DASHED_STROKE,
   DIAGRAM_STROKE,
   DashedOutline,
-  NODE_INTERACTIVE_HOVER,
-  NODE_SHADOW,
   SOLID_EDGE_WIDTH,
-  TruncatedText,
 } from "@/shared/ui/diagram";
+import {
+  EntityCard,
+  EntityCardChips,
+  EntityCardHeader,
+  EntityCardSection,
+  EntityCardSectionRegistry,
+  EntityCardSections,
+} from "@/shared/ui/entity-card";
 
 import {
   CARD,
   CaptionNode,
+  CardSection,
   ClassCardNode,
   GraphMode,
   LINK_PILL_MAX_WIDTH,
@@ -37,7 +45,10 @@ import {
   getClassTitle,
 } from "../model";
 
-export type ClassCardData = ClassCardNode & { mode: GraphMode };
+export type ClassCardData = ClassCardNode & {
+  mode: GraphMode;
+  onToggleSection: (nodeId: string, section: CardSection) => void;
+};
 export type PlaceholderData = PlaceholderNode & {
   onCreate: (side: LinkSide) => void;
 };
@@ -61,176 +72,90 @@ function classHref(twinClass: TwinClass_DETAILED) {
   return `/${PlatformArea.core}/twinclass/${twinClass.id}`;
 }
 
-/** The tinted square holding the class icon. */
-function ClassIcon() {
+/**
+ * A class node: the app's entity card, at the graph's fixed size. Advanced mode
+ * adds the class's fields and statuses — sections only the graph supplies, on
+ * top of the class's own registry, and folded by state the graph keeps: the
+ * layout needs each card's height before anything renders.
+ */
+function ClassCard({ data }: NodeProps<Node<ClassCardData, "classCard">>) {
+  const { twinClass, mode } = data;
+  const href = data.isCenter ? undefined : classHref(twinClass);
+
+  const registry: EntityCardSectionRegistry<TwinClass_DETAILED> = {
+    ...twinClassCardSections,
+    fields: (entity) => (
+      <ChipSection
+        label="Fields"
+        items={entity.fields ?? []}
+        expanded={Boolean(data.expansion.fields)}
+        onToggle={() => data.onToggleSection(data.id, "fields")}
+        renderItem={(field) => (
+          <TwinClassFieldResourceLink
+            data={field as TwinClassField_DETAILED}
+            withTooltip
+          />
+        )}
+      />
+    ),
+    statuses: (entity) => (
+      <ChipSection
+        label="Statuses"
+        items={entity.statuses ?? []}
+        expanded={Boolean(data.expansion.statuses)}
+        onToggle={() => data.onToggleSection(data.id, "statuses")}
+        renderItem={(status) => (
+          <TwinClassStatusResourceLink data={status} withTooltip />
+        )}
+      />
+    ),
+  };
+
   return (
-    <span
-      className="bg-brand-500/10 text-brand-600 dark:text-brand-400 flex shrink-0 items-center justify-center rounded-md"
-      style={{ width: CARD.iconSize, height: CARD.iconSize }}
+    <EntityCard
+      interactive={Boolean(href)}
+      style={{ width: data.width, height: data.height }}
     >
-      <TwinClassIcon className="h-3.5 w-3.5" />
-    </span>
+      <EntityCardHeader
+        title={getClassTitle(twinClass)}
+        subtitle={getClassSubtitle(twinClass)}
+        subtitleLines={mode === "advanced" ? CARD.descriptionLines : 1}
+        icon={<TwinClassCardIcon twinClass={twinClass} />}
+        href={href}
+      />
+
+      {mode === "advanced" && (
+        <EntityCardSections
+          entity={twinClass}
+          registry={registry}
+          preset={TWIN_CLASS_CARD_PRESETS.graph}
+        />
+      )}
+    </EntityCard>
   );
 }
 
-/**
- * The link on a card's header.
- *
- * Only the header, never the whole card: an advanced card's blocks are lists of
- * links themselves, and an anchor cannot contain another one.
- */
-function HeaderLink({
-  href,
-  children,
-}: {
-  href: string | undefined;
-  children: ReactNode;
-}) {
-  const className = "flex items-start gap-2";
-
-  if (!isPopulatedString(href)) {
-    return (
-      <div className={className} style={{ padding: CARD.padding }}>
-        {children}
-      </div>
-    );
-  }
-
-  return (
-    <Link
-      href={href}
-      prefetch={false}
-      className={className}
-      style={{ padding: CARD.padding }}
-      onClick={(event) => event.stopPropagation()}
-    >
-      {children}
-    </Link>
-  );
-}
-
-/**
- * One block of an advanced card: a caption with the count, the first few chips,
- * and a "+N more" row leading to the tab that lists them all.
- */
-function SectionView<T extends { id?: string }>({
+function ChipSection<T extends { id?: string }>({
   label,
   items,
-  moreHref,
-  renderItem,
+  ...chips
 }: {
   label: string;
   items: T[];
-  moreHref: string;
+  expanded: boolean;
+  onToggle: () => void;
   renderItem: (item: T) => ReactNode;
 }) {
   if (items.length === 0) return null;
 
-  const hidden = items.length - CARD.chipLimit;
-
   return (
-    <div className="border-border border-t" style={{ padding: CARD.padding }}>
-      <div
-        className="text-muted-foreground flex items-center gap-1.5 text-[10px]"
-        style={{ height: CARD.sectionLabelHeight }}
-      >
-        {label}
-        <span className="bg-muted rounded-full px-1.5 text-[10px] leading-4 font-medium">
-          {items.length}
-        </span>
-      </div>
-      <div
-        className="flex flex-col"
-        style={{ gap: CARD.chipGap, marginTop: CARD.sectionGap }}
-      >
-        {items.slice(0, CARD.chipLimit).map((item, index) => (
-          <div
-            key={item.id ?? index}
-            className="flex min-w-0"
-            style={{ height: CARD.chipHeight }}
-          >
-            {renderItem(item)}
-          </div>
-        ))}
-        {hidden > 0 && (
-          <Link
-            href={moreHref}
-            prefetch={false}
-            onClick={(event) => event.stopPropagation()}
-            className="text-muted-foreground hover:text-foreground flex items-center text-[11px] transition-colors"
-            style={{ height: CARD.chipHeight }}
-          >
-            +{hidden} more
-          </Link>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ClassCard({ data }: NodeProps<Node<ClassCardData, "classCard">>) {
-  const { twinClass, mode } = data;
-  const href = data.isCenter ? undefined : classHref(twinClass);
-  const subtitle = getClassSubtitle(twinClass);
-
-  return (
-    <div
-      className={cn(
-        "bg-card border-border flex flex-col overflow-hidden rounded-xl border text-left transition-colors",
-        NODE_SHADOW,
-        href && NODE_INTERACTIVE_HOVER
-      )}
-      style={{ width: data.width, height: data.height }}
-    >
-      <HeaderLink href={href}>
-        <ClassIcon />
-
-        <div className="min-w-0 flex-1">
-          <TruncatedText
-            text={getClassTitle(twinClass)}
-            className="text-foreground text-xs leading-[18px] font-semibold"
-          />
-
-          {subtitle &&
-            (mode === "advanced" ? (
-              <TruncatedText
-                text={subtitle}
-                lines={CARD.descriptionLines}
-                className="text-muted-foreground text-[10px] leading-[14px]"
-              />
-            ) : (
-              <TruncatedText
-                text={subtitle}
-                className="text-muted-foreground text-[10px] leading-[15px]"
-              />
-            ))}
-        </div>
-      </HeaderLink>
-
-      {mode === "advanced" && (
-        <>
-          <SectionView
-            label="Fields"
-            items={twinClass.fields ?? []}
-            moreHref={`${classHref(twinClass)}#fields`}
-            renderItem={(field) => (
-              <TwinClassFieldResourceLink
-                data={field as TwinClassField_DETAILED}
-                withTooltip
-              />
-            )}
-          />
-          <SectionView
-            label="Statuses"
-            items={twinClass.statuses ?? []}
-            moreHref={`${classHref(twinClass)}#statuses`}
-            renderItem={(status) => (
-              <TwinClassStatusResourceLink data={status} withTooltip />
-            )}
-          />
-        </>
-      )}
-    </div>
+    <EntityCardSection label={label} count={items.length}>
+      <EntityCardChips
+        items={items}
+        getKey={(item, index) => item.id ?? `${index}`}
+        {...chips}
+      />
+    </EntityCardSection>
   );
 }
 
@@ -304,14 +229,6 @@ function LinkPill({ data }: NodeProps<Node<LinkPillNode, "linkPill">>) {
  * cards at all.
  */
 function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
-  const toPath = (wire: Wire) =>
-    wire.points
-      .map(
-        ([x, y], index) =>
-          `${index === 0 ? "M" : "L"} ${x - data.originX} ${y - data.originY}`
-      )
-      .join(" ");
-
   // Dashed first: where a dashed wire shares a run with a solid one, the solid
   // one wins.
   const ordered = [...data.wires].sort(
@@ -328,7 +245,7 @@ function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
       {ordered.map((wire) => (
         <path
           key={wire.id}
-          d={toPath(wire)}
+          d={toPath(wire, data.originX, data.originY)}
           fill="none"
           stroke={DIAGRAM_STROKE}
           strokeWidth={wire.dashed ? DASHED_STROKE.width : SOLID_EDGE_WIDTH}
@@ -337,6 +254,47 @@ function Wires({ data }: NodeProps<Node<WiresData, "wires">>) {
       ))}
     </svg>
   );
+}
+
+/** Radius of the rounded corners at the far ends of a trunk. */
+const CORNER_RADIUS = 10;
+
+/**
+ * The wire as an SVG path, relative to the layer's origin. A corner marked
+ * rounded is cut short on both sides and joined by a quadratic curve — never by
+ * more than the shorter of its two runs, so a corner on a short run still
+ * meets the card it leads to.
+ */
+function toPath(wire: Wire, originX: number, originY: number): string {
+  const points = wire.points.map(
+    ([x, y]) => [x - originX, y - originY] as const
+  );
+  const rounded = new Set(wire.rounded ?? []);
+
+  return points
+    .map(([x, y], index) => {
+      if (index === 0) return `M ${x} ${y}`;
+
+      const previous = points[index - 1];
+      const next = points[index + 1];
+      if (!rounded.has(index) || !previous || !next) return `L ${x} ${y}`;
+
+      const [px, py] = previous;
+      const [nx, ny] = next;
+      const lengthIn = Math.hypot(x - px, y - py);
+      const lengthOut = Math.hypot(nx - x, ny - y);
+      const radius = Math.min(CORNER_RADIUS, lengthIn, lengthOut);
+      // A corner with no run on one side is no corner at all.
+      if (radius < 1) return `L ${x} ${y}`;
+
+      const startX = x - ((x - px) / lengthIn) * radius;
+      const startY = y - ((y - py) / lengthIn) * radius;
+      const endX = x + ((nx - x) / lengthOut) * radius;
+      const endY = y + ((ny - y) / lengthOut) * radius;
+
+      return `L ${startX} ${startY} Q ${x} ${y} ${endX} ${endY}`;
+    })
+    .join(" ");
 }
 
 export const classNodeTypes = {

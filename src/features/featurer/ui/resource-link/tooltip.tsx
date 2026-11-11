@@ -5,14 +5,7 @@ import { Play } from "lucide-react";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import { isPopulatedArray, isPopulatedString } from "@/shared/libs";
 import { ResourceLinkTooltip } from "@/shared/ui";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/shared/ui/table";
+import { EntityCardChips } from "@/shared/ui/entity-card";
 // eslint-disable-next-line fsd-import/layer-imports
 import { FeaturerParamValueLink } from "@/widgets/featurer-params";
 
@@ -35,63 +28,58 @@ export function FeaturerResourceTooltip({ data, link, params }: Props) {
       />
 
       <ResourceLinkTooltip.Main>
-        {data.id && <p className="text-xs">{`Id: ${data.id}`}</p>}
-        {data.description && <p className="text-xs">{data.description}</p>}
-
-        {!hasParams ? (
-          <p className="text-xs">Params: N/A</p>
-        ) : (
-          <>
-            <p className="text-xs font-semibold">Params:</p>
-            <div className="overflow-hidden">
-              <Table className="text-xs">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="h-8 px-2 py-1">Key</TableHead>
-                    <TableHead className="h-8 px-2 py-1">Value</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {params.map((param, idx) => {
-                    // The href a bare uuid still falls back to, for a reference
-                    // the response did not decode.
-                    const links = getFeaturerLinks(param.type, param.value);
-                    const hrefById = new Map(
-                      links.map((link) => [link.id, link.href])
-                    );
-
-                    return (
-                      <TableRow key={idx} className="hover:bg-muted/50">
-                        <TableCell
-                          className="px-2 py-1 font-medium"
-                          title={param.type}
-                        >
-                          {param.key}
-                        </TableCell>
-                        <TableCell className="px-2 py-1 break-all">
-                          {isPopulatedArray(param.values) ? (
-                            <div className="flex flex-col items-start gap-1">
-                              {param.values.map((value) => (
-                                <FeaturerParamValueLink
-                                  key={value.id}
-                                  value={value}
-                                  href={hrefById.get(value.id)}
-                                />
-                              ))}
-                            </div>
-                          ) : (
-                            param.value || "N/A"
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-          </>
+        {data.description && (
+          <p className="text-xs break-words">{data.description}</p>
+        )}
+        {data.id && (
+          <ResourceLinkTooltip.Item title="Id">
+            {data.id}
+          </ResourceLinkTooltip.Item>
+        )}
+        {!hasParams && (
+          <ResourceLinkTooltip.Item title="Params">
+            N/A
+          </ResourceLinkTooltip.Item>
         )}
       </ResourceLinkTooltip.Main>
+
+      {/* One section per parameter, named after it: a value that points at
+          entities is a list of their links — folding past a few, like any
+          card's list — and anything else is shown as it came. */}
+      {hasParams &&
+        params.map((param) => {
+          const links = getFeaturerLinks(param.type, param.value);
+          // The href a bare uuid still falls back to, for a reference the
+          // response did not decode.
+          const hrefById = new Map(links.map((link) => [link.id, link.href]));
+          const values = param.values ?? [];
+
+          return (
+            <ResourceLinkTooltip.Section
+              key={param.key}
+              label={param.key}
+              hint={param.type}
+              count={values.length > 1 ? values.length : undefined}
+            >
+              {values.length > 0 ? (
+                <EntityCardChips
+                  items={values}
+                  getKey={(value) => value.id}
+                  renderItem={(value) => (
+                    <FeaturerParamValueLink
+                      value={value}
+                      href={hrefById.get(value.id)}
+                    />
+                  )}
+                />
+              ) : (
+                <div className="text-foreground text-xs break-all">
+                  {param.value || "N/A"}
+                </div>
+              )}
+            </ResourceLinkTooltip.Section>
+          );
+        })}
     </ResourceLinkTooltip>
   );
 }

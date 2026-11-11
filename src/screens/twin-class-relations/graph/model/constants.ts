@@ -1,37 +1,23 @@
 import { TwinClass_DETAILED } from "@/entities/twin-class";
+import { getTwinClassTitle } from "@/features/twin-class/ui";
+import { ENTITY_CARD, measureChipSection } from "@/shared/ui/entity-card";
 
-import { GraphMode } from "./types";
+import { CardExpansion, GraphMode } from "./types";
 
 /**
- * Card geometry. Every number here is also a layout input: positions are
- * computed before anything renders, so these have to match what the card
- * components actually draw — otherwise cards overlap or the lines miss them.
+ * Card geometry: the app-wide entity card's, plus what only the graph decides —
+ * how wide its cards are and how much of a description a header may show.
+ * Every number here is also a layout input: positions are computed before
+ * anything renders, so the cards have to draw exactly this.
  */
 export const CARD = {
+  ...ENTITY_CARD,
   simpleWidth: 224,
   advancedWidth: 248,
-  /** Padding inside a card, and the gap between a header and its first block. */
-  padding: 12,
-  /** Icon tile beside the title. */
-  iconSize: 28,
-  titleLineHeight: 18,
-  sublabelLineHeight: 15,
-  descriptionLineHeight: 14,
   /** Longer blurbs are clamped rather than measured — see `countLines`. */
   descriptionLines: 2,
   /** Rough character budget of one description line at the header's width. */
   descriptionCharsPerLine: 30,
-  sectionLabelHeight: 18,
-  sectionGap: 8,
-  chipHeight: 24,
-  chipGap: 6,
-  /**
-   * Chips a block lists before the rest collapse into a "+N more" row — a class
-   * with forty fields would otherwise be a card taller than the whole canvas.
-   */
-  chipLimit: 4,
-  /** Border between two blocks of a card. */
-  dividerHeight: 1,
 } as const;
 
 export const PLACEHOLDER_SIZE = { width: 168, height: 36 } as const;
@@ -70,9 +56,7 @@ export const SPACING = {
 /** Widest a link chip may grow on its line before its name ellipsises. */
 export const LINK_PILL_MAX_WIDTH = SPACING.branchReach.withLabels - 48;
 
-export function getClassTitle(twinClass: TwinClass_DETAILED): string {
-  return twinClass.name || twinClass.key || twinClass.id;
-}
+export const getClassTitle = getTwinClassTitle;
 
 /**
  * The line (or two) of context under a card's title: the description if the
@@ -96,40 +80,21 @@ function countLines(
   return Math.min(Math.ceil(text.length / charsPerLine), max);
 }
 
-/** Rows a block of chips takes: the chips shown, plus the "+N more" row. */
-export function visibleChipRows(total: number): number {
-  return Math.min(total, CARD.chipLimit) + (total > CARD.chipLimit ? 1 : 0);
-}
-
-function measureSection(total: number): number {
-  if (total === 0) return 0;
-
-  const rows = visibleChipRows(total);
-
-  return (
-    CARD.dividerHeight +
-    CARD.padding +
-    CARD.sectionLabelHeight +
-    CARD.sectionGap +
-    rows * CARD.chipHeight +
-    Math.max(rows - 1, 0) * CARD.chipGap +
-    CARD.padding
-  );
-}
-
 /**
  * Footprint of one class card, derived from its own content: the header, plus
- * in advanced mode a block of fields and a block of statuses.
+ * in advanced mode a block of fields and a block of statuses — each as long as
+ * its expansion makes it.
  */
 export function measureCard(
   twinClass: TwinClass_DETAILED,
-  mode: GraphMode
+  mode: GraphMode,
+  expansion: CardExpansion = {}
 ): { width: number; height: number } {
   const subtitle = getClassSubtitle(twinClass);
 
   if (mode === "simple") {
     const textHeight =
-      CARD.titleLineHeight + (subtitle ? CARD.sublabelLineHeight : 0);
+      CARD.titleLineHeight + (subtitle ? CARD.subtitleLineHeight : 0);
 
     return {
       width: CARD.simpleWidth,
@@ -149,7 +114,7 @@ export function measureCard(
     width: CARD.advancedWidth,
     height:
       headerHeight +
-      measureSection(twinClass.fields?.length ?? 0) +
-      measureSection(twinClass.statuses?.length ?? 0),
+      measureChipSection(twinClass.fields?.length ?? 0, expansion.fields) +
+      measureChipSection(twinClass.statuses?.length ?? 0, expansion.statuses),
   };
 }

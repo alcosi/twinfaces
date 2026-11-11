@@ -8,8 +8,10 @@ import { Switch } from "@/shared/ui";
 import { LoadingOverlay } from "@/shared/ui/loading";
 
 import {
+  CardSection,
   GraphMode,
   LinkSide,
+  expansionKey,
   layoutClassGraph,
   useClassGraphData,
 } from "./model";
@@ -33,11 +35,32 @@ export function TwinClassRelationsGraph() {
   const { data, loading, reload } = useClassGraphData(twinClassId, twinClass);
   const [mode, setMode] = useState<GraphMode>("simple");
   const [showLinkLabels, setShowLinkLabels] = useState(false);
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
   const createLinkRef = useRef<CreateLinkDialogRef>(null);
 
   const layout = useMemo(
-    () => (data ? layoutClassGraph(data, { mode, showLinkLabels }) : undefined),
-    [data, mode, showLinkLabels]
+    () =>
+      data
+        ? layoutClassGraph(data, { mode, showLinkLabels, expanded })
+        : undefined,
+    [data, mode, showLinkLabels, expanded]
+  );
+
+  // A fresh object whenever the graph changes for a reason other than a card
+  // unfolding — that one keeps the zoom where it is.
+  const fitKey = useMemo(() => ({}), [data, mode, showLinkLabels]);
+
+  const handleToggleSection = useCallback(
+    (nodeId: string, section: CardSection) => {
+      const key = expansionKey(nodeId, section);
+
+      setExpanded((current) => {
+        const next = new Set(current);
+        if (!next.delete(key)) next.add(key);
+        return next;
+      });
+    },
+    []
   );
 
   const handleCreate = useCallback((side: LinkSide) => {
@@ -52,7 +75,13 @@ export function TwinClassRelationsGraph() {
       {loading && <LoadingOverlay />}
 
       {layout && (
-        <ClassDiagram layout={layout} mode={mode} onCreate={handleCreate} />
+        <ClassDiagram
+          layout={layout}
+          mode={mode}
+          onCreate={handleCreate}
+          onToggleSection={handleToggleSection}
+          fitKey={fitKey}
+        />
       )}
 
       {/* Floats over the canvas rather than sitting above it: the graph is the

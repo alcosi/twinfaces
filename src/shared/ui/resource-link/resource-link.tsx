@@ -161,7 +161,7 @@ export function ResourceLink<T>({
         <TooltipTrigger asChild>
           <span className="inline-flex max-w-full">{ResourceLinkWrapper}</span>
         </TooltipTrigger>
-        <TooltipContent className="overflow-visible p-0">
+        <TooltipContent className="bg-card border-border overflow-visible rounded-xl border p-0">
           <TooltipLockProvider onLockChange={handleLockChange}>
             {renderTooltip(data)}
           </TooltipLockProvider>

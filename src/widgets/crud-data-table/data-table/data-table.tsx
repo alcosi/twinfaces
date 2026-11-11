@@ -49,6 +49,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
     onSortChange,
     columnManager,
     renderListItem,
+    cardHeader,
   }: DataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
 ) {
@@ -182,6 +183,7 @@ function DataTableInternal<TData extends DataTableRow<TData>, TValue>(
             onRowClick={onRowClick}
             getRowHref={getRowHref}
             renderItem={renderListItem}
+            cardHeader={cardHeader}
           />
         )}
       </div>
