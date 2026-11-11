@@ -59,6 +59,7 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
 
   //? NOTE Misc menu
   featurers: ["FEATURER"],
+  "resource-upload": ["DOMAIN"],
 
   //? NOTE Projection menu
   projections: ["PROJECTION"],

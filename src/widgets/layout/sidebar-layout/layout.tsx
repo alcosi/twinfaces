@@ -47,8 +47,14 @@ async function filterAccessibleMenuItems(
 }
 
 export async function SidebarLayout({ children }: Props) {
-  await getAuthHeaders();
-  const permissionSnapshot = await getAuthPermissionSnapshot();
+  //? NOTE Auth cookies may be missing (e.g. after session expiry) — the
+  // wrapped helpers turn that into a redirect to the login flow instead of
+  // crashing the whole layout with a 500.
+  const { DomainId, AuthToken } =
+    await withRedirectOnUnauthorized(getAuthHeaders)();
+  const permissionSnapshot = await withRedirectOnUnauthorized(
+    getAuthPermissionSnapshot
+  )();
 
   const result = await safe(withRedirectOnUnauthorized(fetchDomainsList));
   const domains = result.ok ? result.data.domains : [];
@@ -72,8 +78,6 @@ export async function SidebarLayout({ children }: Props) {
       ),
     };
   }
-
-  const { DomainId, AuthToken } = await getAuthHeaders();
 
   const authUser = await getAuthenticatedUser({
     domainId: DomainId,

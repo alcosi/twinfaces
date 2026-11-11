@@ -3,6 +3,7 @@ import { z } from "zod";
 import { FIRST_ID_EXTRACTOR, OPTIONAL_FIRST_ID_EXTRACTOR } from "@/shared/libs";
 
 export const FACTORY_PIPELINE_SCHEMA = z.object({
+  name: z.string().min(1, "Name can not be empty"),
   factoryId: z
     .string()
     .uuid("Factory ID must be a valid UUID")

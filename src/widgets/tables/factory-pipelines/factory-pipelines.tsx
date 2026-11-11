@@ -76,6 +76,12 @@ const colDefs: Record<
     cell: (data) => <GuidWithCopy value={data.getValue<string>()} />,
   },
 
+  name: {
+    id: "name",
+    accessorKey: "name",
+    header: "Name",
+  },
+
   factory: {
     id: "factory",
     accessorKey: "factory",
