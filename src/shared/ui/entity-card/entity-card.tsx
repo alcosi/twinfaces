@@ -258,7 +258,10 @@ export function EntityCardField({
       >
         {label}
       </div>
-      <div className="text-foreground flex min-h-6 min-w-0 flex-1 flex-wrap items-center gap-1 text-xs break-words">
+      <div
+        data-slot="entity-card-field-value"
+        className="text-foreground flex min-h-6 min-w-0 flex-1 flex-wrap items-center gap-1 text-xs break-words"
+      >
         {children}
       </div>
     </div>
