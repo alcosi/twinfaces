@@ -25,7 +25,9 @@ export function useResourceFilters(): FilterFeature<
     mapFiltersToPayload: mapUserFilters,
   } = useUserFilters();
 
-  function buildFilterFields(): Record<ResourceFilterKeys, AutoFormValueInfo> {
+  function buildFilterFields(): Partial<
+    Record<ResourceFilterKeys, AutoFormValueInfo>
+  > {
     return {
       idList: {
         type: AutoFormValueType.tag,

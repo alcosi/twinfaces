@@ -40,37 +40,35 @@ export function createResourceApi(settings: ApiSettings) {
 
   /**
    * Uploads a single file as a domain resource. Uses XHR instead of the typed
-   * client to report upload progress (openapi-fetch can't). Goes through the
+   * client because openapi-fetch can't send multipart bodies. Goes through the
    * same `/api/proxy` base as the typed client, which attaches the auth/domain
    * headers from cookies. Same multipart contract as the twin attachment flow:
-   * mandatory json `request` part (ResourceCreateRqDTOv1) references the file
+   * mandatory json `request` part (ResourceCreateRqV1) references the file
    * part by name via storageLink = "multipart://files"; the file part itself
    * is named `files`.
    */
   function upload({
     file,
-    onProgress,
+    title,
+    isPublic,
   }: {
     file: File;
-    onProgress?: (percent: number) => void;
+    title?: string;
+    isPublic?: boolean;
   }): Promise<ResourceUploadResult[]> {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
       formData.append(
         "request",
-        JSON.stringify({ files: [{ storageLink: "multipart://files" }] })
+        JSON.stringify({
+          files: [{ storageLink: "multipart://files", title, isPublic }],
+        })
       );
       formData.append("files", file, file.name);
 
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/api/proxy/private/resource/upload/v1");
+      xhr.open("POST", "/api/proxy/private/resource/create/v1");
       xhr.responseType = "text";
-
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          onProgress?.(Math.round((event.loaded / event.total) * 100));
-        }
-      };
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {

@@ -607,6 +607,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/resource/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Resource batch update
+         * @description Updates editable resource attributes: original file name and public flag. Null fields keep the current values. File content replace needs the multipart variant of this endpoint.
+         */
+        put: operations["resourceUpdateV1"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/projection_type_group/v1": {
         parameters: {
             query?: never;
@@ -3249,26 +3269,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/private/resource/upload/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Upload files as domain resources
-         * @description Uploads one or more files as standalone resources of the DomainId domain. Same multipart contract as the twin attachment flow: optional 'request' part is an AttachmentCreateRqDTOv1 json (files referenced via storageLink = "multipart://<part_name>"), any other part is a file; in Swagger UI use the 'files' input. No validation is performed (no permissions, no restrictions).
-         */
-        post: operations["resourceUploadV1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/private/resource/search/v1": {
         parameters: {
             query?: never;
@@ -3278,11 +3278,45 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Uploaded resources search
-         * @description Lists files uploaded via /private/resource/upload/v1 of the DomainId domain. Pagination via query params (offset/limit), sorting via sortField/sortDirection in the body, total count is returned in pagination.total.
-         */
+        /** Domain resources search */
         post: operations["resourceSearchV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/resource/create/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create domain resources from uploaded files or external links
+         * @description Creates one or more standalone resources of the DomainId domain. Same multipart contract as the twin attachment flow: 'request' part is a ResourceCreateRqDTOv1 json (files referenced via storageLink = "multipart://<part_name>", any other link is stored as an external uri), each referenced part carries the file itself. Each item must carry a file (multipart link) or an external uri; an empty files list is rejected with 400.
+         */
+        post: operations["resourceCreateV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/resource/count/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return count of resources grouped by specified fields */
+        post: operations["resourceCountV1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5793,6 +5827,27 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/private/resource/{resourceId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Resource view */
+        get: operations["resourceViewV1"];
+        put?: never;
+        post?: never;
+        /**
+         * Resource delete
+         * @description Deletes the resource row and the stored file.
+         */
+        delete: operations["resourceDeleteV1"];
         options?: never;
         head?: never;
         patch?: never;
@@ -8684,6 +8739,10 @@ export interface components {
             dataListSubsetMap?: {
                 [key: string]: components["schemas"]["DataListSubsetV1"];
             };
+            /** @description related storage map */
+            storageMap?: {
+                [key: string]: components["schemas"]["StorageV1"];
+            };
         };
         SchedulerV1: {
             /**
@@ -8785,6 +8844,38 @@ export interface components {
              * @example 9a3f6075-f175-41cd-a804-934201ec969c
              */
             businessAccountId?: string;
+        };
+        StorageV1: {
+            /**
+             * Format: uuid
+             * @description id
+             * @example 00000000-0000-0000-0007-000000000001
+             */
+            id?: string;
+            /** @description description */
+            description?: string;
+            /**
+             * Format: int32
+             * @description storager featurer id
+             * @example 1000
+             */
+            storageFeaturerId?: number;
+            /** @description storager params */
+            storagerParams?: {
+                [key: string]: string;
+            };
+            /**
+             * Format: date-time
+             * @description created at
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description updated at
+             * @example 2023-09-13T09:32:08
+             */
+            updatedAt?: string;
         };
         TierV1: {
             /**
@@ -12557,6 +12648,86 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description space roles */
             spaceRoles?: components["schemas"]["SpaceRoleV1"][];
+        };
+        ResourceUpdateRqV1: {
+            /** @description resources update list */
+            resources?: components["schemas"]["ResourceUpdateV1"][];
+        };
+        ResourceUpdateV1: {
+            /**
+             * Format: uuid
+             * @description resource id
+             * @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85
+             */
+            id: string;
+            /** @description New resource name (original file name). Null keeps the current value */
+            originalFileName?: string;
+            /** @description Public flag: resource is available via the public download api (GET /public/resource/{id}/v1). Null keeps the current value */
+            isPublic?: boolean;
+            /**
+             * @description Replaces the stored file. Use multipart scheme to send file in the same multipart request. Example : multipart://file[0], where file[0] - multipart filed name. Non-multipart link is stored as an external uri. Null keeps the current file
+             * @example https://test.filestorage.by/JFUjEFWksfqwf
+             */
+            storageLink?: string;
+        };
+        ResourceListRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description uploaded files list */
+            resources?: components["schemas"]["ResourceV1"][];
+        };
+        ResourceV1: {
+            /**
+             * Format: uuid
+             * @description resource id, file can be downloaded via GET /public/resource/{id}/v1
+             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             */
+            id?: string;
+            /**
+             * Format: uuid
+             * @description uploader user id
+             * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
+             */
+            uploadedByUserId?: string;
+            /**
+             * Format: uuid
+             * @description storage id
+             * @example 00000000-0000-0000-0007-000000000001
+             */
+            storageId?: string;
+            /** @description original file name */
+            originalFileName?: string;
+            /**
+             * Format: int64
+             * @description file size in bytes
+             */
+            sizeInBytes?: number;
+            /**
+             * Format: date-time
+             * @description upload timestamp
+             * @example 2023-09-13T09:32:08
+             */
+            createdAt?: string;
+            /** @description direct link to the stored file in the domain storage */
+            storageLink?: string;
+            /** @description public flag: resource is available via the public download api (GET /public/resource/{id}/v1) */
+            isPublic?: boolean;
         };
         ProjectionTypeGroupUpdateRqV1: {
             /** @description projection type groups */
@@ -21788,44 +21959,6 @@ export interface components {
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
         };
-        ResourceUploadRsV1: {
-            /**
-             * Format: int32
-             * @description request processing status (see ErrorCode enum)
-             * @example 0
-             */
-            status?: number;
-            /**
-             * @description User friendly, localized request processing status description
-             * @example success
-             */
-            msg?: string;
-            /**
-             * @description request processing status description, technical
-             * @example success
-             */
-            statusDetails?: string;
-            /** @description uploaded files list, one entry per received file part */
-            files?: components["schemas"]["ResourceUploadV1"][];
-        };
-        ResourceUploadV1: {
-            /**
-             * Format: uuid
-             * @description created resource id, file can be downloaded via GET /public/resource/{resourceId}/v1
-             */
-            resourceId?: string;
-            /** @description file name as it was sent by the client */
-            originalFileName?: string;
-            /**
-             * Format: int64
-             * @description stored file size in bytes
-             */
-            sizeInBytes?: number;
-            /** @description direct link to the stored file in the domain storage */
-            storageLink?: string;
-            /** @description relative download uri served by twins */
-            downloadUri?: string;
-        };
         ResourceSearchRqV1: {
             /** @description search params */
             search?: components["schemas"]["ResourceSearchV1"];
@@ -21833,7 +21966,7 @@ export interface components {
              * @description Sort field. Default: createdAt
              * @enum {string}
              */
-            sortField?: "id" | "originalFileName" | "sizeInBytes" | "createdAt" | "uploadedByUserId";
+            sortField?: "originalFileName" | "sizeInBytes" | "createdAt" | "uploadedByUserName";
             /**
              * @description Sort direction: ASC or DESC. Default: ASC
              * @enum {string}
@@ -21841,12 +21974,35 @@ export interface components {
             sortDirection?: "ASC" | "DESC";
         };
         ResourceSearchV1: {
-            /** @description resource id list */
+            /** @description id list */
             idList?: string[];
-            /** @description original file name contains (case insensitive) */
+            /** @description id exclude list */
+            idExcludeList?: string[];
+            /** @description original file name like list */
             originalFileNameLikeList?: string[];
+            /** @description original file name not like list */
+            originalFileNameNotLikeList?: string[];
             /** @description uploaded by user id list */
             uploadedByUserIdList?: string[];
+            /** @description uploaded by user id exclude list */
+            uploadedByUserIdExcludeList?: string[];
+            /** @description storage id list */
+            storageIdList?: string[];
+            /** @description storage id exclude list */
+            storageIdExcludeList?: string[];
+            /** @description storage file key like list */
+            storageFileKeyLikeList?: string[];
+            /** @description storage file key not like list */
+            storageFileKeyNotLikeList?: string[];
+            /** @description size in bytes */
+            sizeInBytes?: components["schemas"]["LongRangeDTOv1"];
+            /** @description created at */
+            createdAt?: components["schemas"]["DataTimeRangeV1"];
+            /**
+             * @description public flag filter
+             * @enum {string}
+             */
+            isPublic?: "ONLY" | "ONLY_NOT" | "ANY";
         };
         ResourceSearchRsV1: {
             /**
@@ -21872,39 +22028,74 @@ export interface components {
             /** @description pagination data */
             pagination?: components["schemas"]["PaginationV1"];
         };
-        ResourceV1: {
+        ResourceCreateRqV1: {
+            /** @description files list */
+            files?: components["schemas"]["ResourceCreateV1"][];
+        };
+        ResourceCreateV1: {
             /**
-             * Format: uuid
-             * @description resource id, file can be downloaded via GET /public/resource/{id}/v1
-             * @example be44e826-ce24-4881-a227-f3f72d915a20
+             * @description External storage link. Use multipart scheme to send file in the same multipart request. Example : multipart://file[0], where file[0] - multipart filed name. Non-multipart link is stored as an external uri
+             * @example https://test.filestorage.by/JFUjEFWksfqwf
              */
-            id?: string;
+            storageLink?: string;
             /**
-             * Format: uuid
-             * @description domain id the file belongs to
+             * @description Optional resource name override, defaults to the uploaded file name
+             * @example cert.pdf
              */
-            domainId?: string;
+            title?: string;
+            /** @description Public flag: resource is available via the public download api (GET /public/resource/{id}/v1). Defaults to true */
+            isPublic?: boolean;
+        };
+        ResourceCountRqV1: {
+            /** @description search params */
+            search?: components["schemas"]["ResourceSearchV1"];
+            /** @description Group by fields */
+            groupFields?: ("uploadedByUserId" | "storageId" | "isPublic")[];
+        };
+        ResourceCountRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description pagination data */
+            pagination?: components["schemas"]["PaginationV1"];
+            /** @description count results grouped by requested fields */
+            counts?: components["schemas"]["ResourceCountV1"][];
+        };
+        ResourceCountV1: {
+            /**
+             * Format: int64
+             * @description count of records in this group
+             */
+            count?: number;
             /**
              * Format: uuid
              * @description uploader user id
              * @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673
              */
             uploadedByUserId?: string;
-            /** @description original file name */
-            originalFileName?: string;
             /**
-             * Format: int64
-             * @description file size in bytes
+             * Format: uuid
+             * @description storage id
+             * @example 00000000-0000-0000-0007-000000000001
              */
-            sizeInBytes?: number;
-            /**
-             * Format: date-time
-             * @description upload timestamp
-             * @example 2023-09-13T09:32:08
-             */
-            createdAt?: string;
-            /** @description relative download uri served by twins */
-            downloadUri?: string;
+            storageId?: string;
+            /** @description public flag: resource is available via the public download api (GET /public/resource/{id}/v1) */
+            isPublic?: boolean;
         };
         ProjectionTypeGroupCreateRqV1: {
             /** @description projection type groups */
@@ -27776,6 +27967,28 @@ export interface components {
             relatedObjects?: components["schemas"]["RelatedObjectsV1"];
             /** @description space roles */
             userRefSpaceRoles?: components["schemas"]["UserWithinSpaceRolesRsV1"];
+        };
+        ResourceViewRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /** @description results - related objects, if lazeRelation is false */
+            relatedObjects?: components["schemas"]["RelatedObjectsV1"];
+            /** @description results - resource */
+            resource?: components["schemas"]["ResourceV1"];
         };
         ProjectionTypeGroupViewRsV1: {
             /**
@@ -36390,6 +36603,57 @@ export interface operations {
                 };
                 content: {
                     "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    resourceUpdateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showResource2StorageMode?: "HIDE" | "SHORT" | "DETAILED";
+                showResource2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showStorage2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["ResourceUpdateRqV1"];
+                };
+                "application/json": components["schemas"]["ResourceUpdateRqV1"];
+            };
+        };
+        responses: {
+            /** @description Updated resources */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
                 };
             };
         };
@@ -54645,53 +54909,16 @@ export interface operations {
             };
         };
     };
-    resourceUploadV1: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
-                DomainId: string;
-                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
-                AuthToken: string;
-                /** @example WEB */
-                Channel: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "multipart/form-data": {
-                    request?: components["schemas"]["AttachmentCreateRqV1"];
-                    files?: string[];
-                };
-            };
-        };
-        responses: {
-            /** @description Uploaded files */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResourceUploadRsV1"];
-                };
-            };
-            /** @description Access is denied */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
     resourceSearchV1: {
         parameters: {
             query?: {
                 lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showResource2StorageMode?: "HIDE" | "SHORT" | "DETAILED";
+                showResource2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showStorage2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
                 offset?: unknown;
                 limit?: unknown;
                 sortAsc?: unknown;
@@ -54720,6 +54947,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResourceSearchRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    resourceCreateV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showResource2StorageMode?: "HIDE" | "SHORT" | "DETAILED";
+                showResource2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showStorage2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    request: components["schemas"]["ResourceCreateRqV1"];
+                };
+            };
+        };
+        responses: {
+            /** @description Created resources */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    resourceCountV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showResource2StorageMode?: "HIDE" | "SHORT" | "DETAILED";
+                showResource2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showStorage2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+                offset?: unknown;
+                limit?: unknown;
+                sortAsc?: unknown;
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResourceCountRqV1"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceCountRsV1"];
                 };
             };
             /** @description Access is denied */
@@ -68986,6 +69314,92 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserListRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    resourceViewV1: {
+        parameters: {
+            query?: {
+                lazyRelation?: unknown;
+                showFeaturerParamMode?: "HIDE" | "SHOW";
+                showFeaturerTypeMode?: "HIDE" | "SHOW";
+                showResource2StorageMode?: "HIDE" | "SHORT" | "DETAILED";
+                showResource2UserMode?: "HIDE" | "SHORT" | "DETAILED";
+                showStorage2FeaturerMode?: "HIDE" | "SHORT" | "DETAILED";
+                showUser2UserGroupMode?: "HIDE" | "SHORT" | "DETAILED";
+            };
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85 */
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource data result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceViewRsV1"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    resourceDeleteV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 09cd9a50-dcbe-4c73-b39e-65d2000a8e85 */
+                resourceId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Response"];
                 };
             };
             /** @description Access is denied */

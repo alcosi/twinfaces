@@ -413,7 +413,6 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           onChartModeChange={setChartMode}
           onChartRefresh={() => setChartRefreshSignal((prev) => prev + 1)}
           onCreateClick={handleOnCreateClick}
-          headerActions={props.headerActions}
           onViewSettingsChange={handleHeaderViewSettingsChange}
           sortableFields={props.sortableFields}
           defaultLayoutMode={props.defaultLayoutMode}

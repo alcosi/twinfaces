@@ -1,5 +1,5 @@
 import { ChartPie, Plus, RefreshCw, Search } from "lucide-react";
-import { ForwardedRef, ReactNode, useCallback, useEffect } from "react";
+import { ForwardedRef, useCallback, useEffect } from "react";
 
 import { AutoFormValueInfo } from "@/components/auto-field";
 
@@ -49,12 +49,6 @@ export type CrudDataTableHeaderProps = {
   /** Re-fetch the chart dataset (used by the refresh button while in chart mode). */
   onChartRefresh?: () => void;
   onCreateClick?: () => void;
-  /**
-   * Custom actions rendered at the end of the toolbar, after the create
-   * button — e.g. an upload trigger for tables whose "create" is not a form
-   * dialog (the CrudDataTable create dialog machinery stays form-oriented).
-   */
-  headerActions?: ReactNode;
   onViewSettingsChange?: (data: TableViewState) => void;
   /**
    * When provided, a toolbar sort dropdown is rendered. Use this for layouts
@@ -96,7 +90,6 @@ function CrudDataTableHeaderComponent<
     onChartModeChange,
     onChartRefresh,
     onCreateClick,
-    headerActions,
     onViewSettingsChange,
     sortableFields,
     defaultLayoutMode,
@@ -228,8 +221,6 @@ function CrudDataTableHeaderComponent<
             </Button>
           </>
         )}
-
-        {headerActions}
       </div>
     </div>
   );

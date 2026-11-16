@@ -1,15 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { ForwardedRef, ReactNode, useRef } from "react";
+import { ForwardedRef, useContext, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import {
+  RESOURCE_UPLOAD_SCHEMA,
   Resource,
   useResourceFilters,
   useResourceSearchV1,
 } from "@/entities/resource";
-import { PagedResponse, SortV1 } from "@/shared/api";
+import { PagedResponse, PrivateApiContext, SortV1 } from "@/shared/api";
 import { fixedForwardRef, formatIntlDate } from "@/shared/libs";
 import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
@@ -20,6 +24,7 @@ import {
   FiltersState,
   SortableHeader,
 } from "../../crud-data-table";
+import { ResourceFormFields } from "./form-fields";
 
 function formatBytes(bytes?: number): string {
   if (bytes === undefined || bytes === null) return "";
@@ -108,18 +113,25 @@ const columns = [
   colDefs.createdAt,
 ];
 
-type ResourcesTableProps = {
-  /** Rendered at the end of the table toolbar — e.g. the upload trigger "+". */
-  headerActions?: ReactNode;
-};
+type ResourcesTableProps = Record<string, never>;
 
 function ResourcesTableInternal(
-  { headerActions }: ResourcesTableProps,
+  _: ResourcesTableProps,
   ref: ForwardedRef<DataTableHandle>
 ) {
   const tableRef = useRef<DataTableHandle>(null);
+  const api = useContext(PrivateApiContext);
   const { searchResources } = useResourceSearchV1();
   const { buildFilterFields, mapFiltersToPayload } = useResourceFilters();
+
+  const uploadForm = useForm<z.infer<typeof RESOURCE_UPLOAD_SCHEMA>>({
+    resolver: zodResolver(RESOURCE_UPLOAD_SCHEMA),
+    defaultValues: {
+      file: undefined,
+      title: "",
+      isPublic: true,
+    },
+  });
 
   async function fetchResources(
     pagination: PaginationState,
@@ -138,6 +150,25 @@ function ResourcesTableInternal(
     }
   }
 
+  async function handleCreateSubmit(
+    values: z.infer<typeof RESOURCE_UPLOAD_SCHEMA>
+  ) {
+    try {
+      await api.resource.upload({
+        file: values.file,
+        title: values.title,
+        isPublic: values.isPublic,
+      });
+
+      toast.success("File uploaded");
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload file");
+      // rethrow to keep the dialog open (the dialog toasts on failure too)
+      throw error;
+    }
+  }
+
   return (
     <CrudDataTable
       ref={ref ?? tableRef}
@@ -150,7 +181,13 @@ function ResourcesTableInternal(
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      headerActions={headerActions}
+      modalTitle="Upload file"
+      submitButtonLabel="Upload"
+      dialogForm={uploadForm}
+      onCreateSubmit={handleCreateSubmit}
+      renderFormFields={() => (
+        <ResourceFormFields control={uploadForm.control} />
+      )}
     />
   );
 }

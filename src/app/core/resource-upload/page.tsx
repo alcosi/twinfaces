@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <TablePageLayout
       title="Resource upload"
-      description="Upload files to the platform storage via /private/resource/upload/v1."
+      description="Upload files to the platform storage via /private/resource/create/v1."
       icon={FileUp}
     >
       <ResourceUploadScreen />

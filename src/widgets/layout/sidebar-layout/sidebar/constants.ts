@@ -286,7 +286,7 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         icon: Play,
       },
       {
-        title: "Resource upload",
+        title: "Resources",
         url: `/${PlatformArea.core}/resource-upload`,
         icon: FileUp,
       },
