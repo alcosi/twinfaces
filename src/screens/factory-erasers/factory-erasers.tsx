@@ -2,11 +2,14 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 import {
+  FactoryEraserCountGroup,
+  FactoryEraserCountGroupField,
   FactoryEraserFilterKeys,
+  FactoryEraserFilters,
   FactoryEraser_DETAILED,
   useFactoryEraserCount,
   useFactoryEraserFilters,
@@ -27,12 +30,11 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "@/widgets/crud-data-table";
 
 import {
@@ -230,137 +232,117 @@ export function FactoryErasers() {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_eraser/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<FactoryEraserFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "factory",
-          label: "Factory",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "factoryId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryId,
-            (g) => g.factory?.name ?? g.factory?.key,
-            (g) =>
-              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
-          ),
-        },
-        {
-          key: "inputTwinClass",
-          label: "Input class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "inputTwinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.inputTwinClassId,
-            (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
-            (g) =>
+  // Server-side breakdowns backed by /private/factory_eraser/count/v1, bound
+  // to the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryEraser_DETAILED,
+        FactoryEraserCountGroup,
+        FactoryEraserFilters
+      >({
+        fields: [
+          {
+            key: "factory",
+            label: "Factory",
+            groupField: "factoryId",
+            getValue: (g) => g.factoryId,
+            getText: (g) => g.factory?.name ?? g.factory?.key,
+            renderLabel: (g) =>
+              g.factory && <FactoryResourceLink data={g.factory} withTooltip />,
+            narrow: narrowBy.idList<FactoryEraserFilters>("factoryIdList"),
+          },
+          {
+            key: "inputTwinClass",
+            label: "Input class",
+            groupField: "inputTwinClassId",
+            getValue: (g) => g.inputTwinClassId,
+            getText: (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+            renderLabel: (g) =>
               g.inputTwinClass && (
                 <TwinClassResourceLink
                   data={g.inputTwinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "factoryConditionSet",
-          label: "Condition set",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "factoryConditionSetId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryConditionSetId,
-            (g) => g.factoryConditionSet?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<FactoryEraserFilters>(
+              "inputTwinClassIdList"
+            ),
+          },
+          {
+            key: "factoryConditionSet",
+            label: "Condition set",
+            groupField: "factoryConditionSetId",
+            getValue: (g) => g.factoryConditionSetId,
+            getText: (g) => g.factoryConditionSet?.name,
+            renderLabel: (g) =>
               g.factoryConditionSet && (
                 <FactoryConditionSetResourceLink
                   data={g.factoryConditionSet}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "action",
-          label: "Erase action",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "action",
-                offset,
-                limit,
-              }),
-            (g) => g.action,
-            (g) => g.action
-          ),
-        },
-        {
-          key: "active",
-          label: "Active",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "active",
-                offset,
-                limit,
-              }),
-            (g) => (g.active === undefined ? undefined : String(g.active)),
-            (g) =>
+              ),
+            narrow: narrowBy.idList<FactoryEraserFilters>(
+              "factoryConditionSetIdList"
+            ),
+          },
+          {
+            key: "action",
+            label: "Erase action",
+            groupField: "action",
+            getValue: (g) => g.action,
+            getText: (g) => g.action,
+            narrow: narrowBy.valueList<FactoryEraserFilters>(
+              "eraseActionLikeList"
+            ),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
               g.active === undefined
                 ? undefined
                 : g.active
                   ? "Active"
-                  : "Inactive"
-          ),
-        },
-        {
-          key: "factoryConditionSetInvert",
-          label: "Condition invert",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryErasers({
-                filters: resolved,
-                groupField: "factoryConditionSetInvert",
-                offset,
-                limit,
-              }),
-            (g) =>
+                  : "Inactive",
+            narrow: narrowBy.ternary<FactoryEraserFilters>("active"),
+          },
+          {
+            key: "factoryConditionSetInvert",
+            label: "Condition invert",
+            groupField: "factoryConditionSetInvert",
+            getValue: (g) =>
               g.factoryConditionSetInvert === undefined
                 ? undefined
                 : String(g.factoryConditionSetInvert),
-            (g) =>
+            getText: (g) =>
               g.factoryConditionSetInvert === undefined
                 ? undefined
                 : g.factoryConditionSetInvert
                   ? "Inverted"
-                  : "Not inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<FactoryEraserFilters>("conditionInvert"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(
+            filters as Record<FactoryEraserFilterKeys, unknown>
           ),
-        },
-      ];
-    },
-    [mapFiltersToPayload, countFactoryErasers]
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryErasers({
+            filters,
+            groupField: groupField as FactoryEraserCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryErasers({ pagination, filters, sort }),
+      }),
+    [mapFiltersToPayload, countFactoryErasers, searchFactoryErasers]
   );
 
   return (
@@ -394,7 +376,8 @@ export function FactoryErasers() {
         filters={{
           filtersInfo: buildFilterFields(),
         }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
       />
 
       <FactoryEraserDuplicateDialog ref={duplicateDialogRef} />

@@ -1,9 +1,11 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { toast } from "sonner";
 
 import {
   BusinessAccount,
+  DomainBusinessAccountUserCountGroup,
+  DomainBusinessAccountUserCountGroupField,
   DomainBusinessAccountUserFilterKeys,
   DomainBusinessAccountUserFilters,
   DomainBusinessAccountUser_DETAILED,
@@ -32,7 +34,8 @@ import {
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 
 const UNSET_GROUP_LABEL = "— Not set —";
@@ -182,35 +185,71 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/domain/business_account_user/count/v1), bound to active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<DomainBusinessAccountUserFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showUserColumn) {
-        groupings.push({
-          key: "user",
-          label: "User",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccountUser({
-                filters: resolved,
+  // Server-side breakdowns backed by
+  // /private/domain/business_account_user/count/v1, bound to active filters:
+  // the pie charts, and the grouping of the table view, whose groups open
+  // through the matching search filters.
+  const { chartGroupings: countChartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        DomainBusinessAccountUser_DETAILED,
+        DomainBusinessAccountUserCountGroup,
+        DomainBusinessAccountUserFilters
+      >({
+        fields: showUserColumn
+          ? [
+              {
+                key: "user",
+                label: "User",
                 groupField: "userId",
-                offset,
-                limit,
-              }),
-            (g) => g.userId,
-            (g) => g.user?.fullName,
-            (g) => g.user && <UserResourceLink data={g.user} withTooltip />
+                getValue: (g) => g.userId,
+                getText: (g) => g.user?.fullName,
+                renderLabel: (g) =>
+                  g.user && <UserResourceLink data={g.user} withTooltip />,
+                narrow:
+                  narrowBy.idList<DomainBusinessAccountUserFilters>(
+                    "userIdList"
+                  ),
+              },
+            ]
+          : [],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(
+            filters as Record<DomainBusinessAccountUserFilterKeys, unknown>
           ),
-        });
-      }
+        count: ({ filters, groupField, offset, limit }) =>
+          countBusinessAccountUser({
+            filters,
+            groupField: groupField as DomainBusinessAccountUserCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchBusinessAccountUser({ pagination, filters, sort }),
+      }),
+    [
+      resolveFilters,
+      countBusinessAccountUser,
+      searchBusinessAccountUser,
+      showUserColumn,
+    ]
+  );
+
+  // The pie charts: the count-backed ones, followed by the business account
+  // breakdown, which the count endpoint can't serve (see below) and so stays
+  // out of the table view's grouping.
+  const buildChartGroupings = useCallback(
+    (context: ChartDataContext): ChartGrouping[] => {
+      const groupings = countChartGroupings(context);
 
       if (showBusinessAccountColumn) {
+        const resolved = resolveFilters(
+          context.filters as Record<
+            DomainBusinessAccountUserFilterKeys,
+            unknown
+          >
+        );
+
         groupings.push({
           key: "businessAccount",
           // The count endpoint only returns businessAccountId, but the resource
@@ -267,10 +306,9 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
       return groupings;
     },
     [
+      countChartGroupings,
       resolveFilters,
-      countBusinessAccountUser,
       searchBusinessAccountUser,
-      showUserColumn,
       showBusinessAccountColumn,
     ]
   );
@@ -296,6 +334,7 @@ export function BusinessAccountUsersTable({ userId }: { userId?: string }) {
       fetcher={fetchBusinesAccountUsers}
       filters={{ filtersInfo: buildFilterFields() }}
       chartGroupings={buildChartGroupings}
+      grouping={grouping}
       getRowId={(row) =>
         `${row.userId}-${row.businessAccountId}-${row.createdAt ?? ""}`
       }

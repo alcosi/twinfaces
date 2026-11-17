@@ -72,6 +72,7 @@ import {
   createPermissionSchemaApi,
 } from "@/entities/permission-schema";
 import { ProjectionApi, createProjectionApi } from "@/entities/projection";
+import { ResourceApi, createResourceApi } from "@/entities/resource";
 import {
   PermissionSpaceRoleApi,
   createPermissionSpaceRoleApi,
@@ -175,6 +176,7 @@ export interface PrivateApiContextProps {
   twinLink: TwinLinkApi;
   tier: TierApi;
   projection: ProjectionApi;
+  resource: ResourceApi;
   notification: NotificationApi;
   validatorSet: ValidatorSetApi;
   twinValidator: TwinValidatorApi;
@@ -241,6 +243,7 @@ export function PrivateApiContextProvider({
         twinLink: createTwinLinkApi(settings),
         tier: createTierApi(settings),
         projection: createProjectionApi(settings),
+        resource: createResourceApi(settings),
         notification: createNotificationApi(settings),
         validatorSet: createValidatorSetApi(settings),
         twinValidator: createTwinValidatorApi(settings),

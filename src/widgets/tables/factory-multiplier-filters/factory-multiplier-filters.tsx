@@ -3,12 +3,15 @@
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 import { FactoryMultiplier_DETAILED } from "@/entities/factory-multiplier";
 import {
+  FactoryMultiplierFilterCountGroup,
+  FactoryMultiplierFilterCountGroupField,
   FactoryMultiplierFilterFilterKeys,
+  FactoryMultiplierFilterFilters,
   FactoryMultiplierFilter_DETAILED,
   useFactoryMultiplierFilterCount,
   useFactoryMultiplierFilterFilters,
@@ -33,12 +36,11 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryMultiplierFilterDuplicateDialog,
@@ -256,134 +258,127 @@ export function FactoryMultiplierFiltersTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_multiplier_filter/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<FactoryMultiplierFilterFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showMultiplierColumn) {
-        groupings.push({
-          key: "multiplier",
-          label: "Multiplier",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryMultiplierFilters({
-                filters: resolved,
-                groupField: "factoryMultiplierId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryMultiplierId,
-            (g) => g.multiplier?.description,
-            (g) =>
-              g.multiplier && (
-                <FactoryMultiplierResourceLink
-                  data={g.multiplier as FactoryMultiplier_DETAILED}
+  // Server-side breakdowns backed by /private/factory_multiplier_filter/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryMultiplierFilter_DETAILED,
+        FactoryMultiplierFilterCountGroup,
+        FactoryMultiplierFilterFilters
+      >({
+        fields: [
+          ...(showMultiplierColumn
+            ? [
+                {
+                  key: "multiplier",
+                  label: "Multiplier",
+                  groupField: "factoryMultiplierId",
+                  getValue: (g: FactoryMultiplierFilterCountGroup) =>
+                    g.factoryMultiplierId,
+                  getText: (g: FactoryMultiplierFilterCountGroup) =>
+                    g.multiplier?.description,
+                  renderLabel: (g: FactoryMultiplierFilterCountGroup) =>
+                    g.multiplier && (
+                      <FactoryMultiplierResourceLink
+                        data={g.multiplier as FactoryMultiplier_DETAILED}
+                        withTooltip
+                      />
+                    ),
+                  narrow: narrowBy.idList<FactoryMultiplierFilterFilters>(
+                    "factoryMultiplierIdList"
+                  ),
+                },
+              ]
+            : []),
+          {
+            key: "inputTwinClass",
+            label: "Input class",
+            groupField: "inputTwinClassId",
+            getValue: (g) => g.inputTwinClassId,
+            getText: (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+            renderLabel: (g) =>
+              g.inputTwinClass && (
+                <TwinClassResourceLink
+                  data={g.inputTwinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
+              ),
+            narrow: narrowBy.idList<FactoryMultiplierFilterFilters>(
+              "inputTwinClassIdList"
+            ),
+          },
+          {
+            key: "factoryConditionSet",
+            label: "Condition set",
+            groupField: "factoryConditionSetId",
+            getValue: (g) => g.factoryConditionSetId,
+            getText: (g) => g.factoryConditionSet?.name,
+            renderLabel: (g) =>
+              g.factoryConditionSet && (
+                <FactoryConditionSetResourceLink
+                  data={g.factoryConditionSet}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.idList<FactoryMultiplierFilterFilters>(
+              "factoryConditionSetIdList"
+            ),
+          },
+          {
+            key: "factoryConditionSetInvert",
+            label: "Condition invert",
+            groupField: "factoryConditionSetInvert",
+            getValue: (g) =>
+              g.factoryConditionSetInvert === undefined
+                ? undefined
+                : String(g.factoryConditionSetInvert),
+            getText: (g) =>
+              g.factoryConditionSetInvert === undefined
+                ? undefined
+                : g.factoryConditionSetInvert
+                  ? "Inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<FactoryMultiplierFilterFilters>(
+              "factoryConditionInvert"
+            ),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<FactoryMultiplierFilterFilters>("active"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(
+            filters as Record<FactoryMultiplierFilterFilterKeys, unknown>
           ),
-        });
-      }
-
-      groupings.push({
-        key: "inputTwinClass",
-        label: "Input class",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultiplierFilters({
-              filters: resolved,
-              groupField: "inputTwinClassId",
-              offset,
-              limit,
-            }),
-          (g) => g.inputTwinClassId,
-          (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
-          (g) =>
-            g.inputTwinClass && (
-              <TwinClassResourceLink
-                data={g.inputTwinClass as TwinClass_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "factoryConditionSet",
-        label: "Condition set",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultiplierFilters({
-              filters: resolved,
-              groupField: "factoryConditionSetId",
-              offset,
-              limit,
-            }),
-          (g) => g.factoryConditionSetId,
-          (g) => g.factoryConditionSet?.name,
-          (g) =>
-            g.factoryConditionSet && (
-              <FactoryConditionSetResourceLink
-                data={g.factoryConditionSet}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "factoryConditionSetInvert",
-        label: "Condition invert",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultiplierFilters({
-              filters: resolved,
-              groupField: "factoryConditionSetInvert",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.factoryConditionSetInvert === undefined
-              ? undefined
-              : String(g.factoryConditionSetInvert),
-          (g) =>
-            g.factoryConditionSetInvert === undefined
-              ? undefined
-              : g.factoryConditionSetInvert
-                ? "Inverted"
-                : "Not inverted"
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultiplierFilters({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countFactoryMultiplierFilters, showMultiplierColumn]
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryMultiplierFilters({
+            filters,
+            groupField: groupField as FactoryMultiplierFilterCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryMultiplierFilters({ pagination, filters, sort }),
+      }),
+    [
+      resolveFilters,
+      countFactoryMultiplierFilters,
+      searchFactoryMultiplierFilters,
+      showMultiplierColumn,
+    ]
   );
 
   return (
@@ -421,7 +416,8 @@ export function FactoryMultiplierFiltersTable({
         ]}
         getRowId={(row) => row.id!}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
       />
 
       <FactoryMultiplierFilterDuplicateDialog ref={duplicateDialogRef} />

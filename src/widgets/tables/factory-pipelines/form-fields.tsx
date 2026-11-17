@@ -7,7 +7,11 @@ import {
   AutoFormValueType,
 } from "@/components/auto-field";
 import { ComplexComboboxFormField } from "@/components/complex-combobox";
-import { SwitchFormField, TextAreaFormField } from "@/components/form-fields";
+import {
+  SwitchFormField,
+  TextAreaFormField,
+  TextFormField,
+} from "@/components/form-fields";
 
 import {
   useFactoryFilters,
@@ -151,6 +155,8 @@ export function FactoryPipelineFormFields({
 
   return (
     <>
+      <TextFormField control={control} name="name" label="Name" required />
+
       <ComplexComboboxFormField
         control={control}
         name="factoryId"

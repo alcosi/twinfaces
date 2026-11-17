@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,6 +12,7 @@ import {
   FactoryTriggerCountGroup,
   FactoryTriggerCountGroupField,
   FactoryTriggerFilterKeys,
+  FactoryTriggerFilters,
   FactoryTrigger_DETAILED,
   useFactoryTriggerCount,
   useFactoryTriggerCreate,
@@ -37,12 +38,12 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
+  CountGroupField,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryTriggerDuplicateDialog,
@@ -285,115 +286,120 @@ export function FactoryTriggersTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/twin_factory/trigger/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<FactoryTriggerFilterKeys, unknown>
-      );
+  // Server-side breakdowns backed by /private/twin_factory/trigger/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(() => {
+    type Field = CountGroupField<
+      FactoryTriggerCountGroup,
+      FactoryTriggerFilters
+    >;
 
-      /** Wraps a boolean grouping, whose label is just the flag's meaning. */
-      const flagGrouping = (
-        key: FactoryTriggerCountGroupField,
-        label: string,
-        read: (group: FactoryTriggerCountGroup) => boolean | undefined,
-        [onLabel, offLabel]: [string, string]
-      ): ChartGrouping => ({
-        key,
-        label,
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryTriggers({
-              filters: resolved,
-              groupField: key,
-              offset,
-              limit,
-            }),
-          (g) => (read(g) === undefined ? undefined : String(read(g))),
-          (g) =>
-            read(g) === undefined ? undefined : read(g) ? onLabel : offLabel
-        ),
+    /** A boolean grouping, whose label is just the flag's meaning. */
+    const flagField = (
+      key: FactoryTriggerCountGroupField,
+      label: string,
+      read: (group: FactoryTriggerCountGroup) => boolean | undefined,
+      [onLabel, offLabel]: [string, string],
+      narrow?: Field["narrow"]
+    ): Field => ({
+      key,
+      label,
+      groupField: key,
+      getValue: (g) => (read(g) === undefined ? undefined : String(read(g))),
+      getText: (g) =>
+        read(g) === undefined ? undefined : read(g) ? onLabel : offLabel,
+      narrow,
+    });
+
+    const fields: Field[] = [
+      {
+        key: "twinFactoryId",
+        label: "Twin factory",
+        groupField: "twinFactoryId",
+        getValue: (g) => g.twinFactoryId,
+        getText: (g) => g.factory?.name,
+        renderLabel: (g) =>
+          g.factory && <FactoryResourceLink data={g.factory} withTooltip />,
+        narrow: narrowBy.idList<FactoryTriggerFilters>("twinFactoryIdList"),
+      },
+      {
+        key: "inputTwinClassId",
+        label: "Input twin class",
+        groupField: "inputTwinClassId",
+        getValue: (g) => g.inputTwinClassId,
+        getText: (g) => g.inputTwinClass?.name,
+        renderLabel: (g) =>
+          g.inputTwinClass && (
+            <TwinClassResourceLink data={g.inputTwinClass} withTooltip />
+          ),
+        narrow: narrowBy.idList<FactoryTriggerFilters>("inputTwinClassIdList"),
+      },
+      flagField(
+        "active",
+        "Active",
+        (g) => g.active,
+        ["Active", "Inactive"],
+        narrowBy.ternary<FactoryTriggerFilters>("active")
+      ),
+      flagField(
+        "async",
+        "Async",
+        (g) => g.async,
+        ["Async", "Sync"],
+        narrowBy.ternary<FactoryTriggerFilters>("async")
+      ),
+      // The trigger search has no condition-invert filter, so this breakdown
+      // is offered by the pie charts only.
+      flagField(
+        "twinFactoryConditionInvert",
+        "Condition invert",
+        (g) => g.twinFactoryConditionInvert,
+        ["Inverted", "Not inverted"]
+      ),
+    ];
+
+    // Scoped to one twin trigger, that column is a constant and carries no
+    // information — same reason it is dropped from the filters.
+    if (!isTruthy(twinTriggerId)) {
+      fields.push({
+        key: "twinTriggerId",
+        label: "Twin trigger",
+        groupField: "twinTriggerId",
+        getValue: (g) => g.twinTriggerId,
+        getText: (g) => g.twinTrigger?.name,
+        renderLabel: (g) =>
+          g.twinTrigger && (
+            <TwinTriggerResourceLink data={g.twinTrigger} withTooltip />
+          ),
+        narrow: narrowBy.idList<FactoryTriggerFilters>("twinTriggerIdList"),
       });
+    }
 
-      const groupings: ChartGrouping[] = [
-        {
-          key: "twinFactoryId",
-          label: "Twin factory",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryTriggers({
-                filters: resolved,
-                groupField: "twinFactoryId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinFactoryId,
-            (g) => g.factory?.name,
-            (g) =>
-              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
-          ),
-        },
-        {
-          key: "inputTwinClassId",
-          label: "Input twin class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryTriggers({
-                filters: resolved,
-                groupField: "inputTwinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.inputTwinClassId,
-            (g) => g.inputTwinClass?.name,
-            (g) =>
-              g.inputTwinClass && (
-                <TwinClassResourceLink data={g.inputTwinClass} withTooltip />
-              )
-          ),
-        },
-        flagGrouping("active", "Active", (g) => g.active, [
-          "Active",
-          "Inactive",
-        ]),
-        flagGrouping("async", "Async", (g) => g.async, ["Async", "Sync"]),
-        flagGrouping(
-          "twinFactoryConditionInvert",
-          "Condition invert",
-          (g) => g.twinFactoryConditionInvert,
-          ["Inverted", "Not inverted"]
-        ),
-      ];
-
-      // Scoped to one twin trigger, that column is a constant and carries no
-      // information — same reason it is dropped from the filters.
-      if (!isTruthy(twinTriggerId)) {
-        groupings.push({
-          key: "twinTriggerId",
-          label: "Twin trigger",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryTriggers({
-                filters: resolved,
-                groupField: "twinTriggerId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinTriggerId,
-            (g) => g.twinTrigger?.name,
-            (g) =>
-              g.twinTrigger && (
-                <TwinTriggerResourceLink data={g.twinTrigger} withTooltip />
-              )
-          ),
-        });
-      }
-
-      return groupings;
-    },
-    [resolveFilters, countFactoryTriggers, twinTriggerId]
-  );
+    return buildCountGroupings<
+      FactoryTrigger_DETAILED,
+      FactoryTriggerCountGroup,
+      FactoryTriggerFilters
+    >({
+      fields,
+      resolveFilters: ({ filters }) =>
+        resolveFilters(filters as Record<FactoryTriggerFilterKeys, unknown>),
+      count: ({ filters, groupField, offset, limit }) =>
+        countFactoryTriggers({
+          filters,
+          groupField: groupField as FactoryTriggerCountGroupField,
+          offset,
+          limit,
+        }),
+      fetchRows: ({ filters, pagination, sort }) =>
+        searchFactoryTrigger({ pagination, filters, sort }),
+    });
+  }, [
+    resolveFilters,
+    countFactoryTriggers,
+    searchFactoryTrigger,
+    twinTriggerId,
+  ]);
 
   const triggersForm = useForm<TriggersFormValues>({
     resolver: zodResolver(FACTORY_TRIGGER_SCHEMA),
@@ -462,7 +468,8 @@ export function FactoryTriggersTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         getRowId={(row) => row.id!}
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/factory-triggers/${row.id}`)

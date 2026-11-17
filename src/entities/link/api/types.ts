@@ -34,7 +34,11 @@ export type LinkFilterKeys =
   | "strengthLikeList";
 
 export type LinkFilters = Partial<
-  Pick<components["schemas"]["LinkSearchDTOv1"], LinkFilterKeys>
+  Pick<
+    components["schemas"]["LinkSearchDTOv1"],
+    // Search-only keys: no filter in the UI, but the table grouping narrows by them.
+    LinkFilterKeys | "srcTwinClassInheritable" | "dstTwinClassInheritable"
+  >
 >;
 
 export type LinkSortField = NonNullable<

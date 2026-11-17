@@ -13,7 +13,7 @@
     "lint": "eslint . --quiet",
     "format": "prettier --write .",
     "test:ts": "tsc --noEmit",
-    "generate:schema": "./scripts/generate-schema.sh",
+    "generate:schema": "node scripts/generate-schema.mjs",
     "postinstall": "patch-package"
   },
   "lint-staged": {

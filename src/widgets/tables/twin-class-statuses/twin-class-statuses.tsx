@@ -3,7 +3,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -11,7 +11,10 @@ import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
   TWIN_CLASS_STATUS_SCHEMA,
   TwinClassStatusFormValues,
+  TwinStatusCountGroup,
+  TwinStatusCountGroupField,
   TwinStatusFilterKeys,
+  TwinStatusFilters,
   TwinStatus_DETAILED,
   buildTwinStatusCreateRq,
   useStatusCreate,
@@ -36,13 +39,12 @@ import { GuidWithCopy } from "@/shared/ui/guid";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { TwinClassStatusFormFields } from "./form-fields";
 import {
@@ -223,68 +225,63 @@ export function TwinClassStatusesTable({
     [mapFiltersToPayload, twinClassId]
   );
 
-  // Server-side pie-chart breakdowns backed by /private/twin_status/count/v1,
-  // bound to the active filters (and the optional scoping twin class).
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(filters);
-
-      return [
-        {
-          key: "twinClass",
-          label: "Class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinStatuses({
-                filters: resolved,
-                groupField: "twinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassId,
-            (g) => g.twinClass?.name,
-            (g) =>
+  // Server-side breakdowns backed by /private/twin_status/count/v1, bound to
+  // the active filters (and the optional scoping twin class): the pie charts,
+  // and the grouping of the table view, whose groups open through the matching
+  // search filters. Type has no search filter, so it stays a pie chart only.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        TwinStatus_DETAILED,
+        TwinStatusCountGroup,
+        TwinStatusFilters
+      >({
+        fields: [
+          {
+            key: "twinClass",
+            label: "Class",
+            groupField: "twinClassId",
+            getValue: (g) => g.twinClassId,
+            getText: (g) => g.twinClass?.name,
+            renderLabel: (g) =>
               g.twinClass && (
                 <TwinClassResourceLink
                   data={g.twinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "inheritable",
-          label: "Inheritable",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinStatuses({
-                filters: resolved,
-                groupField: "inheritable",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
-            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
-          ),
-        },
-        {
-          key: "type",
-          label: "Type",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinStatuses({
-                filters: resolved,
-                groupField: "type",
-                offset,
-                limit,
-              }),
-            (g) => g.type,
-            (g) => g.type
-          ),
-        },
-      ];
-    },
-    [countTwinStatuses, resolveFilters]
+              ),
+            narrow: narrowBy.idMap<TwinStatusFilters>("twinClassIdMap"),
+          },
+          {
+            key: "inheritable",
+            label: "Inheritable",
+            groupField: "inheritable",
+            getValue: (g) =>
+              g.inheritable == null ? undefined : String(g.inheritable),
+            getText: (g) =>
+              boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
+            narrow: narrowBy.ternary<TwinStatusFilters>("inheritable"),
+          },
+          {
+            key: "type",
+            label: "Type",
+            groupField: "type",
+            getValue: (g) => g.type,
+            getText: (g) => g.type,
+          },
+        ],
+        resolveFilters: ({ filters }) => resolveFilters(filters),
+        count: ({ filters, groupField, offset, limit }) =>
+          countTwinStatuses({
+            filters,
+            groupField: groupField as TwinStatusCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchTwinStatuses({ pagination, filters, sort }),
+      }),
+    [countTwinStatuses, searchTwinStatuses, resolveFilters]
   );
 
   const form = useForm<TwinClassStatusFormValues>({
@@ -397,7 +394,8 @@ export function TwinClassStatusesTable({
         ]}
         getRowId={(row) => row.id!}
         fetcher={fetchStatuses}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/statuses/${row.id}`)
         }

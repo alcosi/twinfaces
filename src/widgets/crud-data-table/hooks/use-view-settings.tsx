@@ -78,6 +78,9 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
       ? defaultOrderKeys
       : (savedState?.orderKeys ?? defaultOrderKeys),
     groupByKey: hasNavigatedToNewPage ? undefined : savedState?.groupByKey,
+    groupFieldKeys: hasNavigatedToNewPage
+      ? undefined
+      : savedState?.groupFieldKeys,
     layoutMode: hasNavigatedToNewPage
       ? defaultLayoutMode
       : (savedState?.layoutMode ?? defaultLayoutMode),

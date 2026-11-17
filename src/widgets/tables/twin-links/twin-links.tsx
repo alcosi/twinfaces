@@ -6,7 +6,9 @@ import { toast } from "sonner";
 
 import {
   TwinLinkCountGroup,
+  TwinLinkCountGroupField,
   TwinLinkFilterKeys,
+  TwinLinkFilters,
   TwinLink_DETAILED,
   useTwinLinkCount,
   useTwinLinkFilters,
@@ -21,13 +23,12 @@ import { formatIntlDate, toArray, toArrayOfString } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableFieldOption,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 
 /**
@@ -241,72 +242,66 @@ export function TwinLinksTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/twin_link/search/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<TwinLinkFilterKeys, unknown>
-      );
-
-      return [
-        ...sides.map((side) => ({
-          key: side.groupField,
-          label: side.label,
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinLinks({
-                filters: resolved,
-                groupField: side.groupField,
-                offset,
-                limit,
-              }),
-            side.getGroupId,
-            (group) => side.getGroupTwin(group)?.name,
-            (group) => {
+  // Server-side breakdowns backed by /private/twin_link/search/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        TwinLink_DETAILED,
+        TwinLinkCountGroup,
+        TwinLinkFilters
+      >({
+        fields: [
+          ...sides.map((side) => ({
+            key: side.groupField,
+            label: side.label,
+            groupField: side.groupField,
+            getValue: side.getGroupId,
+            getText: (group: TwinLinkCountGroup) =>
+              side.getGroupTwin(group)?.name,
+            renderLabel: (group: TwinLinkCountGroup) => {
               const twin = side.getGroupTwin(group);
               return twin && <TwinResourceLink data={twin} withTooltip />;
-            }
-          ),
-        })),
-        {
-          key: "linkId",
-          label: "Link",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinLinks({
-                filters: resolved,
-                groupField: "linkId",
-                offset,
-                limit,
-              }),
-            (g) => g.linkId,
-            (g) => g.link?.name,
-            (g) => g.link && <LinkResourceLink data={g.link} withTooltip />
-          ),
-        },
-        {
-          key: "createdByUserId",
-          label: "Created by",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinLinks({
-                filters: resolved,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
+            },
+            narrow: narrowBy.idList<TwinLinkFilters>(side.filterKey),
+          })),
+          {
+            key: "linkId",
+            label: "Link",
+            groupField: "linkId",
+            getValue: (g) => g.linkId,
+            getText: (g) => g.link?.name,
+            renderLabel: (g) =>
+              g.link && <LinkResourceLink data={g.link} withTooltip />,
+            narrow: narrowBy.idList<TwinLinkFilters>("linkIdList"),
+          },
+          {
+            key: "createdByUserId",
+            label: "Created by",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.createdByUser?.fullName,
+            renderLabel: (g) =>
               g.createdByUser && (
                 <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-      ];
-    },
-    [resolveFilters, countTwinLinks, sides]
+              ),
+            narrow: narrowBy.idList<TwinLinkFilters>("createdByUserIdList"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<TwinLinkFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countTwinLinks({
+            filters,
+            groupField: groupField as TwinLinkCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchTwinLinks({ pagination, filters, sort }),
+      }),
+    [resolveFilters, countTwinLinks, searchTwinLinks, sides]
   );
 
   return (
@@ -319,7 +314,8 @@ export function TwinLinksTable({
       fetcher={fetchTwinLinks}
       filters={{ filtersInfo: buildFilterFields() }}
       sortableFields={sortableFields}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={onRowClick}
       getRowHref={getRowHref}
     />

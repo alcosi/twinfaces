@@ -4,14 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   FACTORY_MULTIPLIER_SCHEMA,
+  FactoryMultiplierCountGroup,
+  FactoryMultiplierCountGroupField,
   FactoryMultiplierFilterKeys,
+  FactoryMultiplierFilters,
   FactoryMultiplier_DETAILED,
   useFactoryMultiplierCount,
   useFactoryMultiplierCreate,
@@ -37,12 +40,11 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryMultiplierDuplicateDialog,
@@ -273,105 +275,104 @@ export function FactoryMultipliersTable({
 
   const showFactoryColumn = isFalsy(factoryId);
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_multiplier/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<FactoryMultiplierFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showFactoryColumn) {
-        groupings.push({
-          key: "factory",
-          label: "Factory",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryMultipliers({
-                filters: resolved,
-                groupField: "factoryId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryId,
-            (g) => g.factory?.name ?? g.factory?.key,
-            (g) =>
-              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
+  // Server-side breakdowns backed by /private/factory_multiplier/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryMultiplier_DETAILED,
+        FactoryMultiplierCountGroup,
+        FactoryMultiplierFilters
+      >({
+        fields: [
+          ...(showFactoryColumn
+            ? [
+                {
+                  key: "factory",
+                  label: "Factory",
+                  groupField: "factoryId",
+                  getValue: (g: FactoryMultiplierCountGroup) => g.factoryId,
+                  getText: (g: FactoryMultiplierCountGroup) =>
+                    g.factory?.name ?? g.factory?.key,
+                  renderLabel: (g: FactoryMultiplierCountGroup) =>
+                    g.factory && (
+                      <FactoryResourceLink data={g.factory} withTooltip />
+                    ),
+                  narrow:
+                    narrowBy.idList<FactoryMultiplierFilters>("factoryIdList"),
+                },
+              ]
+            : []),
+          {
+            key: "inputTwinClass",
+            label: "Input class",
+            groupField: "inputTwinClassId",
+            getValue: (g) => g.inputTwinClassId,
+            getText: (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+            renderLabel: (g) =>
+              g.inputTwinClass && (
+                <TwinClassResourceLink
+                  data={g.inputTwinClass as TwinClass_DETAILED}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.idList<FactoryMultiplierFilters>(
+              "inputTwinClassIdList"
+            ),
+          },
+          {
+            key: "multiplierFeaturer",
+            label: "Muliplier featurer",
+            groupField: "multiplierFeaturerId",
+            getValue: (g) => g.multiplierFeaturerId?.toString(),
+            getText: (g) => g.multiplierFeaturer?.name,
+            renderLabel: (g) =>
+              g.multiplierFeaturer && (
+                <FeaturerResourceLink
+                  data={g.multiplierFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.numberList<FactoryMultiplierFilters>(
+              "multiplierFeaturerIdList"
+            ),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<FactoryMultiplierFilters>("active"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(
+            filters as Record<FactoryMultiplierFilterKeys, unknown>
           ),
-        });
-      }
-
-      groupings.push({
-        key: "inputTwinClass",
-        label: "Input class",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultipliers({
-              filters: resolved,
-              groupField: "inputTwinClassId",
-              offset,
-              limit,
-            }),
-          (g) => g.inputTwinClassId,
-          (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
-          (g) =>
-            g.inputTwinClass && (
-              <TwinClassResourceLink
-                data={g.inputTwinClass as TwinClass_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "multiplierFeaturer",
-        label: "Muliplier featurer",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultipliers({
-              filters: resolved,
-              groupField: "multiplierFeaturerId",
-              offset,
-              limit,
-            }),
-          (g) => g.multiplierFeaturerId?.toString(),
-          (g) => g.multiplierFeaturer?.name,
-          (g) =>
-            g.multiplierFeaturer && (
-              <FeaturerResourceLink
-                data={g.multiplierFeaturer as Featurer_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryMultipliers({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countFactoryMultipliers, showFactoryColumn]
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryMultipliers({
+            filters,
+            groupField: groupField as FactoryMultiplierCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryMultipliers({ pagination, filters, sort }),
+      }),
+    [
+      resolveFilters,
+      countFactoryMultipliers,
+      searchFactoryMultipliers,
+      showFactoryColumn,
+    ]
   );
 
   const handleOnCreateSubmit = async (
@@ -412,7 +413,8 @@ export function FactoryMultipliersTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         dialogForm={factoryMultiplierForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

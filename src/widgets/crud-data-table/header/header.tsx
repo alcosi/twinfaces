@@ -10,10 +10,12 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 
 import { DataTableHandle, DataTableProps, DataTableRow } from "../data-table";
+import { TableGroupField } from "../grouped-table";
 import { safeRefresh, safeResetPage } from "../helpers";
 import { useViewSettings } from "../hooks";
 import { FiltersSidebar } from "./filters-sidebar";
 import { GroupByButton } from "./group-by-button";
+import { GroupFieldsPopover } from "./group-fields-popover";
 import { SortControl, SortableFieldOption } from "./sort-control";
 import { ViewMode, ViewModeOption, ViewModeToggle } from "./view-mode-toggle";
 
@@ -23,6 +25,8 @@ export type TableViewState = {
   visibleKeys: string[];
   orderKeys: string[];
   groupByKey?: string;
+  /** Server-side group levels of the table view, outermost first. */
+  groupFieldKeys?: string[];
   layoutMode: "grid" | "list";
   sort?: SortV1;
 };
@@ -60,6 +64,11 @@ export type CrudDataTableHeaderProps = {
   defaultLayoutMode?: "grid" | "list";
   /** Hide the table (grid) view option — e.g. for a card-only dataset. */
   disableGridView?: boolean;
+  /**
+   * Fields the table view can be grouped by on the server. Enables the
+   * "Group" control of the table view.
+   */
+  groupFields?: TableGroupField[];
 };
 
 type Props<
@@ -94,6 +103,7 @@ function CrudDataTableHeaderComponent<
     sortableFields,
     defaultLayoutMode,
     disableGridView,
+    groupFields,
   }: Props<TData, TValue>,
   tableRef: ForwardedRef<DataTableHandle>
 ) {
@@ -199,13 +209,27 @@ function CrudDataTableHeaderComponent<
           />
         )}
 
-        {/* Table-only controls are hidden while the chart breakdown is active */}
-        {!chartMode && isPopulatedArray(groupableColumns) && (
-          <GroupByButton
-            columns={groupableColumns}
-            onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
+        {/* Server-side grouping belongs to the table view: cards have no
+            rows to nest and the chart view groups on its own. */}
+        {currentViewMode === "grid" && isPopulatedArray(groupFields) && (
+          <GroupFieldsPopover
+            fields={groupFields}
+            value={viewSettings.groupFieldKeys ?? []}
+            onChange={(groupFieldKeys) =>
+              updateViewSettings({ groupFieldKeys })
+            }
           />
         )}
+
+        {/* Table-only controls are hidden while the chart breakdown is active */}
+        {!chartMode &&
+          !isPopulatedArray(groupFields) &&
+          isPopulatedArray(groupableColumns) && (
+            <GroupByButton
+              columns={groupableColumns}
+              onGroupByChange={(groupByKey) => debouncedUpdate({ groupByKey })}
+            />
+          )}
 
         <ViewModeToggle
           value={currentViewMode}

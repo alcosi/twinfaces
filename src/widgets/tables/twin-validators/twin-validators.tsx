@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,6 +11,8 @@ import { z } from "zod";
 import { Featurer_DETAILED } from "@/entities/featurer";
 import {
   TWIN_VALIDATOR_SCHEMA,
+  TwinValidatorCountGroup,
+  TwinValidatorCountGroupField,
   TwinValidatorFilterKeys,
   TwinValidatorFilters,
   TwinValidator_DETAILED,
@@ -28,12 +30,11 @@ import { isFalsy, isTruthy, toArray, toArrayOfString } from "@/shared/libs";
 import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { TwinValidatorFormFields } from "./form-fields";
 
@@ -185,111 +186,107 @@ export function TwinValidatorsTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/twin_validator/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<TwinValidatorFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showValidatorSetColumn) {
-        groupings.push({
-          key: "twinValidatorSet",
-          label: "Validator set",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinValidators({
-                filters: resolved,
-                groupField: "twinValidatorSetId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinValidatorSetId,
-            (g) => g.twinValidatorSet?.name,
-            (g) =>
-              g.twinValidatorSet && (
-                <ValidatorSetResourceLink
-                  data={g.twinValidatorSet as ValidatorSet_DETAILED}
+  // Server-side breakdowns backed by /private/twin_validator/count/v1, bound
+  // to the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        TwinValidator_DETAILED,
+        TwinValidatorCountGroup,
+        TwinValidatorFilters
+      >({
+        fields: [
+          ...(showValidatorSetColumn
+            ? [
+                {
+                  key: "twinValidatorSet",
+                  label: "Validator set",
+                  groupField: "twinValidatorSetId",
+                  getValue: (g: TwinValidatorCountGroup) =>
+                    g.twinValidatorSetId,
+                  getText: (g: TwinValidatorCountGroup) =>
+                    g.twinValidatorSet?.name,
+                  renderLabel: (g: TwinValidatorCountGroup) =>
+                    g.twinValidatorSet && (
+                      <ValidatorSetResourceLink
+                        data={g.twinValidatorSet as ValidatorSet_DETAILED}
+                        withTooltip
+                      />
+                    ),
+                  narrow: narrowBy.idList<TwinValidatorFilters>(
+                    "twinValidatorSetIdList"
+                  ),
+                },
+              ]
+            : []),
+          {
+            key: "validatorFeaturer",
+            label: "Featurer",
+            groupField: "validatorFeaturerId",
+            getValue: (g) =>
+              g.validatorFeaturerId === undefined
+                ? undefined
+                : String(g.validatorFeaturerId),
+            getText: (g) => g.validatorFeaturer?.name,
+            renderLabel: (g) =>
+              g.validatorFeaturer && (
+                <FeaturerResourceLink
+                  data={g.validatorFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        });
-      }
-
-      groupings.push({
-        key: "validatorFeaturer",
-        label: "Featurer",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countTwinValidators({
-              filters: resolved,
-              groupField: "validatorFeaturerId",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.validatorFeaturerId === undefined
-              ? undefined
-              : String(g.validatorFeaturerId),
-          (g) => g.validatorFeaturer?.name,
-          (g) =>
-            g.validatorFeaturer && (
-              <FeaturerResourceLink
-                data={g.validatorFeaturer as Featurer_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "invert",
-        label: "Invert",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countTwinValidators({
-              filters: resolved,
-              groupField: "invert",
-              offset,
-              limit,
-            }),
-          (g) => (g.invert === undefined ? undefined : String(g.invert)),
-          (g) =>
-            g.invert === undefined
-              ? undefined
-              : g.invert
-                ? "Inverted"
-                : "Not inverted"
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countTwinValidators({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countTwinValidators, showValidatorSetColumn]
+              ),
+            narrow: narrowBy.numberList<TwinValidatorFilters>(
+              "validatorFeaturerIdList"
+            ),
+          },
+          {
+            key: "invert",
+            label: "Invert",
+            groupField: "invert",
+            getValue: (g) =>
+              g.invert === undefined ? undefined : String(g.invert),
+            getText: (g) =>
+              g.invert === undefined
+                ? undefined
+                : g.invert
+                  ? "Inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<TwinValidatorFilters>("invert"),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<TwinValidatorFilters>("active"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<TwinValidatorFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countTwinValidators({
+            filters,
+            groupField: groupField as TwinValidatorCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchTwinValidators({ pagination, filters, sort }),
+      }),
+    [
+      resolveFilters,
+      countTwinValidators,
+      searchTwinValidators,
+      showValidatorSetColumn,
+    ]
   );
 
   const twinValidatorForm = useForm<z.infer<typeof TWIN_VALIDATOR_SCHEMA>>({
@@ -328,7 +325,8 @@ export function TwinValidatorsTable({
       getRowId={(row) => row.id}
       fetcher={fetchTwinValidators}
       filters={{ filtersInfo: buildFilterFields() }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/validators/${row.id}`)
       }

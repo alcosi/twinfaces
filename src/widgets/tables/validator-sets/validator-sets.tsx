@@ -3,14 +3,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   VALIDATOR_SETS_SHEMA,
+  ValidatorSetCountGroup,
+  ValidatorSetCountGroupField,
   ValidatorSetFilterKeys,
+  ValidatorSetFilters,
   ValidatorSet_DETAILED,
   useValidatorSetCount,
   useValidatorSetCreate,
@@ -22,12 +25,11 @@ import { PlatformArea } from "@/shared/config";
 import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { ValidatorSetFormFields } from "./form-fields";
 
@@ -93,39 +95,48 @@ export function ValidatorSetsTable() {
     }
   }
 
-  // Builds the pie-chart breakdown from the server-side count endpoint
-  // (/private/twin_validator_set/count/v1), bound to the active filters.
-  // `invert` is the only field the endpoint groups by.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<ValidatorSetFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "invert",
-          label: "Invert",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countValidatorSets({
-                filters: resolved,
-                groupField: "invert",
-                offset,
-                limit,
-              }),
-            (g) => (g.invert === undefined ? undefined : String(g.invert)),
-            (g) =>
+  // Server-side breakdowns backed by /private/twin_validator_set/count/v1,
+  // bound to the active filters: the pie chart, and the grouping of the table
+  // view, whose groups open through the matching search filters. `invert` is
+  // the only field the endpoint groups by.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        ValidatorSet_DETAILED,
+        ValidatorSetCountGroup,
+        ValidatorSetFilters
+      >({
+        fields: [
+          {
+            key: "invert",
+            label: "Invert",
+            groupField: "invert",
+            getValue: (g) =>
+              g.invert === undefined ? undefined : String(g.invert),
+            getText: (g) =>
               g.invert === undefined
                 ? undefined
                 : g.invert
                   ? "Inverted"
-                  : "Not inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<ValidatorSetFilters>("invert"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(
+            filters as Record<ValidatorSetFilterKeys, unknown>
           ),
-        },
-      ];
-    },
-    [mapFiltersToPayload, countValidatorSets]
+        count: ({ filters, groupField, offset, limit }) =>
+          countValidatorSets({
+            filters,
+            groupField: groupField as ValidatorSetCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchValidatorSets({ pagination, filters, sort }),
+      }),
+    [mapFiltersToPayload, countValidatorSets, searchValidatorSets]
   );
 
   const validatorSetsForm = useForm<z.infer<typeof VALIDATOR_SETS_SHEMA>>({
@@ -168,7 +179,8 @@ export function ValidatorSetsTable() {
         colDefs.invert,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       dialogForm={validatorSetsForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

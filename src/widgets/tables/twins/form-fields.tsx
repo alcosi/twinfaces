@@ -97,6 +97,9 @@ export function TwinFormFields({
           control={control}
           label="Head"
           {...headAdapter}
+          // Rendered only for a class with a head class, and the API refuses to
+          // create such a twin without a head (HEAD_TWIN_NOT_SPECIFIED).
+          required
         />
       )}
 

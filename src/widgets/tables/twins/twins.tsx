@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -10,6 +10,7 @@ import {
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
+  TwinCountGroup,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
@@ -25,13 +26,13 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import {
   TwinCreateRq,
   TwinFilterKeys,
+  TwinFilters,
   Twin_DETAILED,
 } from "@/entities/twin/server";
 import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import {
   TwinFieldEditor,
   TwinResourceLink,
@@ -48,16 +49,15 @@ import {
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
 } from "../../crud-data-table";
 import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
+import { TWIN_GROUP_FIELDS } from "./grouping";
 
 // Default header titles for the twin self (static) columns, keyed by field id.
 const STATIC_FIELD_TITLES: Record<string, string> = {
@@ -472,111 +472,23 @@ export function TwinsTable({
     }
   }
 
-  // Server-side pie-chart breakdowns backed by /private/twin/count/v1, bound to
-  // the active filters. Only static fields whose grouped value the count
-  // response models are offered; dynamic-field grouping is not yet returned by
-  // the endpoint, though dynamic fields remain sortable.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveTwinFilters(filters);
-
-      return [
-        {
-          key: "status",
-          label: "Status",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
-                offset,
-                limit,
-              }),
-            (g) => g.twinStatusId,
-            (g) => g.status?.name,
-            (g) =>
-              g.status && (
-                <TwinClassStatusResourceLink data={g.status} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "twinClass",
-          label: "Twin class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassId,
-            (g) => g.twinClass?.name,
-            (g) =>
-              g.twinClass && (
-                <TwinClassResourceLink data={g.twinClass} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "assignee",
-          label: "Assignee",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
-                offset,
-                limit,
-              }),
-            (g) => g.assignerUserId,
-            (g) => g.assignerUser?.fullName,
-            (g) =>
-              g.assignerUser && (
-                <UserResourceLink data={g.assignerUser} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "author",
-          label: "Author",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
-              g.createdByUser && (
-                <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "head",
-          label: "Head",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
-                offset,
-                limit,
-              }),
-            (g) => g.headTwinId,
-            (g) => g.headTwin?.name,
-            (g) =>
-              g.headTwin && <TwinResourceLink data={g.headTwin} withTooltip />
-          ),
-        },
-      ];
-    },
-    [countTwins, resolveTwinFilters]
+  // Server-side breakdowns backed by /private/twin/count/v1, bound to the
+  // active filters: the pie charts, and the multi-level grouping of the table
+  // view. The table can't be grouped for a search by id — the count endpoint
+  // knows only plain filters, so its groups would not match the rows that
+  // search returns.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<Twin_DETAILED, TwinCountGroup, TwinFilters>({
+        fields: TWIN_GROUP_FIELDS,
+        resolveFilters: ({ filters }) => resolveTwinFilters(filters),
+        count: countTwins,
+        fetchRows: searchId
+          ? undefined
+          : ({ filters, pagination, sort }) =>
+              searchTwins({ pagination, filters, sort }),
+      }),
+    [searchId, countTwins, searchTwins, resolveTwinFilters]
   );
 
   const form = useForm<TwinFormValues>({
@@ -624,7 +536,8 @@ export function TwinsTable({
       fetcher={(pagination, filters, sort) =>
         fetchTwins({ pagination, filters, sort })
       }
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       filters={{
         filtersInfo: buildFilterFields(enabledFilters),
       }}

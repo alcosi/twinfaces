@@ -1,11 +1,14 @@
 "use client";
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { toast } from "sonner";
 
 import {
+  CommentCountGroup,
+  CommentCountGroupField,
   CommentFilterKeys,
+  CommentFilters,
   Comment_DETAILED,
   useCommentCount,
   useCommentFilters,
@@ -24,13 +27,12 @@ import {
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableFieldOption,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 
 const colDefs: Record<
@@ -136,24 +138,32 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
     { field: "authorUserName", label: "Author" },
   ];
 
+  // The search filters of the active query, scoped to the base twin when the
+  // list is shown for a single twin.
+  const resolveFilters = useCallback(
+    (filters: Record<CommentFilterKeys, unknown>): CommentFilters => {
+      const resolved = mapFiltersToPayload(filters);
+      return {
+        ...resolved,
+        twinIdList: baseTwinId
+          ? toArrayOfString(toArray(baseTwinId), "id")
+          : resolved.twinIdList,
+      };
+    },
+    [mapFiltersToPayload, baseTwinId]
+  );
+
   async function fetchComments(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<Comment_DETAILED>> {
-    const _filters = mapFiltersToPayload(
-      filters.filters as Record<CommentFilterKeys, unknown>
-    );
-
     try {
       return await searchComments({
         pagination,
-        filters: {
-          ..._filters,
-          twinIdList: baseTwinId
-            ? toArrayOfString(toArray(baseTwinId), "id")
-            : _filters.twinIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<CommentFilterKeys, unknown>
+        ),
         sort,
       });
     } catch {
@@ -162,63 +172,53 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/comment/count/v1), bound to the active filters. When the list is
-  // scoped to a single twin the twin grouping is excluded — grouping by a
-  // constant value carries no information.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<CommentFilterKeys, unknown>
-      );
-      const scopedFilters = {
-        ...resolved,
-        twinIdList: baseTwinId
-          ? toArrayOfString(toArray(baseTwinId), "id")
-          : resolved.twinIdList,
-      };
-
-      return [
-        ...(isFalsy(baseTwinId)
-          ? [
-              {
-                key: "twin",
-                label: "Twin",
-                load: buildCountGroupingLoad(
-                  ({ offset, limit }) =>
-                    countComment({
-                      filters: scopedFilters,
-                      groupField: "twinId",
-                      offset,
-                      limit,
-                    }),
-                  (g) => g.twinId,
-                  (g) => g.twin?.name,
-                  (g) =>
-                    g.twin && <TwinResourceLink data={g.twin} withTooltip />
-                ),
-              },
-            ]
-          : []),
-        {
-          key: "author",
-          label: "Author",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countComment({
-                filters: scopedFilters,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.author?.fullName,
-            (g) => g.author && <UserResourceLink data={g.author} withTooltip />
-          ),
-        },
-      ];
-    },
-    [countComment, mapFiltersToPayload, baseTwinId]
+  // Server-side breakdowns backed by /private/comment/count/v1, bound to the
+  // active filters: the pie charts, and the grouping of the table view, whose
+  // groups open through the matching search filters. When the list is scoped
+  // to a single twin the twin grouping is excluded — grouping by a constant
+  // value carries no information.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<Comment_DETAILED, CommentCountGroup, CommentFilters>({
+        fields: [
+          ...(isFalsy(baseTwinId)
+            ? [
+                {
+                  key: "twin",
+                  label: "Twin",
+                  groupField: "twinId",
+                  getValue: (g: CommentCountGroup) => g.twinId,
+                  getText: (g: CommentCountGroup) => g.twin?.name,
+                  renderLabel: (g: CommentCountGroup) =>
+                    g.twin && <TwinResourceLink data={g.twin} withTooltip />,
+                  narrow: narrowBy.idList<CommentFilters>("twinIdList"),
+                },
+              ]
+            : []),
+          {
+            key: "author",
+            label: "Author",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.author?.fullName,
+            renderLabel: (g) =>
+              g.author && <UserResourceLink data={g.author} withTooltip />,
+            narrow: narrowBy.idList<CommentFilters>("createdByUserIdList"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<CommentFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countComment({
+            filters,
+            groupField: groupField as CommentCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchComments({ pagination, filters, sort }),
+      }),
+    [resolveFilters, countComment, searchComments, baseTwinId]
   );
 
   return (
@@ -240,7 +240,8 @@ export function CommentsTable({ title = "Comments", baseTwinId }: Props) {
         />
       )}
       sortableFields={sortableFields}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       filters={{ filtersInfo: buildFilterFields() }}
     />
   );

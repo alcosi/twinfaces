@@ -5,14 +5,17 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   PIPELINE_STEP_SCHEMA,
+  PipelineStepCountGroup,
+  PipelineStepCountGroupField,
   PipelineStepFilterKeys,
+  PipelineStepFilters,
   PipelineStep_DETAILED,
   usePipelineStepCount,
   usePipelineStepCreate,
@@ -45,12 +48,11 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryPipelineStepExportSqlDialog,
@@ -326,158 +328,134 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_pipeline_step/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<PipelineStepFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (isFalsy(pipelineId)) {
-        groupings.push({
-          key: "factoryPipeline",
-          label: "Pipeline",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countPipelineStep({
-                filters: resolved,
-                groupField: "factoryPipelineId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryPipelineId,
-            (g) => g.factoryPipeline?.description,
-            (g) =>
-              g.factoryPipeline && (
-                <FactoryPipelineResourceLink
-                  data={g.factoryPipeline}
+  // Server-side breakdowns backed by /private/factory_pipeline_step/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        PipelineStep_DETAILED,
+        PipelineStepCountGroup,
+        PipelineStepFilters
+      >({
+        fields: [
+          ...(isFalsy(pipelineId)
+            ? [
+                {
+                  key: "factoryPipeline",
+                  label: "Pipeline",
+                  groupField: "factoryPipelineId",
+                  getValue: (g: PipelineStepCountGroup) => g.factoryPipelineId,
+                  getText: (g: PipelineStepCountGroup) =>
+                    g.factoryPipeline?.description,
+                  renderLabel: (g: PipelineStepCountGroup) =>
+                    g.factoryPipeline && (
+                      <FactoryPipelineResourceLink
+                        data={g.factoryPipeline}
+                        withTooltip
+                      />
+                    ),
+                  narrow: narrowBy.idList<PipelineStepFilters>(
+                    "factoryPipelineIdList"
+                  ),
+                },
+              ]
+            : []),
+          {
+            key: "factoryConditionSet",
+            label: "Condition Set",
+            groupField: "factoryConditionSetId",
+            getValue: (g) => g.factoryConditionSetId,
+            getText: (g) => g.factoryConditionSet?.name,
+            renderLabel: (g) =>
+              g.factoryConditionSet && (
+                <FactoryConditionSetResourceLink
+                  data={g.factoryConditionSet}
                   withTooltip
                 />
-              )
-          ),
-        });
-      }
-
-      groupings.push({
-        key: "factoryConditionSet",
-        label: "Condition Set",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countPipelineStep({
-              filters: resolved,
-              groupField: "factoryConditionSetId",
-              offset,
-              limit,
-            }),
-          (g) => g.factoryConditionSetId,
-          (g) => g.factoryConditionSet?.name,
-          (g) =>
-            g.factoryConditionSet && (
-              <FactoryConditionSetResourceLink
-                data={g.factoryConditionSet}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "fillerFeaturer",
-        label: "Filler featurer",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countPipelineStep({
-              filters: resolved,
-              groupField: "fillerFeaturerId",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.fillerFeaturerId === undefined
-              ? undefined
-              : String(g.fillerFeaturerId),
-          (g) => g.fillerFeaturer?.name,
-          (g) =>
-            g.fillerFeaturer && (
-              <FeaturerResourceLink
-                data={g.fillerFeaturer as Featurer_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countPipelineStep({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      groupings.push({
-        key: "optional",
-        label: "Optional",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countPipelineStep({
-              filters: resolved,
-              groupField: "optional",
-              offset,
-              limit,
-            }),
-          (g) => (g.optional === undefined ? undefined : String(g.optional)),
-          (g) =>
-            g.optional === undefined
-              ? undefined
-              : g.optional
-                ? "Optional"
-                : "Required"
-        ),
-      });
-
-      groupings.push({
-        key: "factoryConditionInvert",
-        label: "Condition invert",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countPipelineStep({
-              filters: resolved,
-              groupField: "factoryConditionInvert",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.factoryConditionInvert === undefined
-              ? undefined
-              : String(g.factoryConditionInvert),
-          (g) =>
-            g.factoryConditionInvert === undefined
-              ? undefined
-              : g.factoryConditionInvert
-                ? "Inverted"
-                : "Not inverted"
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countPipelineStep, pipelineId]
+              ),
+            narrow: narrowBy.idList<PipelineStepFilters>(
+              "factoryConditionSetIdList"
+            ),
+          },
+          {
+            key: "fillerFeaturer",
+            label: "Filler featurer",
+            groupField: "fillerFeaturerId",
+            getValue: (g) =>
+              g.fillerFeaturerId === undefined
+                ? undefined
+                : String(g.fillerFeaturerId),
+            getText: (g) => g.fillerFeaturer?.name,
+            renderLabel: (g) =>
+              g.fillerFeaturer && (
+                <FeaturerResourceLink
+                  data={g.fillerFeaturer as Featurer_DETAILED}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.numberList<PipelineStepFilters>(
+              "fillerFeaturerIdList"
+            ),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<PipelineStepFilters>("active"),
+          },
+          {
+            key: "optional",
+            label: "Optional",
+            groupField: "optional",
+            getValue: (g) =>
+              g.optional === undefined ? undefined : String(g.optional),
+            getText: (g) =>
+              g.optional === undefined
+                ? undefined
+                : g.optional
+                  ? "Optional"
+                  : "Required",
+            narrow: narrowBy.ternary<PipelineStepFilters>("optional"),
+          },
+          {
+            key: "factoryConditionInvert",
+            label: "Condition invert",
+            groupField: "factoryConditionInvert",
+            getValue: (g) =>
+              g.factoryConditionInvert === undefined
+                ? undefined
+                : String(g.factoryConditionInvert),
+            getText: (g) =>
+              g.factoryConditionInvert === undefined
+                ? undefined
+                : g.factoryConditionInvert
+                  ? "Inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<PipelineStepFilters>("conditionInvert"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<PipelineStepFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countPipelineStep({
+            filters,
+            groupField: groupField as PipelineStepCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchPipelineStep({ pagination, filters, sort }),
+      }),
+    [resolveFilters, countPipelineStep, searchPipelineStep, pipelineId]
   );
 
   const handleOnCreateSubmit = async (
@@ -520,7 +498,8 @@ export function PipelineStepsTable({ pipelineId, factoryId, title }: Props) {
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         dialogForm={pipelineStepForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

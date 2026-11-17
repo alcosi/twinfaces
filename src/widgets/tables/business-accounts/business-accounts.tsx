@@ -2,11 +2,14 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
 import {
+  DomainBusinessAccountCountGroup,
+  DomainBusinessAccountCountGroupField,
   DomainBusinessAccountFilterFormKeys,
+  DomainBusinessAccountFilters,
   DomainBusinessAccount_DETAILED,
   useBusinessAccountCount,
   useBusinessAccountSearch,
@@ -26,12 +29,11 @@ import { formatIntlDate } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 
 const colDefs: Record<
@@ -236,124 +238,113 @@ export function BusinessAccountsTable() {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/domain/business_account/count/v1), bound to the active filters.
-  // Only the fields the endpoint can group by are offered — business account
-  // itself is intentionally excluded, since it is not a groupable field.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<DomainBusinessAccountFilterFormKeys, unknown>
-      );
-
-      return [
-        {
-          key: "tier",
-          label: "Tier",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccount({
-                filters: resolved,
-                groupField: "tierId",
-                offset,
-                limit,
-              }),
-            (g) => g.tierId,
-            (g) => g.tier?.name,
-            (g) => g.tier && <TierResourceLink data={g.tier} withTooltip />
-          ),
-        },
-        {
-          key: "permissionSchema",
-          label: "Permission schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccount({
-                filters: resolved,
-                groupField: "permissionSchemaId",
-                offset,
-                limit,
-              }),
-            (g) => g.permissionSchemaId,
-            (g) => g.permissionSchema?.name,
-            (g) =>
+  // Server-side breakdowns backed by /private/domain/business_account/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters. Only the
+  // fields the endpoint can group by are offered — business account itself is
+  // intentionally excluded, since it is not a groupable field.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        DomainBusinessAccount_DETAILED,
+        DomainBusinessAccountCountGroup,
+        DomainBusinessAccountFilters
+      >({
+        fields: [
+          {
+            key: "tier",
+            label: "Tier",
+            groupField: "tierId",
+            getValue: (g) => g.tierId,
+            getText: (g) => g.tier?.name,
+            renderLabel: (g) =>
+              g.tier && <TierResourceLink data={g.tier} withTooltip />,
+            narrow: narrowBy.idList<DomainBusinessAccountFilters>("tierIdList"),
+          },
+          {
+            key: "permissionSchema",
+            label: "Permission schema",
+            groupField: "permissionSchemaId",
+            getValue: (g) => g.permissionSchemaId,
+            getText: (g) => g.permissionSchema?.name,
+            renderLabel: (g) =>
               g.permissionSchema && (
                 <PermissionSchemaResourceLink
                   data={g.permissionSchema}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "twinflowSchema",
-          label: "Twinflow schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccount({
-                filters: resolved,
-                groupField: "twinflowSchemaId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinflowSchemaId,
-            (g) => g.twinflowSchema?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<DomainBusinessAccountFilters>(
+              "permissionSchemaIdList"
+            ),
+          },
+          {
+            key: "twinflowSchema",
+            label: "Twinflow schema",
+            groupField: "twinflowSchemaId",
+            getValue: (g) => g.twinflowSchemaId,
+            getText: (g) => g.twinflowSchema?.name,
+            renderLabel: (g) =>
               g.twinflowSchema && (
                 <TwinFlowSchemaResourceLink
                   data={g.twinflowSchema as TwinFlowSchema_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "twinClassSchema",
-          label: "Twinclass schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccount({
-                filters: resolved,
-                groupField: "twinClassSchemaId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassSchemaId,
-            (g) => g.twinClassSchema?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<DomainBusinessAccountFilters>(
+              "twinflowSchemaIdList"
+            ),
+          },
+          {
+            key: "twinClassSchema",
+            label: "Twinclass schema",
+            groupField: "twinClassSchemaId",
+            getValue: (g) => g.twinClassSchemaId,
+            getText: (g) => g.twinClassSchema?.name,
+            renderLabel: (g) =>
               g.twinClassSchema && (
                 <TwinClassSchemaResourceLink
                   data={g.twinClassSchema as TwinClassSchema_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "notificationSchema",
-          label: "Notification schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countBusinessAccount({
-                filters: resolved,
-                groupField: "notificationSchemaId",
-                offset,
-                limit,
-              }),
-            (g) => g.notificationSchemaId,
-            (g) => g.notificationSchema?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<DomainBusinessAccountFilters>(
+              "twinClassSchemaIdList"
+            ),
+          },
+          {
+            key: "notificationSchema",
+            label: "Notification schema",
+            groupField: "notificationSchemaId",
+            getValue: (g) => g.notificationSchemaId,
+            getText: (g) => g.notificationSchema?.name,
+            renderLabel: (g) =>
               g.notificationSchema && (
                 <NotificationSchemaResourceLink
                   data={g.notificationSchema}
                   withTooltip
                 />
-              )
+              ),
+            narrow: narrowBy.idList<DomainBusinessAccountFilters>(
+              "notificationSchemaIdList"
+            ),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(
+            filters as Record<DomainBusinessAccountFilterFormKeys, unknown>
           ),
-        },
-      ];
-    },
-    [countBusinessAccount, mapFiltersToPayload]
+        count: ({ filters, groupField, offset, limit }) =>
+          countBusinessAccount({
+            filters,
+            groupField: groupField as DomainBusinessAccountCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchBusinessAccount({ pagination, filters, sort }),
+      }),
+    [mapFiltersToPayload, countBusinessAccount, searchBusinessAccount]
   );
 
   return (
@@ -393,7 +384,8 @@ export function BusinessAccountsTable() {
       ]}
       getRowId={(row) => row.id!}
       filters={{ filtersInfo: buildFilterFields() }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/business-accounts/${row.id}`)
       }

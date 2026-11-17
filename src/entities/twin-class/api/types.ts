@@ -122,7 +122,11 @@ export type TwinClassFilterKeys =
   | "twinCounterRange";
 
 export type TwinClassFilters = Partial<
-  Pick<components["schemas"]["TwinClassSearchV1"], TwinClassFilterKeys>
+  Pick<
+    components["schemas"]["TwinClassSearchV1"],
+    // Search-only keys: no filter in the UI, but the table grouping narrows by them.
+    TwinClassFilterKeys | "headHunterFeaturerIdList" | "hasDynamicMarkers"
+  >
 >;
 
 export type TwinClassListRs = components["schemas"]["TwinClassListRsV1"];
