@@ -35,12 +35,19 @@ export type ClassGraphData = {
 
 type Box = { x: number; y: number; width: number; height: number };
 
+/** An advanced card's block that can list more than `CARD.chipLimit` chips. */
+export type CardSection = "fields" | "statuses";
+
+/** Which of a card's blocks are unfolded to list every chip. */
+export type CardExpansion = Partial<Record<CardSection, boolean>>;
+
 export type ClassCardNode = Box & {
   kind: "class";
   id: string;
   twinClass: TwinClass_DETAILED;
   /** The class the tab belongs to. Drawn without a link to itself. */
   isCenter: boolean;
+  expansion: CardExpansion;
 };
 
 export type PlaceholderNode = Box & {
@@ -83,6 +90,12 @@ export type Wire = {
   points: [number, number][];
   /** Dashed wires lead to create affordances. */
   dashed?: boolean;
+  /**
+   * Indices of the points whose corner is drawn rounded. Only the corners at
+   * the far ends of a trunk: at a junction another wire carries straight on,
+   * and a rounded corner there would leave a fillet hanging off the line.
+   */
+  rounded?: number[];
 };
 
 export type ClassGraphLayout = {

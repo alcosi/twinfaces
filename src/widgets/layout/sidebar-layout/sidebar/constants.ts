@@ -11,8 +11,10 @@ import {
   Inbox,
   Layers,
   Link2,
+  ListChecks,
   Megaphone,
   MessageCircle,
+  MousePointer2,
   Option,
   Orbit,
   Paperclip,
@@ -73,6 +75,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
             url: `/${PlatformArea.core}/rules`,
             icon: Shield,
           },
+          {
+            title: "Field rule conditions",
+            url: `/${PlatformArea.core}/rule-conditions`,
+            icon: ListChecks,
+          },
         ],
       },
       {
@@ -84,6 +91,11 @@ export const SIDEBAR_GROUPS: Record<GroupKeys, Group> = {
         title: "Links",
         url: `/${PlatformArea.core}/links`,
         icon: Link2,
+      },
+      {
+        title: "Twin pointers",
+        url: `/${PlatformArea.core}/twin-pointers`,
+        icon: MousePointer2,
       },
       {
         title: "Dynamic markers",

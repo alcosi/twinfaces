@@ -7,6 +7,7 @@ const CORE_ROUTE_PERMISSION_PREFIX_MAP: Record<string, string[]> = {
   "dynamic-markers": ["TWIN_CLASS_DYNAMIC_MARKER"],
   "space-roles": ["SPACE_ROLE"],
   rules: ["TWIN_CLASS_FIELD_RULE"],
+  "rule-conditions": ["TWIN_CLASS_FIELD_RULE"],
 
   //? NOTE Twin menu
   twins: ["TWIN"],

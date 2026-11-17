@@ -3,7 +3,8 @@ import { cn } from "@/shared/libs";
 /**
  * Read-only boolean for table cells: a hollow ring when off, a filled dot with
  * a soft halo when on. Unlike a bare check mark, "off" is visible too.
- * Centered horizontally within its cell.
+ * Centered horizontally within its table cell; in an entity card field it
+ * sits at the start, in line with the other values.
  */
 export function BooleanIndicator({
   value,
@@ -15,7 +16,7 @@ export function BooleanIndicator({
   const checked = value === true;
 
   return (
-    <span className="flex w-full justify-center">
+    <span className="flex w-full justify-center in-data-[slot=entity-card-field-value]:justify-start">
       <span
         role="img"
         aria-label={checked ? "Yes" : "No"}
