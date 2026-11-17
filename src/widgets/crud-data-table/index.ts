@@ -15,5 +15,13 @@ export type {
 export { SortableHeader } from "./data-table";
 export type { CrudDataTableDialogRef } from "./dialog";
 export { CrudDataTableDialog } from "./dialog";
+export type {
+  GroupBucket,
+  GroupPage,
+  GroupPathStep,
+  TableGroupField,
+  TableGrouping,
+  TableQueryContext,
+} from "./grouped-table";
 export type { SortableFieldOption } from "./header";
 export * from "./types";

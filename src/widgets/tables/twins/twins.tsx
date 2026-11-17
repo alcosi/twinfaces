@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,7 +31,6 @@ import { TwinFieldUI } from "@/entities/twinField";
 import { User } from "@/entities/user";
 import { DatalistOptionResourceLink } from "@/features/datalist-option/ui";
 import { TwinClassResourceLink } from "@/features/twin-class/ui";
-import { TwinClassStatusResourceLink } from "@/features/twin-status/ui";
 import {
   TwinFieldEditor,
   TwinResourceLink,
@@ -54,10 +53,17 @@ import {
   DataTableHandle,
   FiltersState,
   SortableHeader,
+  TableGrouping,
   buildCountGroupingLoad,
 } from "../../crud-data-table";
 import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
+import {
+  TWIN_GROUP_DEFINITIONS,
+  TWIN_NO_VALUE_GROUP_LABEL,
+  findTwinGroupDefinition,
+  narrowTwinFiltersToGroup,
+} from "./grouping";
 
 // Default header titles for the twin self (static) columns, keyed by field id.
 const STATIC_FIELD_TITLES: Record<string, string> = {
@@ -480,103 +486,75 @@ export function TwinsTable({
     ({ filters }: ChartDataContext): ChartGrouping[] => {
       const resolved = resolveTwinFilters(filters);
 
-      return [
-        {
-          key: "status",
-          label: "Status",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.statusId,
-                offset,
-                limit,
-              }),
-            (g) => g.twinStatusId,
-            (g) => g.status?.name,
-            (g) =>
-              g.status && (
-                <TwinClassStatusResourceLink data={g.status} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "twinClass",
-          label: "Twin class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.twinClassId,
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassId,
-            (g) => g.twinClass?.name,
-            (g) =>
-              g.twinClass && (
-                <TwinClassResourceLink data={g.twinClass} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "assignee",
-          label: "Assignee",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.assignerUserId,
-                offset,
-                limit,
-              }),
-            (g) => g.assignerUserId,
-            (g) => g.assignerUser?.fullName,
-            (g) =>
-              g.assignerUser && (
-                <UserResourceLink data={g.assignerUser} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "author",
-          label: "Author",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.authorUserId,
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
-              g.createdByUser && (
-                <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "head",
-          label: "Head",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwins({
-                filters: resolved,
-                groupField: TWIN_SELF_FIELD_KEY_TO_ID_MAP.headTwinId,
-                offset,
-                limit,
-              }),
-            (g) => g.headTwinId,
-            (g) => g.headTwin?.name,
-            (g) =>
-              g.headTwin && <TwinResourceLink data={g.headTwin} withTooltip />
-          ),
-        },
-      ];
+      return TWIN_GROUP_DEFINITIONS.map((definition) => ({
+        key: definition.key,
+        label: definition.label,
+        load: buildCountGroupingLoad(
+          ({ offset, limit }) =>
+            countTwins({
+              filters: resolved,
+              groupField: definition.groupFieldId,
+              offset,
+              limit,
+            }),
+          definition.getValue,
+          definition.getText,
+          definition.renderLabel
+        ),
+      }));
     },
     [countTwins, resolveTwinFilters]
+  );
+
+  // Multi-level grouping of the table view, on the same count endpoint: a
+  // level is counted under the groups opened above it, and the last level's
+  // rows are searched under the whole path. Not offered for a search by id —
+  // the count endpoint knows only plain filters, so its groups would not
+  // match the rows that search returns.
+  const tableGrouping = useMemo<TableGrouping<Twin_DETAILED> | undefined>(
+    () =>
+      searchId
+        ? undefined
+        : {
+            fields: TWIN_GROUP_DEFINITIONS.map(({ key, label }) => ({
+              key,
+              label,
+            })),
+            countGroups: async ({ fieldKey, path, offset, limit, context }) => {
+              const definition = findTwinGroupDefinition(fieldKey);
+              const { items, total } = await countTwins({
+                filters: narrowTwinFiltersToGroup(
+                  resolveTwinFilters(context.filters),
+                  path
+                ),
+                groupField: definition.groupFieldId,
+                offset,
+                limit,
+              });
+
+              return {
+                total,
+                items: items.map((group) => ({
+                  value: definition.getValue(group) ?? null,
+                  label:
+                    definition.renderLabel(group) ??
+                    definition.getText(group) ??
+                    TWIN_NO_VALUE_GROUP_LABEL,
+                  count: group.count,
+                })),
+              };
+            },
+            fetchRows: ({ path, pagination, context }) =>
+              searchTwins({
+                pagination,
+                filters: narrowTwinFiltersToGroup(
+                  resolveTwinFilters(context.filters),
+                  path
+                ),
+                sort: context.sort,
+              }),
+          },
+    [searchId, countTwins, searchTwins, resolveTwinFilters]
   );
 
   const form = useForm<TwinFormValues>({
@@ -625,6 +603,7 @@ export function TwinsTable({
         fetchTwins({ pagination, filters, sort })
       }
       chartGroupings={buildChartGroupings}
+      grouping={tableGrouping}
       filters={{
         filtersInfo: buildFilterFields(enabledFilters),
       }}

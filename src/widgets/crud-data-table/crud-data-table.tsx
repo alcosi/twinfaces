@@ -42,6 +42,7 @@ import {
   DataTableRow,
 } from "./data-table";
 import { CrudDataTableDialog, CrudDataTableDialogRef } from "./dialog";
+import { GroupedTable, TableGrouping } from "./grouped-table";
 import {
   CrudDataTableHeader,
   CrudDataTableHeaderProps,
@@ -78,6 +79,12 @@ type CrudDataTableProps<
      * toggle. Takes precedence over `groupableFields` when provided.
      */
     chartGroupings?: (context: ChartDataContext) => ChartGrouping[];
+    /**
+     * Server-side, multi-level grouping of the table view. Enables the "Group"
+     * control; while any group field is selected, the table is rendered group
+     * by group, loading rows as it scrolls instead of by page.
+     */
+    grouping?: TableGrouping<TData>;
     dialogForm?: UseFormReturn<any>;
     onCreateSubmit?: (values: any) => Promise<void>;
     renderFormFields?: () => ReactNode;
@@ -121,6 +128,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
     pageSizes = DEFAULT_PAGE_SIZES,
     permissionSegment,
     disableRowClick,
+    grouping,
     ...props
   }: CrudDataTableProps<TData, TValue>,
   ref: ForwardedRef<DataTableHandle>
@@ -152,6 +160,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
         query: settings.query,
         filters: settings.filters,
         groupByKey: settings.groupByKey,
+        groupFieldKeys: settings.groupFieldKeys,
         layoutMode: settings.layoutMode,
         sort: settings.sort,
       }),
@@ -224,6 +233,30 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
   ]);
 
   const hasChartView = isPopulatedArray(chartGroupings);
+
+  // Selected levels the grouping still knows — a stored key may outlive the
+  // field it named.
+  const activeGroupFieldKeys = useMemo(
+    () =>
+      (viewSettings.groupFieldKeys ?? []).filter((key) =>
+        grouping?.fields.some((field) => field.key === key)
+      ),
+    [viewSettings.groupFieldKeys, grouping]
+  );
+
+  const isGrouped =
+    Boolean(grouping) &&
+    viewSettings.layoutMode === "grid" &&
+    isPopulatedArray(activeGroupFieldKeys);
+
+  const groupingContext = useMemo<ChartDataContext>(
+    () => ({
+      search: viewSettings.query,
+      filters: viewSettings.filters,
+      sort: viewSettings.sort,
+    }),
+    [viewSettings.query, viewSettings.filters, viewSettings.sort]
+  );
 
   useImperativeHandle(ref, () => tableRef.current!, [tableRef]);
 
@@ -417,6 +450,7 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
           sortableFields={props.sortableFields}
           defaultLayoutMode={props.defaultLayoutMode}
           disableGridView={props.disableGridView}
+          groupFields={grouping?.fields}
         />
       </div>
 
@@ -427,6 +461,20 @@ function CrudDataTableInternal<TData extends DataTableRow<TData>, TValue>(
             refreshSignal={chartRefreshSignal}
           />
         </div>
+      ) : isGrouped && grouping ? (
+        <GroupedTable
+          ref={tableRef}
+          grouping={grouping}
+          fieldKeys={activeGroupFieldKeys}
+          context={groupingContext}
+          columns={visibleColumns}
+          getRowId={props.getRowId}
+          onRowClick={disableRowClick ? undefined : handleOnRowClick}
+          getRowHref={resolveRowHref}
+          columnManager={columnManager}
+          sort={viewSettings.sort}
+          onSortChange={(s) => updateViewSettings({ sort: s })}
+        />
       ) : (
         <DataTable
           ref={tableRef}
