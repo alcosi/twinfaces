@@ -21005,6 +21005,10 @@ export interface components {
              * @example be44e826-ce24-4881-a227-f3f72d915a20
              */
             headTwinId?: string;
+            /** @description Dynamic field values this group is keyed by: twin class field id -> storage value (number/text/boolean/timestamp/dataList option id). One entry per dynamic group field from the request */
+            groupedFieldValues?: {
+                [key: string]: unknown;
+            };
         };
         TwinBatchCreateRqV1: {
             /** @description twin list */
