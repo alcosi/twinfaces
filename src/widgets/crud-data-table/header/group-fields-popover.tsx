@@ -77,7 +77,7 @@ export function GroupFieldsPopover({ fields, value, onChange }: Props) {
         <Button
           type="button"
           variant="ghost"
-          className="max-w-72"
+          className="max-w-72 gap-[5px]"
           title="Group rows by fields"
         >
           <span className="truncate">Group: {triggerLabel}</span>
