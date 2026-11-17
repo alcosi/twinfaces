@@ -1,13 +1,16 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { FaceTC001ViewRs as FaceTC, FaceWT002Button } from "@/entities/face";
-import { TWIN_SCHEMA, TwinFormValues, useCreateTwin } from "@/entities/twin";
+import {
+  TwinFormValues,
+  twinFormResolver,
+  useCreateTwin,
+} from "@/entities/twin";
 import { TwinCreateRq } from "@/entities/twin/server";
 import { isPopulatedString } from "@/shared/libs";
 import {
@@ -44,7 +47,7 @@ export function WT002EntryClient({ trigger, faceData }: Props) {
     : undefined;
 
   const form = useForm<TwinFormValues>({
-    resolver: zodResolver(TWIN_SCHEMA),
+    resolver: twinFormResolver,
     defaultValues: {
       classId: "",
       name: "",

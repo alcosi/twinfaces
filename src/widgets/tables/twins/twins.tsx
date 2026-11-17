@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -8,11 +7,11 @@ import { FaceTC001ViewRs, FaceWT001 } from "@/entities/face";
 import {
   STATIC_TWIN_FIELD_ID_TO_FILTERS_KEY_MAP,
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
-  TWIN_SCHEMA,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
   TwinCountGroup,
   TwinFormValues,
   TwinSelfFieldId,
+  twinFormResolver,
   useCreateTwin,
   useTwinCount,
   useTwinFilters,
@@ -492,7 +491,7 @@ export function TwinsTable({
   );
 
   const form = useForm<TwinFormValues>({
-    resolver: zodResolver(TWIN_SCHEMA),
+    resolver: twinFormResolver,
     defaultValues: {
       classId: "",
       name: "",
