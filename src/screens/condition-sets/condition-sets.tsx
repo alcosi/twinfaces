@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useRef } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -12,8 +12,11 @@ import z from "zod";
 import {
   CONDITION_SET_SCHEMA,
   ConditionSetFieldValues,
+  FactoryConditionSetCountGroup,
+  FactoryConditionSetCountGroupField,
   FactoryConditionSetCreateRq,
   FactoryConditionSetFilterKeys,
+  FactoryConditionSetFilters,
   FactoryConditionSet_DETAILED,
   useFactoryConditionSetCount,
   useFactoryConditionSetFilters,
@@ -33,12 +36,11 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "@/widgets/crud-data-table";
 import { ConditionSetFields } from "@/widgets/form-fields";
 
@@ -216,74 +218,70 @@ export function ConditionSetsScreen() {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_condition_set/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<FactoryConditionSetFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "factory",
-          label: "Factory",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryConditionSets({
-                filters: resolved,
-                groupField: "twinFactoryId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinFactoryId,
-            (g) => g.factory?.name ?? g.factory?.key,
-            (g) =>
-              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
-          ),
-        },
-        {
-          key: "createdByUser",
-          label: "Created by",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryConditionSets({
-                filters: resolved,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
+  // Server-side breakdowns backed by /private/factory_condition_set/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters. The search
+  // has no creator filter, so "Created by" stays a pie chart only.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryConditionSet_DETAILED,
+        FactoryConditionSetCountGroup,
+        FactoryConditionSetFilters
+      >({
+        fields: [
+          {
+            key: "factory",
+            label: "Factory",
+            groupField: "twinFactoryId",
+            getValue: (g) => g.twinFactoryId,
+            getText: (g) => g.factory?.name ?? g.factory?.key,
+            renderLabel: (g) =>
+              g.factory && <FactoryResourceLink data={g.factory} withTooltip />,
+            narrow:
+              narrowBy.idList<FactoryConditionSetFilters>("twinFactoryIdList"),
+          },
+          {
+            key: "createdByUser",
+            label: "Created by",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.createdByUser?.fullName,
+            renderLabel: (g) =>
               g.createdByUser && (
                 <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "cachable",
-          label: "Cachable",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryConditionSets({
-                filters: resolved,
-                groupField: "cachable",
-                offset,
-                limit,
-              }),
-            (g) => (g.cachable === undefined ? undefined : String(g.cachable)),
-            (g) =>
+              ),
+          },
+          {
+            key: "cachable",
+            label: "Cachable",
+            groupField: "cachable",
+            getValue: (g) =>
+              g.cachable === undefined ? undefined : String(g.cachable),
+            getText: (g) =>
               g.cachable === undefined
                 ? undefined
                 : g.cachable
                   ? "Cachable"
-                  : "Not cachable"
+                  : "Not cachable",
+            narrow: narrowBy.ternary<FactoryConditionSetFilters>("cachable"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(
+            filters as Record<FactoryConditionSetFilterKeys, unknown>
           ),
-        },
-      ];
-    },
-    [mapFiltersToPayload, countFactoryConditionSets]
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryConditionSets({
+            filters,
+            groupField: groupField as FactoryConditionSetCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryConditionSet({ pagination, filters, sort }),
+      }),
+    [mapFiltersToPayload, countFactoryConditionSets, searchFactoryConditionSet]
   );
 
   const conditionSetForm = useForm<ConditionSetFieldValues>({
@@ -356,7 +354,8 @@ export function ConditionSetsScreen() {
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         dialogForm={conditionSetForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

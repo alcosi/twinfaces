@@ -25,7 +25,8 @@ export type FactoryConditionSetFilterKeys =
 export type FactoryConditionSetFilters = Partial<
   Pick<
     components["schemas"]["FactoryConditionSetSearchDTOv1"],
-    FactoryConditionSetFilterKeys
+    // Search-only key: no filter in the UI, but the table grouping narrows by it.
+    FactoryConditionSetFilterKeys | "cachable"
   >
 >;
 

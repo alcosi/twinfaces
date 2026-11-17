@@ -4,13 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   FACTORY_CONDITION_SCHEMA,
+  FactoryConditionCountGroup,
+  FactoryConditionCountGroupField,
   FactoryConditionFilterKeys,
   FactoryConditionFilters,
   FactoryCondition_DETAILED,
@@ -37,12 +39,11 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryConditionDuplicateDialog,
@@ -249,111 +250,111 @@ export function FactoryConditionsTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_condition/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<FactoryConditionFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showConditionSetColumn) {
-        groupings.push({
-          key: "factoryConditionSet",
-          label: "Condition Set",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryConditions({
-                filters: resolved,
-                groupField: "factoryConditionSetId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryConditionSetId,
-            (g) => g.factoryConditionSet?.name,
-            (g) =>
-              g.factoryConditionSet && (
-                <FactoryConditionSetResourceLink
-                  data={g.factoryConditionSet as FactoryConditionSet_DETAILED}
+  // Server-side breakdowns backed by /private/factory_condition/count/v1,
+  // bound to the active filters: the pie charts, and the grouping of the table
+  // view, whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryCondition_DETAILED,
+        FactoryConditionCountGroup,
+        FactoryConditionFilters
+      >({
+        fields: [
+          ...(showConditionSetColumn
+            ? [
+                {
+                  key: "factoryConditionSet",
+                  label: "Condition Set",
+                  groupField: "factoryConditionSetId",
+                  getValue: (g: FactoryConditionCountGroup) =>
+                    g.factoryConditionSetId,
+                  getText: (g: FactoryConditionCountGroup) =>
+                    g.factoryConditionSet?.name,
+                  renderLabel: (g: FactoryConditionCountGroup) =>
+                    g.factoryConditionSet && (
+                      <FactoryConditionSetResourceLink
+                        data={
+                          g.factoryConditionSet as FactoryConditionSet_DETAILED
+                        }
+                        withTooltip
+                      />
+                    ),
+                  narrow: narrowBy.idList<FactoryConditionFilters>(
+                    "factoryConditionSetIdList"
+                  ),
+                },
+              ]
+            : []),
+          {
+            key: "conditionerFeaturer",
+            label: "Conditioner Featurer",
+            groupField: "conditionerFeaturerId",
+            getValue: (g) =>
+              g.conditionerFeaturerId === undefined
+                ? undefined
+                : String(g.conditionerFeaturerId),
+            getText: (g) => g.conditionerFeaturer?.name,
+            renderLabel: (g) =>
+              g.conditionerFeaturer && (
+                <FeaturerResourceLink
+                  data={g.conditionerFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
+              ),
+            narrow: narrowBy.numberList<FactoryConditionFilters>(
+              "conditionerFeaturerIdList"
+            ),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<FactoryConditionFilters>("active"),
+          },
+          {
+            key: "invert",
+            label: "Invert",
+            groupField: "invert",
+            getValue: (g) =>
+              g.invert === undefined ? undefined : String(g.invert),
+            getText: (g) =>
+              g.invert === undefined
+                ? undefined
+                : g.invert
+                  ? "Inverted"
+                  : "Not inverted",
+            narrow: narrowBy.ternary<FactoryConditionFilters>("invert"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(
+            filters as Record<FactoryConditionFilterKeys, unknown>
           ),
-        });
-      }
-
-      groupings.push({
-        key: "conditionerFeaturer",
-        label: "Conditioner Featurer",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryConditions({
-              filters: resolved,
-              groupField: "conditionerFeaturerId",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.conditionerFeaturerId === undefined
-              ? undefined
-              : String(g.conditionerFeaturerId),
-          (g) => g.conditionerFeaturer?.name,
-          (g) =>
-            g.conditionerFeaturer && (
-              <FeaturerResourceLink
-                data={g.conditionerFeaturer as Featurer_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryConditions({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      groupings.push({
-        key: "invert",
-        label: "Invert",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryConditions({
-              filters: resolved,
-              groupField: "invert",
-              offset,
-              limit,
-            }),
-          (g) => (g.invert === undefined ? undefined : String(g.invert)),
-          (g) =>
-            g.invert === undefined
-              ? undefined
-              : g.invert
-                ? "Inverted"
-                : "Not inverted"
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countFactoryConditions, showConditionSetColumn]
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryConditions({
+            filters,
+            groupField: groupField as FactoryConditionCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryCondition({ pagination, filters, sort }),
+      }),
+    [
+      resolveFilters,
+      countFactoryConditions,
+      searchFactoryCondition,
+      showConditionSetColumn,
+    ]
   );
 
   const handleOnCreateSubmit = async (
@@ -396,7 +397,8 @@ export function FactoryConditionsTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         dialogForm={factoryConditionForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

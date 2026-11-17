@@ -5,13 +5,16 @@ import { PaginationState } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
+  FactoryPipelineCountGroup,
+  FactoryPipelineCountGroupField,
   FactoryPipelineFilterKeys,
+  FactoryPipelineFilters,
   FactoryPipeline_DETAILED,
   useFactoryPipelineCount,
   useFactoryPipelineCreate,
@@ -38,12 +41,11 @@ import {
 } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import {
   FactoryPipelineDuplicateDialog,
@@ -374,200 +376,171 @@ export function FactoryPipelinesTable({
   const showFactoryColumn = isFalsy(factoryId);
   const showOutputTwinStatusColumn = isFalsy(outputTwinStatusId);
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory_pipeline/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<FactoryPipelineFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      if (showFactoryColumn) {
-        groupings.push({
-          key: "factory",
-          label: "Factory",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryPipelines({
-                filters: resolved,
-                groupField: "factoryId",
-                offset,
-                limit,
-              }),
-            (g) => g.factoryId,
-            (g) => g.factory?.name ?? g.factory?.key,
-            (g) =>
-              g.factory && <FactoryResourceLink data={g.factory} withTooltip />
-          ),
-        });
-      }
-
-      groupings.push({
-        key: "inputTwinClass",
-        label: "Input Class",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "inputTwinClassId",
-              offset,
-              limit,
-            }),
-          (g) => g.inputTwinClassId,
-          (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
-          (g) =>
-            g.inputTwinClass && (
-              <TwinClassResourceLink
-                data={g.inputTwinClass as TwinClass_DETAILED}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "factoryConditionSet",
-        label: "Condition Set",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "factoryConditionSetId",
-              offset,
-              limit,
-            }),
-          (g) => g.factoryConditionSetId,
-          (g) => g.factoryConditionSet?.name,
-          (g) =>
-            g.factoryConditionSet && (
-              <FactoryConditionSetResourceLink
-                data={g.factoryConditionSet}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      if (showOutputTwinStatusColumn) {
-        groupings.push({
-          key: "outputTwinStatus",
-          label: "Output Status",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactoryPipelines({
-                filters: resolved,
-                groupField: "outputTwinStatusId",
-                offset,
-                limit,
-              }),
-            (g) => g.outputTwinStatusId,
-            (g) => g.outputTwinStatus?.name,
-            (g) =>
-              g.outputTwinStatus && (
-                <TwinClassStatusResourceLink
-                  data={g.outputTwinStatus}
+  // Server-side breakdowns backed by /private/factory_pipeline/count/v1, bound
+  // to the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        FactoryPipeline_DETAILED,
+        FactoryPipelineCountGroup,
+        FactoryPipelineFilters
+      >({
+        fields: [
+          ...(showFactoryColumn
+            ? [
+                {
+                  key: "factory",
+                  label: "Factory",
+                  groupField: "factoryId",
+                  getValue: (g: FactoryPipelineCountGroup) => g.factoryId,
+                  getText: (g: FactoryPipelineCountGroup) =>
+                    g.factory?.name ?? g.factory?.key,
+                  renderLabel: (g: FactoryPipelineCountGroup) =>
+                    g.factory && (
+                      <FactoryResourceLink data={g.factory} withTooltip />
+                    ),
+                  narrow:
+                    narrowBy.idList<FactoryPipelineFilters>("factoryIdList"),
+                },
+              ]
+            : []),
+          {
+            key: "inputTwinClass",
+            label: "Input Class",
+            groupField: "inputTwinClassId",
+            getValue: (g) => g.inputTwinClassId,
+            getText: (g) => g.inputTwinClass?.name ?? g.inputTwinClass?.key,
+            renderLabel: (g) =>
+              g.inputTwinClass && (
+                <TwinClassResourceLink
+                  data={g.inputTwinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        });
-      }
-
-      groupings.push({
-        key: "nextFactory",
-        label: "Next Factory",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "nextFactoryId",
-              offset,
-              limit,
-            }),
-          (g) => g.nextFactoryId,
-          (g) => g.nextFactory?.name ?? g.nextFactory?.key,
-          (g) =>
-            g.nextFactory && (
-              <FactoryResourceLink data={g.nextFactory} withTooltip />
-            )
-        ),
-      });
-
-      groupings.push({
-        key: "active",
-        label: "Active",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "active",
-              offset,
-              limit,
-            }),
-          (g) => (g.active === undefined ? undefined : String(g.active)),
-          (g) =>
-            g.active === undefined
-              ? undefined
-              : g.active
-                ? "Active"
-                : "Inactive"
-        ),
-      });
-
-      groupings.push({
-        key: "factoryConditionSetInvert",
-        label: "Condition Invert",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "factoryConditionSetInvert",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.factoryConditionSetInvert === undefined
-              ? undefined
-              : String(g.factoryConditionSetInvert),
-          (g) =>
-            g.factoryConditionSetInvert === undefined
-              ? undefined
-              : g.factoryConditionSetInvert
-                ? "Inverted"
-                : "Not inverted"
-        ),
-      });
-
-      groupings.push({
-        key: "nextFactoryLimitScope",
-        label: "Next Factory Limit Scope",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countFactoryPipelines({
-              filters: resolved,
-              groupField: "nextFactoryLimitScope",
-              offset,
-              limit,
-            }),
-          (g) =>
-            g.nextFactoryLimitScope === undefined
-              ? undefined
-              : String(g.nextFactoryLimitScope),
-          (g) =>
-            g.nextFactoryLimitScope === undefined
-              ? undefined
-              : g.nextFactoryLimitScope
-                ? "Scoped"
-                : "Not scoped"
-        ),
-      });
-
-      return groupings;
-    },
+              ),
+            narrow: narrowBy.idList<FactoryPipelineFilters>(
+              "inputTwinClassIdList"
+            ),
+          },
+          {
+            key: "factoryConditionSet",
+            label: "Condition Set",
+            groupField: "factoryConditionSetId",
+            getValue: (g) => g.factoryConditionSetId,
+            getText: (g) => g.factoryConditionSet?.name,
+            renderLabel: (g) =>
+              g.factoryConditionSet && (
+                <FactoryConditionSetResourceLink
+                  data={g.factoryConditionSet}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.idList<FactoryPipelineFilters>(
+              "factoryConditionSetIdList"
+            ),
+          },
+          ...(showOutputTwinStatusColumn
+            ? [
+                {
+                  key: "outputTwinStatus",
+                  label: "Output Status",
+                  groupField: "outputTwinStatusId",
+                  getValue: (g: FactoryPipelineCountGroup) =>
+                    g.outputTwinStatusId,
+                  getText: (g: FactoryPipelineCountGroup) =>
+                    g.outputTwinStatus?.name,
+                  renderLabel: (g: FactoryPipelineCountGroup) =>
+                    g.outputTwinStatus && (
+                      <TwinClassStatusResourceLink
+                        data={g.outputTwinStatus}
+                        withTooltip
+                      />
+                    ),
+                  narrow: narrowBy.idList<FactoryPipelineFilters>(
+                    "outputTwinStatusIdList"
+                  ),
+                },
+              ]
+            : []),
+          {
+            key: "nextFactory",
+            label: "Next Factory",
+            groupField: "nextFactoryId",
+            getValue: (g) => g.nextFactoryId,
+            getText: (g) => g.nextFactory?.name ?? g.nextFactory?.key,
+            renderLabel: (g) =>
+              g.nextFactory && (
+                <FactoryResourceLink data={g.nextFactory} withTooltip />
+              ),
+            narrow:
+              narrowBy.idList<FactoryPipelineFilters>("nextFactoryIdList"),
+          },
+          {
+            key: "active",
+            label: "Active",
+            groupField: "active",
+            getValue: (g) =>
+              g.active === undefined ? undefined : String(g.active),
+            getText: (g) =>
+              g.active === undefined
+                ? undefined
+                : g.active
+                  ? "Active"
+                  : "Inactive",
+            narrow: narrowBy.ternary<FactoryPipelineFilters>("active"),
+          },
+          {
+            // The pipeline search has no condition-invert filter, so this
+            // breakdown is offered by the pie charts only.
+            key: "factoryConditionSetInvert",
+            label: "Condition Invert",
+            groupField: "factoryConditionSetInvert",
+            getValue: (g) =>
+              g.factoryConditionSetInvert === undefined
+                ? undefined
+                : String(g.factoryConditionSetInvert),
+            getText: (g) =>
+              g.factoryConditionSetInvert === undefined
+                ? undefined
+                : g.factoryConditionSetInvert
+                  ? "Inverted"
+                  : "Not inverted",
+          },
+          {
+            key: "nextFactoryLimitScope",
+            label: "Next Factory Limit Scope",
+            groupField: "nextFactoryLimitScope",
+            getValue: (g) =>
+              g.nextFactoryLimitScope === undefined
+                ? undefined
+                : String(g.nextFactoryLimitScope),
+            getText: (g) =>
+              g.nextFactoryLimitScope === undefined
+                ? undefined
+                : g.nextFactoryLimitScope
+                  ? "Scoped"
+                  : "Not scoped",
+            narrow: narrowBy.ternary<FactoryPipelineFilters>(
+              "nextFactoryLimitScope"
+            ),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<FactoryPipelineFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactoryPipelines({
+            filters,
+            groupField: groupField as FactoryPipelineCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchFactoryPipelines({ pagination, filters, sort }),
+      }),
     [
       resolveFilters,
       countFactoryPipelines,
+      searchFactoryPipelines,
       showFactoryColumn,
       showOutputTwinStatusColumn,
     ]
@@ -617,7 +590,8 @@ export function FactoryPipelinesTable({
           actionsCol,
         ]}
         filters={{ filtersInfo: buildFilterFields() }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         dialogForm={factoryPipelinesForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

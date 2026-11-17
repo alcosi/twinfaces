@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -13,7 +13,9 @@ import {
   LINK_SCHEMA,
   Link,
   LinkCountGroup,
+  LinkCountGroupField,
   LinkFilterKeys,
+  LinkFilters,
   LinkStrengthEnum,
   LinkTypesEnum,
   useCreateLink,
@@ -29,12 +31,11 @@ import { PlatformArea } from "@/shared/config";
 import { formatIntlDate } from "@/shared/libs";
 import { Badge, GuidWithCopy } from "@/shared/ui";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "@/widgets/crud-data-table";
 
 import { CreateLinkFormFields } from "./form-fields";
@@ -161,12 +162,18 @@ export function LinksScreen() {
     },
   });
 
+  const resolveFilters = useCallback(
+    (filters: Record<LinkFilterKeys, unknown>): LinkFilters =>
+      mapFiltersToPayload(filters),
+    [mapFiltersToPayload]
+  );
+
   async function fetchLink(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<Link>> {
-    const _filters = mapFiltersToPayload(
+    const _filters = resolveFilters(
       filters.filters as Record<LinkFilterKeys, unknown>
     );
 
@@ -178,156 +185,117 @@ export function LinksScreen() {
     }
   }
 
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<LinkFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "type",
-          label: "Type",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "type",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => g.type,
-            (g: LinkCountGroup) => g.type,
-            (g: LinkCountGroup) =>
-              g.type && <Badge variant="outline">{g.type}</Badge>
-          ),
-        },
-        {
-          key: "linkStrength",
-          label: "Link strength",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "linkStrength",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => g.linkStrength,
-            (g: LinkCountGroup) => g.linkStrength,
-            (g: LinkCountGroup) =>
+  // Server-side breakdowns backed by the link count endpoint, bound to the
+  // active filters: the pie charts, and the grouping of the table view, whose
+  // groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<Link, LinkCountGroup, LinkFilters>({
+        fields: [
+          {
+            key: "type",
+            label: "Type",
+            groupField: "type",
+            getValue: (g) => g.type,
+            getText: (g) => g.type,
+            renderLabel: (g) =>
+              g.type && <Badge variant="outline">{g.type}</Badge>,
+            narrow: narrowBy.valueList<LinkFilters>("typeLikeList"),
+          },
+          {
+            key: "linkStrength",
+            label: "Link strength",
+            groupField: "linkStrength",
+            getValue: (g) => g.linkStrength,
+            getText: (g) => g.linkStrength,
+            renderLabel: (g) =>
               g.linkStrength && (
                 <Badge variant="outline">{g.linkStrength}</Badge>
-              )
-          ),
-        },
-        {
-          key: "srcTwinClass",
-          label: "Source Twin Class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "srcTwinClassId",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => g.srcTwinClassId,
-            (g: LinkCountGroup) => g.srcTwinClass?.name,
-            (g: LinkCountGroup) =>
+              ),
+            narrow: narrowBy.valueList<LinkFilters>("strengthLikeList"),
+          },
+          {
+            key: "srcTwinClass",
+            label: "Source Twin Class",
+            groupField: "srcTwinClassId",
+            getValue: (g) => g.srcTwinClassId,
+            getText: (g) => g.srcTwinClass?.name,
+            renderLabel: (g) =>
               g.srcTwinClass && (
                 <TwinClassResourceLink data={g.srcTwinClass} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "dstTwinClass",
-          label: "Destination Twin Class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "dstTwinClassId",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => g.dstTwinClassId,
-            (g: LinkCountGroup) => g.dstTwinClass?.name,
-            (g: LinkCountGroup) =>
+              ),
+            narrow: narrowBy.idList<LinkFilters>("srcTwinClassIdList"),
+          },
+          {
+            key: "dstTwinClass",
+            label: "Destination Twin Class",
+            groupField: "dstTwinClassId",
+            getValue: (g) => g.dstTwinClassId,
+            getText: (g) => g.dstTwinClass?.name,
+            renderLabel: (g) =>
               g.dstTwinClass && (
                 <TwinClassResourceLink data={g.dstTwinClass} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "createdByUserId",
-          label: "Created by User",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => g.createdByUserId,
-            (g: LinkCountGroup) =>
+              ),
+            narrow: narrowBy.idList<LinkFilters>("dstTwinClassIdList"),
+          },
+          {
+            key: "createdByUserId",
+            label: "Created by User",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) =>
               g.createdByUser?.email ??
               g.createdByUser?.fullName ??
               g.createdByUserId,
-            (g: LinkCountGroup) =>
+            renderLabel: (g) =>
               g.createdByUser ? (
                 <UserResourceLink data={g.createdByUser} withTooltip />
               ) : g.createdByUserId ? (
                 <GuidWithCopy value={g.createdByUserId} />
-              ) : undefined
-          ),
-        },
-        {
-          key: "srcTwinClassInheritable",
-          label: "Src Twin Class Inheritable",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "srcTwinClassInheritable",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => String(g.srcTwinClassInheritable),
-            (g: LinkCountGroup) =>
+              ) : undefined,
+          },
+          {
+            key: "srcTwinClassInheritable",
+            label: "Src Twin Class Inheritable",
+            groupField: "srcTwinClassInheritable",
+            getValue: (g) => String(g.srcTwinClassInheritable),
+            getText: (g) =>
               g.srcTwinClassInheritable ? "Inheritable" : "Not inheritable",
-            (g: LinkCountGroup) => (
+            renderLabel: (g) => (
               <Badge variant="outline">
                 {g.srcTwinClassInheritable ? "Inheritable" : "Not inheritable"}
               </Badge>
-            )
-          ),
-        },
-        {
-          key: "dstTwinClassInheritable",
-          label: "Dst Twin Class Inheritable",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countLinks({
-                filters: resolved,
-                groupField: "dstTwinClassInheritable",
-                offset,
-                limit,
-              }),
-            (g: LinkCountGroup) => String(g.dstTwinClassInheritable),
-            (g: LinkCountGroup) =>
+            ),
+            narrow: narrowBy.ternary<LinkFilters>("srcTwinClassInheritable"),
+          },
+          {
+            key: "dstTwinClassInheritable",
+            label: "Dst Twin Class Inheritable",
+            groupField: "dstTwinClassInheritable",
+            getValue: (g) => String(g.dstTwinClassInheritable),
+            getText: (g) =>
               g.dstTwinClassInheritable ? "Inheritable" : "Not inheritable",
-            (g: LinkCountGroup) => (
+            renderLabel: (g) => (
               <Badge variant="outline">
                 {g.dstTwinClassInheritable ? "Inheritable" : "Not inheritable"}
               </Badge>
-            )
-          ),
-        },
-      ];
-    },
-    [countLinks, mapFiltersToPayload]
+            ),
+            narrow: narrowBy.ternary<LinkFilters>("dstTwinClassInheritable"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<LinkFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countLinks({
+            filters,
+            groupField: groupField as LinkCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchLinks({ pagination, filters, sort }),
+      }),
+    [resolveFilters, countLinks, searchLinks]
   );
 
   const handleOnCreateSubmit = async (
@@ -373,7 +341,8 @@ export function LinksScreen() {
         colDefs.createdAt,
       ]}
       filters={{ filtersInfo: buildFilterFields() }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       dialogForm={linkForm}
       onCreateSubmit={handleOnCreateSubmit}
       renderFormFields={() => (

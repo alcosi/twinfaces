@@ -38,6 +38,8 @@ import {
 import { useInfinitePages } from "./use-infinite-pages";
 
 const GROUPS_PAGE_SIZE = 50;
+/** React key of the group of rows with no value. */
+const NO_VALUE_KEY = "∅";
 const ROWS_PAGE_SIZE = 25;
 /** Horizontal step of one group level. */
 const INDENT_PX = 20;
@@ -302,7 +304,8 @@ function GroupLevel({ path }: { path: GroupPathStep[] }) {
           limit,
           context,
         }),
-      GROUPS_PAGE_SIZE
+      GROUPS_PAGE_SIZE,
+      (bucket) => bucket.value ?? NO_VALUE_KEY
     );
 
   if (!loading && !failed && items.length === 0) {
@@ -322,7 +325,7 @@ function GroupLevel({ path }: { path: GroupPathStep[] }) {
     <>
       {items.map((bucket) => (
         <GroupNode
-          key={bucket.value ?? "∅"}
+          key={bucket.value ?? NO_VALUE_KEY}
           field={field}
           bucket={bucket}
           path={path}
@@ -343,18 +346,23 @@ function GroupLevel({ path }: { path: GroupPathStep[] }) {
 /** The line a group row and its sticky copy share. */
 function GroupRowContent({
   open,
+  expandable = true,
   fieldLabel,
   label,
   count,
 }: {
   open: boolean;
+  expandable?: boolean;
   fieldLabel: string;
   label: ReactNode;
   count: number;
 }) {
   return (
     <div className="flex items-center gap-2">
-      {open ? (
+      {!expandable ? (
+        // Keeps the label in line with the groups that can be opened.
+        <span className="h-4 w-4 shrink-0" />
+      ) : open ? (
         <ChevronDown className="h-4 w-4 shrink-0" />
       ) : (
         <ChevronRight className="h-4 w-4 shrink-0" />
@@ -387,6 +395,7 @@ function GroupNode({
   const id = useId();
   const [open, setOpen] = useState(false);
   const toggle = useCallback(() => setOpen((prev) => !prev), []);
+  const expandable = bucket.expandable !== false;
 
   const depth = path.length;
   const childPath = [...path, { fieldKey: field.key, value: bucket.value }];
@@ -407,11 +416,19 @@ function GroupNode({
   return (
     <>
       <TableRow
-        role="button"
-        aria-expanded={open}
+        role={expandable ? "button" : undefined}
+        aria-expanded={expandable ? open : undefined}
         data-group-id={id}
-        onClick={toggle}
-        className="bg-muted/40 hover:bg-muted/70 cursor-pointer"
+        onClick={expandable ? toggle : undefined}
+        title={
+          expandable
+            ? undefined
+            : "This group can't be opened — no filter for it"
+        }
+        className={cn(
+          "bg-muted/40",
+          expandable && "hover:bg-muted/70 cursor-pointer"
+        )}
       >
         <TableCell
           colSpan={colSpan}
@@ -423,6 +440,7 @@ function GroupNode({
         >
           <GroupRowContent
             open={open}
+            expandable={expandable}
             fieldLabel={field.label}
             label={bucket.label}
             count={bucket.count}
@@ -462,7 +480,8 @@ function GroupRows<TData extends DataTableRow<TData>>({
         total: response.pagination?.total ?? response.data.length,
       };
     },
-    ROWS_PAGE_SIZE
+    ROWS_PAGE_SIZE,
+    (row) => getRowId(row, -1)
   );
 
   const table = useReactTable<TData>({

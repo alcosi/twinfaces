@@ -53,5 +53,9 @@ export type AttachmentFilterKeys =
   | "createdAt";
 
 export type AttachmentFilters = Partial<
-  Pick<components["schemas"]["AttachmentSearchRqV1"], AttachmentFilterKeys>
+  Pick<
+    components["schemas"]["AttachmentSearchRqV1"],
+    // Search-only key: no filter in the UI, but the table grouping narrows by it.
+    AttachmentFilterKeys | "commentIdList"
+  >
 >;

@@ -5,7 +5,7 @@ import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp, Unplug } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,8 +18,11 @@ import {
   FetchTreePageResult,
   TWIN_CLASSES_SCHEMA,
   TwinClassContext,
+  TwinClassCountGroup,
+  TwinClassCountGroupField,
   TwinClassFieldValues,
   TwinClassFilterKeys,
+  TwinClassFilters,
   TwinClassFiltersHierarchyOverride,
   TwinClass_DETAILED,
   buildTwinClassCreateRq,
@@ -50,13 +53,12 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "@/widgets/crud-data-table";
 import { TwinClassFormFields } from "@/widgets/form-fields/twin-class";
 
@@ -473,18 +475,27 @@ export function TwinClasses({ type }: { type?: string }) {
     return undefined;
   }
 
+  // The search filters of the active query, scoped to the (optional)
+  // head/extends hierarchy of this view.
+  const resolveTwinClassFilters = useCallback(
+    (filters: Record<TwinClassFilterKeys, unknown>): TwinClassFilters => ({
+      ...mapFiltersToPayload(filters),
+      ...(buildOverrideFilters() || {}),
+    }),
+    [mapFiltersToPayload, twinClass, type]
+  );
+
   async function fetchTwinClasses(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<TwinClass_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-    const _override = buildOverrideFilters();
-
     try {
       return await searchByFilters({
         pagination,
-        filters: { ..._filters, ...(_override || {}) },
+        filters: resolveTwinClassFilters(
+          filters.filters as Record<TwinClassFilterKeys, unknown>
+        ),
         sort,
       });
     } catch {
@@ -493,357 +504,246 @@ export function TwinClasses({ type }: { type?: string }) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/twin_class/count/v1), bound to the active filters and the
-  // (optional) head/extends hierarchy scope of this view.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<TwinClassFilterKeys, unknown>
-      );
-      const scopedFilters = {
-        ...resolved,
-        ...(buildOverrideFilters() || {}),
-      };
-
-      return [
-        {
-          key: "ownerType",
-          label: "Owner type",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "ownerType",
-                offset,
-                limit,
-              }),
-            (g) => g.ownerType,
-            (g) => g.ownerType
-          ),
-        },
-        {
-          key: "headClass",
-          label: "Head",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "headTwinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.headTwinClassId,
-            (g) => g.headTwinClass?.name,
-            (g) =>
+  // Server-side breakdowns backed by /private/twin_class/count/v1, bound to
+  // the active filters and the (optional) head/extends hierarchy scope of this
+  // view: the pie charts, and the grouping of the table view, whose groups
+  // open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        TwinClass_DETAILED,
+        TwinClassCountGroup,
+        TwinClassFilters
+      >({
+        fields: [
+          {
+            key: "ownerType",
+            label: "Owner type",
+            groupField: "ownerType",
+            getValue: (g) => g.ownerType,
+            getText: (g) => g.ownerType,
+            narrow: narrowBy.valueList<TwinClassFilters>("ownerTypeList"),
+          },
+          {
+            key: "headClass",
+            label: "Head",
+            groupField: "headTwinClassId",
+            getValue: (g) => g.headTwinClassId,
+            getText: (g) => g.headTwinClass?.name,
+            renderLabel: (g) =>
               g.headTwinClass && (
                 <TwinClassResourceLink
                   data={g.headTwinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "extendsClass",
-          label: "Extends",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "extendsTwinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.extendsTwinClassId,
-            (g) => g.extendsTwinClass?.name,
-            (g) =>
+              ),
+          },
+          {
+            key: "extendsClass",
+            label: "Extends",
+            groupField: "extendsTwinClassId",
+            getValue: (g) => g.extendsTwinClassId,
+            getText: (g) => g.extendsTwinClass?.name,
+            renderLabel: (g) =>
               g.extendsTwinClass && (
                 <TwinClassResourceLink
                   data={g.extendsTwinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "markerDataList",
-          label: "Markers list",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "markerDataListId",
-                offset,
-                limit,
-              }),
-            (g) => g.markerDataListId,
-            (g) => g.markerDataList?.name,
-            (g) =>
+              ),
+          },
+          {
+            key: "markerDataList",
+            label: "Markers list",
+            groupField: "markerDataListId",
+            getValue: (g) => g.markerDataListId,
+            getText: (g) => g.markerDataList?.name,
+            renderLabel: (g) =>
               g.markerDataList && (
                 <DatalistResourceLink
                   data={g.markerDataList as DataList}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "tagDataList",
-          label: "Tags list",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "tagDataListId",
-                offset,
-                limit,
-              }),
-            (g) => g.tagDataListId,
-            (g) => g.tagDataList?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<TwinClassFilters>("markerDatalistIdList"),
+          },
+          {
+            key: "tagDataList",
+            label: "Tags list",
+            groupField: "tagDataListId",
+            getValue: (g) => g.tagDataListId,
+            getText: (g) => g.tagDataList?.name,
+            renderLabel: (g) =>
               g.tagDataList && (
                 <DatalistResourceLink
                   data={g.tagDataList as DataList}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "flavorDataList",
-          label: "Flavors list",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "flavorDataListId",
-                offset,
-                limit,
-              }),
-            (g) => g.flavorDataListId,
-            (g) => g.flavorDataList?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<TwinClassFilters>("tagDatalistIdList"),
+          },
+          {
+            key: "flavorDataList",
+            label: "Flavors list",
+            groupField: "flavorDataListId",
+            getValue: (g) => g.flavorDataListId,
+            getText: (g) => g.flavorDataList?.name,
+            renderLabel: (g) =>
               g.flavorDataList && (
                 <DatalistResourceLink
                   data={g.flavorDataList as DataList}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "headHunterFeaturer",
-          label: "Head hunter",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "headHunterFeaturerId",
-                offset,
-                limit,
-              }),
-            (g) =>
+              ),
+            narrow: narrowBy.idList<TwinClassFilters>("flavorDatalistIdList"),
+          },
+          {
+            key: "headHunterFeaturer",
+            label: "Head hunter",
+            groupField: "headHunterFeaturerId",
+            getValue: (g) =>
               g.headHunterFeaturerId != null
                 ? String(g.headHunterFeaturerId)
                 : undefined,
-            (g) => g.headHunterFeaturer?.name,
-            (g) =>
+            getText: (g) => g.headHunterFeaturer?.name,
+            renderLabel: (g) =>
               g.headHunterFeaturer && (
                 <FeaturerResourceLink
                   data={g.headHunterFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "viewPermission",
-          label: "View permission",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "viewPermissionId",
-                offset,
-                limit,
-              }),
-            (g) => g.viewPermissionId,
-            (g) => g.viewPermission?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.numberList<TwinClassFilters>(
+              "headHunterFeaturerIdList"
+            ),
+          },
+          {
+            key: "viewPermission",
+            label: "View permission",
+            groupField: "viewPermissionId",
+            getValue: (g) => g.viewPermissionId,
+            getText: (g) => g.viewPermission?.name,
+            renderLabel: (g) =>
               g.viewPermission && (
                 <PermissionResourceLink
                   data={g.viewPermission as Permission_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "abstract",
-          label: "Abstract",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "abstractt",
-                offset,
-                limit,
-              }),
-            (g) =>
-              g.abstractt == null
-                ? undefined
-                : g.abstractt
-                  ? "Abstract"
-                  : "Not abstract",
-            (g) =>
-              g.abstractt == null
-                ? undefined
-                : g.abstractt
-                  ? "Abstract"
-                  : "Not abstract"
-          ),
-        },
-        {
-          key: "assigneeRequired",
-          label: "Assignee required",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "assigneeRequired",
-                offset,
-                limit,
-              }),
-            (g) =>
+              ),
+            narrow: narrowBy.idList<TwinClassFilters>("viewPermissionIdList"),
+          },
+          {
+            key: "abstract",
+            label: "Abstract",
+            groupField: "abstractt",
+            getValue: (g) =>
+              g.abstractt == null ? undefined : String(g.abstractt),
+            getText: (g) => boolLabel(g.abstractt, "Abstract", "Not abstract"),
+            narrow: narrowBy.ternary<TwinClassFilters>("abstractt"),
+          },
+          {
+            key: "assigneeRequired",
+            label: "Assignee required",
+            groupField: "assigneeRequired",
+            getValue: (g) =>
               g.assigneeRequired == null
                 ? undefined
-                : g.assigneeRequired
-                  ? "Required"
-                  : "Not required",
-            (g) =>
-              g.assigneeRequired == null
-                ? undefined
-                : g.assigneeRequired
-                  ? "Required"
-                  : "Not required"
-          ),
-        },
-        {
-          key: "segment",
-          label: "Segment",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "segment",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.segment, "Segment", "Not segment"),
-            (g) => boolLabel(g.segment, "Segment", "Not segment")
-          ),
-        },
-        {
-          key: "twinClassFreeze",
-          label: "Freeze",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "twinClassFreezeId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassFreezeId,
-            (g) => g.twinClassFreeze?.name,
-            (g) =>
+                : String(g.assigneeRequired),
+            getText: (g) =>
+              boolLabel(g.assigneeRequired, "Required", "Not required"),
+            narrow: narrowBy.ternary<TwinClassFilters>("assigneeRequired"),
+          },
+          {
+            key: "segment",
+            label: "Segment",
+            groupField: "segment",
+            getValue: (g) =>
+              g.segment == null ? undefined : String(g.segment),
+            getText: (g) => boolLabel(g.segment, "Segment", "Not segment"),
+            narrow: narrowBy.ternary<TwinClassFilters>("segment"),
+          },
+          {
+            key: "twinClassFreeze",
+            label: "Freeze",
+            groupField: "twinClassFreezeId",
+            getValue: (g) => g.twinClassFreezeId,
+            getText: (g) => g.twinClassFreeze?.name,
+            renderLabel: (g) =>
               g.twinClassFreeze && (
                 <TwinClassFreezeResourceLink
                   data={g.twinClassFreeze as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
+              ),
+            narrow: narrowBy.idList<TwinClassFilters>("freezeIdList"),
+          },
+          {
+            key: "twinflowSchemaSpace",
+            label: "Twinflow schema",
+            groupField: "twinflowSchemaSpace",
+            getValue: (g) =>
+              g.twinflowSchemaSpace == null
+                ? undefined
+                : String(g.twinflowSchemaSpace),
+            getText: (g) => boolLabel(g.twinflowSchemaSpace, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFilters>("twinflowSchemaSpace"),
+          },
+          {
+            key: "twinClassSchemaSpace",
+            label: "Twinclass schema",
+            groupField: "twinClassSchemaSpace",
+            getValue: (g) =>
+              g.twinClassSchemaSpace == null
+                ? undefined
+                : String(g.twinClassSchemaSpace),
+            getText: (g) => boolLabel(g.twinClassSchemaSpace, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFilters>("twinClassSchemaSpace"),
+          },
+          {
+            key: "aliasSpace",
+            label: "Alias space",
+            groupField: "aliasSpace",
+            getValue: (g) =>
+              g.aliasSpace == null ? undefined : String(g.aliasSpace),
+            getText: (g) => boolLabel(g.aliasSpace, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFilters>("aliasSpace"),
+          },
+          {
+            key: "uniqueName",
+            label: "Unique name",
+            groupField: "uniqueName",
+            getValue: (g) =>
+              g.uniqueName == null ? undefined : String(g.uniqueName),
+            getText: (g) => boolLabel(g.uniqueName, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFilters>("uniqueName"),
+          },
+          {
+            key: "hasDynamicMarkers",
+            label: "Has dynamic markers",
+            groupField: "hasDynamicMarkers",
+            getValue: (g) =>
+              g.hasDynamicMarkers == null
+                ? undefined
+                : String(g.hasDynamicMarkers),
+            getText: (g) => boolLabel(g.hasDynamicMarkers, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFilters>("hasDynamicMarkers"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveTwinClassFilters(
+            filters as Record<TwinClassFilterKeys, unknown>
           ),
-        },
-        {
-          key: "twinflowSchemaSpace",
-          label: "Twinflow schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "twinflowSchemaSpace",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.twinflowSchemaSpace, "Yes", "No"),
-            (g) => boolLabel(g.twinflowSchemaSpace, "Yes", "No")
-          ),
-        },
-        {
-          key: "twinClassSchemaSpace",
-          label: "Twinclass schema",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "twinClassSchemaSpace",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.twinClassSchemaSpace, "Yes", "No"),
-            (g) => boolLabel(g.twinClassSchemaSpace, "Yes", "No")
-          ),
-        },
-        {
-          key: "aliasSpace",
-          label: "Alias space",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "aliasSpace",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.aliasSpace, "Yes", "No"),
-            (g) => boolLabel(g.aliasSpace, "Yes", "No")
-          ),
-        },
-        {
-          key: "uniqueName",
-          label: "Unique name",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "uniqueName",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.uniqueName, "Yes", "No"),
-            (g) => boolLabel(g.uniqueName, "Yes", "No")
-          ),
-        },
-        {
-          key: "hasDynamicMarkers",
-          label: "Has dynamic markers",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClass({
-                filters: scopedFilters,
-                groupField: "hasDynamicMarkers",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.hasDynamicMarkers, "Yes", "No"),
-            (g) => boolLabel(g.hasDynamicMarkers, "Yes", "No")
-          ),
-        },
-      ];
-    },
-    [countTwinClass, mapFiltersToPayload, twinClass, type]
+        count: ({ filters, groupField, offset, limit }) =>
+          countTwinClass({
+            filters,
+            groupField: groupField as TwinClassCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchByFilters({ pagination, filters, sort }),
+      }),
+    [resolveTwinClassFilters, countTwinClass, searchByFilters]
   );
 
   const twinClassesForm = useForm<TwinClassFieldValues>({
@@ -970,7 +870,8 @@ export function TwinClasses({ type }: { type?: string }) {
             actionsCol,
           ]}
           getRowId={(row) => row.id!}
-          chartGroupings={buildChartGroupings}
+          chartGroupings={chartGroupings}
+          grouping={grouping}
           onRowClick={(row) =>
             router.push(`/${PlatformArea.core}/twinclass/${row.id}`)
           }

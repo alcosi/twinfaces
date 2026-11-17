@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical, FolderUp } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,7 +11,10 @@ import { z } from "zod";
 import {
   FACTORY_SCHEMA,
   Factory,
+  FactoryCountGroup,
+  FactoryCountGroupField,
   FactoryFilterKeys,
+  FactoryFilters,
   buildFactoryCreateRq,
   useCreateFactory,
   useFactoryCount,
@@ -30,13 +33,11 @@ import {
   GuidWithCopy,
 } from "@/shared/ui";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
 } from "@/widgets/crud-data-table";
 import { FactoryFormFields } from "@/widgets/form-fields/factory";
 
@@ -215,37 +216,37 @@ export function Factories() {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/factory/count/v1), bound to the active filters. The count
-  // endpoint only supports grouping by createdByUserId.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<FactoryFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "createdByUser",
-          label: "Created By",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countFactories({
-                filters: resolved,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
+  // Server-side breakdown backed by /private/factory/count/v1, bound to the
+  // active filters. The count endpoint only supports grouping by
+  // createdByUserId, and the factory search has no filter by creator, so the
+  // breakdown is offered by the pie chart only — the table view can't open its
+  // groups.
+  const { chartGroupings } = useMemo(
+    () =>
+      buildCountGroupings<Factory, FactoryCountGroup, FactoryFilters>({
+        fields: [
+          {
+            key: "createdByUser",
+            label: "Created By",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.createdByUser?.fullName,
+            renderLabel: (g) =>
               g.createdByUser && (
                 <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-      ];
-    },
+              ),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(filters as Record<FactoryFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countFactories({
+            filters,
+            groupField: groupField as FactoryCountGroupField,
+            offset,
+            limit,
+          }),
+      }),
     [mapFiltersToPayload, countFactories]
   );
 
@@ -277,7 +278,7 @@ export function Factories() {
         filters={{
           filtersInfo: buildFilterFields(),
         }}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
         dialogForm={factoryForm}
         onCreateSubmit={handleOnCreateSubmit}
         renderFormFields={() => (

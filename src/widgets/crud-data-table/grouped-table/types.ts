@@ -30,6 +30,11 @@ export type GroupBucket = {
   value: string | null;
   label: ReactNode;
   count: number;
+  /**
+   * Whether the group can be opened — `false` for a group the search has no
+   * filter to narrow down to (e.g. "not set" of a boolean). Defaults to true.
+   */
+  expandable?: boolean;
 };
 
 export type GroupPage = {

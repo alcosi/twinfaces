@@ -2,11 +2,14 @@
 
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 import {
+  AttachmentCountGroup,
+  AttachmentCountGroupField,
   AttachmentFilterKeys,
+  AttachmentFilters,
   Attachment_DETAILED,
   useAttachmentCount,
   useAttachmentFilters,
@@ -34,13 +37,12 @@ import { AnchorWithCopy } from "@/shared/ui";
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 
 const colDefs: Record<
@@ -224,22 +226,32 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
   const { searchAttachments } = useAttachmentSearchV2();
   const { countAttachment } = useAttachmentCount();
 
+  // The search filters of the active query, scoped to the base twin when the
+  // table is embedded in a twin page.
+  const resolveFilters = useCallback(
+    (filters: Record<AttachmentFilterKeys, unknown>): AttachmentFilters => {
+      const resolved = mapFiltersToPayload(filters);
+      return {
+        ...resolved,
+        twinIdList: baseTwinId
+          ? toArrayOfString(toArray(baseTwinId), "id")
+          : resolved.twinIdList,
+      };
+    },
+    [mapFiltersToPayload, baseTwinId]
+  );
+
   async function fetchAttachments(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<Attachment_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
-
     try {
       return await searchAttachments({
         pagination,
-        filters: {
-          ..._filters,
-          twinIdList: baseTwinId
-            ? toArrayOfString(toArray(baseTwinId), "id")
-            : _filters.twinIdList,
-        },
+        filters: resolveFilters(
+          filters.filters as Record<AttachmentFilterKeys, unknown>
+        ),
         sort,
       });
     } catch {
@@ -248,148 +260,116 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/attachment/count/v1), bound to the active filters. When the table
-  // is scoped to a single twin (embedded in a twin page) the twin itself is
+  // Server-side breakdowns backed by /private/attachment/count/v1, bound to
+  // the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters. When the table is
+  // scoped to a single twin (embedded in a twin page) the twin itself is
   // excluded — grouping by a constant value carries no information.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<AttachmentFilterKeys, unknown>
-      );
-      const scopedFilters = {
-        ...resolved,
-        twinIdList: baseTwinId
-          ? toArrayOfString(toArray(baseTwinId), "id")
-          : resolved.twinIdList,
-      };
-
-      return [
-        ...(isFalsy(baseTwinId)
-          ? [
-              {
-                key: "twin",
-                label: "Twin",
-                load: buildCountGroupingLoad(
-                  ({ offset, limit }) =>
-                    countAttachment({
-                      filters: scopedFilters,
-                      groupField: "twinId",
-                      offset,
-                      limit,
-                    }),
-                  (g) => g.twinId,
-                  (g) => g.twin?.name,
-                  (g) =>
-                    g.twin && <TwinResourceLink data={g.twin} withTooltip />
-                ),
-              },
-            ]
-          : []),
-        {
-          key: "transition",
-          label: "Transition",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countAttachment({
-                filters: scopedFilters,
-                groupField: "twinflowTransitionId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinflowTransitionId,
-            (g) => g.twinflowTransition?.name,
-            (g) =>
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        Attachment_DETAILED,
+        AttachmentCountGroup,
+        AttachmentFilters
+      >({
+        fields: [
+          ...(isFalsy(baseTwinId)
+            ? [
+                {
+                  key: "twin",
+                  label: "Twin",
+                  groupField: "twinId",
+                  getValue: (g: AttachmentCountGroup) => g.twinId,
+                  getText: (g: AttachmentCountGroup) => g.twin?.name,
+                  renderLabel: (g: AttachmentCountGroup) =>
+                    g.twin && <TwinResourceLink data={g.twin} withTooltip />,
+                  narrow: narrowBy.idList<AttachmentFilters>("twinIdList"),
+                },
+              ]
+            : []),
+          {
+            key: "transition",
+            label: "Transition",
+            groupField: "twinflowTransitionId",
+            getValue: (g) => g.twinflowTransitionId,
+            getText: (g) => g.twinflowTransition?.name,
+            renderLabel: (g) =>
               g.twinflowTransition && (
                 <TwinFlowTransitionResourceLink
                   data={g.twinflowTransition as TwinFlowTransition_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "viewPermission",
-          label: "View permission",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countAttachment({
-                filters: scopedFilters,
-                groupField: "viewPermissionId",
-                offset,
-                limit,
-              }),
-            (g) => g.viewPermissionId,
-            (g) => g.viewPermission?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<AttachmentFilters>(
+              "twinflowTransitionIdList"
+            ),
+          },
+          {
+            key: "viewPermission",
+            label: "View permission",
+            groupField: "viewPermissionId",
+            getValue: (g) => g.viewPermissionId,
+            getText: (g) => g.viewPermission?.name,
+            renderLabel: (g) =>
               g.viewPermission && (
                 <PermissionResourceLink data={g.viewPermission} withTooltip />
-              )
-          ),
-        },
-        {
-          key: "author",
-          label: "Author",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countAttachment({
-                filters: scopedFilters,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.author?.fullName,
-            (g) => g.author && <UserResourceLink data={g.author} withTooltip />
-          ),
-        },
-        {
-          key: "field",
-          label: "Field",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countAttachment({
-                filters: scopedFilters,
-                groupField: "twinClassFieldId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassFieldId,
-            (g) => g.twinClassField?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<AttachmentFilters>("viewPermissionIdList"),
+          },
+          {
+            key: "author",
+            label: "Author",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.author?.fullName,
+            renderLabel: (g) =>
+              g.author && <UserResourceLink data={g.author} withTooltip />,
+            narrow: narrowBy.idList<AttachmentFilters>("createdByUserIdList"),
+          },
+          {
+            key: "field",
+            label: "Field",
+            groupField: "twinClassFieldId",
+            getValue: (g) => g.twinClassFieldId,
+            getText: (g) => g.twinClassField?.name,
+            renderLabel: (g) =>
               g.twinClassField && (
                 <TwinClassFieldResourceLink
                   data={g.twinClassField as TwinClassField_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "comment",
-          label: "Comment",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countAttachment({
-                filters: scopedFilters,
-                groupField: "twinCommentId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinCommentId,
-            (g) => g.comment?.text,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<AttachmentFilters>("twinClassFieldIdList"),
+          },
+          {
+            key: "comment",
+            label: "Comment",
+            groupField: "twinCommentId",
+            getValue: (g) => g.twinCommentId,
+            getText: (g) => g.comment?.text,
+            renderLabel: (g) =>
               g.comment && (
                 <CommentResourceLink
                   data={g.comment as Comment_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-      ];
-    },
-    [countAttachment, mapFiltersToPayload, baseTwinId]
+              ),
+            narrow: narrowBy.idList<AttachmentFilters>("commentIdList"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<AttachmentFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countAttachment({
+            filters,
+            groupField: groupField as AttachmentCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: ({ filters, pagination, sort }) =>
+          searchAttachments({ pagination, filters, sort }),
+      }),
+    [resolveFilters, countAttachment, searchAttachments, baseTwinId]
   );
 
   return (
@@ -412,7 +392,8 @@ export function AttachmentsTable({ title = "Attachments", baseTwinId }: Props) {
       ]}
       getRowId={(row) => row.id!}
       fetcher={fetchAttachments}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/attachments/${row.id}`)
       }

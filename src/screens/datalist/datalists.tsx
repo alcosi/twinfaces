@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
-import { useCallback, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -10,7 +10,10 @@ import { z } from "zod";
 import {
   DATALIST_SCHEMA,
   DataList,
+  DataListCountGroup,
+  DataListCountGroupField,
   DatalistFilterKeys,
+  DatalistFilters,
   buildDatalistCreateRq,
   useDatalistCount,
   useDatalistCreate,
@@ -21,13 +24,11 @@ import { UserResourceLink } from "@/features/user/ui";
 import { PagedResponse, SortV1 } from "@/shared/api";
 import { GuidWithCopy } from "@/shared/ui/guid";
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
 } from "@/widgets/crud-data-table";
 import { DatalistFormFields } from "@/widgets/form-fields/datalist";
 
@@ -114,35 +115,34 @@ export const DatalistsScreen = () => {
   // Builds the pie-chart breakdown from the server-side count endpoint
   // (/private/data_list/count/v1), bound to the active filters. `createdByUserId`
   // is the only field the endpoint groups by — it has no column of its own, the
-  // chart is the only place it surfaces.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<DatalistFilterKeys, unknown>
-      );
-
-      return [
-        {
-          key: "createdByUser",
-          label: "Created by",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countDatalists({
-                filters: resolved,
-                groupField: "createdByUserId",
-                offset,
-                limit,
-              }),
-            (g) => g.createdByUserId,
-            (g) => g.createdByUser?.fullName,
-            (g) =>
+  // chart is the only place it surfaces. The search has no creator filter, so
+  // the table view can't be grouped by it.
+  const { chartGroupings } = useMemo(
+    () =>
+      buildCountGroupings<DataList, DataListCountGroup, DatalistFilters>({
+        fields: [
+          {
+            key: "createdByUser",
+            label: "Created by",
+            groupField: "createdByUserId",
+            getValue: (g) => g.createdByUserId,
+            getText: (g) => g.createdByUser?.fullName,
+            renderLabel: (g) =>
               g.createdByUser && (
                 <UserResourceLink data={g.createdByUser} withTooltip />
-              )
-          ),
-        },
-      ];
-    },
+              ),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          mapFiltersToPayload(filters as Record<DatalistFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countDatalists({
+            filters,
+            groupField: groupField as DataListCountGroupField,
+            offset,
+            limit,
+          }),
+      }),
     [mapFiltersToPayload, countDatalists]
   );
 
@@ -181,7 +181,7 @@ export const DatalistsScreen = () => {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
       defaultVisibleColumns={[
         colDefs.id,
         colDefs.key,

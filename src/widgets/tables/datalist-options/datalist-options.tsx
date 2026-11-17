@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,6 +11,8 @@ import { z } from "zod";
 import { DataList } from "@/entities/datalist";
 import {
   DATALIST_OPTION_SCHEMA,
+  DataListOptionCountGroup,
+  DataListOptionCountGroupField,
   DataListOptionFilterKeys,
   DataListOptionFilters,
   DataListOption_DETAILED,
@@ -34,13 +36,12 @@ import {
 import { BooleanIndicator, GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { DatalistOptionFormFields } from "./form-fields";
 
@@ -76,20 +77,11 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
     [mapFiltersToPayload, datalist]
   );
 
-  async function fetchDatalistOptions(
-    pagination: PaginationState,
-    filters: FiltersState,
-    sort?: SortV1
-  ): Promise<PagedResponse<DataListOption_DETAILED>> {
-    try {
-      const response = await searchDatalistOptions({
-        pagination,
-        filters: resolveFilters(
-          filters.filters as Record<DataListOptionFilterKeys, unknown>
-        ),
-        sort,
-      });
-
+  // Derives the columns from a page of fetched options — the attribute columns
+  // depend on the options themselves. Shared by the flat fetcher and the rows
+  // of the grouped view, which may be the only fetch the table makes.
+  const applyColumns = useCallback(
+    (response: PagedResponse<DataListOption_DETAILED>) => {
       const datalistOption = Object.values(response.data);
       const attributeKeys = new Set<string>();
       datalistOption.forEach((item) => {
@@ -174,6 +166,25 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
 
         ...dynamicColumns,
       ]);
+    },
+    [datalist?.id]
+  );
+
+  async function fetchDatalistOptions(
+    pagination: PaginationState,
+    filters: FiltersState,
+    sort?: SortV1
+  ): Promise<PagedResponse<DataListOption_DETAILED>> {
+    try {
+      const response = await searchDatalistOptions({
+        pagination,
+        filters: resolveFilters(
+          filters.filters as Record<DataListOptionFilterKeys, unknown>
+        ),
+        sort,
+      });
+
+      applyColumns(response);
 
       return response;
     } catch {
@@ -207,76 +218,80 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
     });
   };
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/data_list_option/count/v1), bound to the active filters. When the
-  // table is scoped to a single datalist, grouping by datalist would yield a
-  // single slice, so that grouping is omitted in that case.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<DataListOptionFilterKeys, unknown>
-      );
-
-      const groupings: ChartGrouping[] = [
-        {
-          key: "status",
-          label: "Status",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countDatalistOption({
-                filters: resolved,
-                groupField: "status",
-                offset,
-                limit,
-              }),
-            (g) => g.status,
-            (g) => g.status
-          ),
-        },
-        {
-          key: "custom",
-          label: "Custom",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countDatalistOption({
-                filters: resolved,
-                groupField: "custom",
-                offset,
-                limit,
-              }),
-            (g) =>
+  // Server-side breakdowns backed by /private/data_list_option/count/v1, bound
+  // to the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters. When the table is
+  // scoped to a single datalist, grouping by datalist would yield a single
+  // slice, so that grouping is omitted in that case.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        DataListOption_DETAILED,
+        DataListOptionCountGroup,
+        DataListOptionFilters
+      >({
+        fields: [
+          {
+            key: "status",
+            label: "Status",
+            groupField: "status",
+            getValue: (g) => g.status,
+            getText: (g) => g.status,
+            narrow: narrowBy.valueList<DataListOptionFilters>("statusIdList"),
+          },
+          {
+            key: "custom",
+            label: "Custom",
+            groupField: "custom",
+            getValue: (g) => (g.custom == null ? undefined : String(g.custom)),
+            getText: (g) =>
               g.custom == null ? undefined : g.custom ? "Custom" : "Not custom",
-            (g) =>
-              g.custom == null ? undefined : g.custom ? "Custom" : "Not custom"
-          ),
+            narrow: narrowBy.ternary<DataListOptionFilters>("custom"),
+          },
+          ...(!datalist?.id
+            ? [
+                {
+                  key: "dataList",
+                  label: "Datalist",
+                  groupField: "dataListId",
+                  getValue: (g: DataListOptionCountGroup) => g.dataListId,
+                  getText: (g: DataListOptionCountGroup) => g.dataList?.name,
+                  renderLabel: (g: DataListOptionCountGroup) =>
+                    g.dataList && (
+                      <DatalistResourceLink data={g.dataList} withTooltip />
+                    ),
+                  narrow:
+                    narrowBy.idList<DataListOptionFilters>("dataListIdList"),
+                },
+              ]
+            : []),
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<DataListOptionFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countDatalistOption({
+            filters,
+            groupField: groupField as DataListOptionCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: async ({ filters, pagination, sort }) => {
+          const response = await searchDatalistOptions({
+            pagination,
+            filters,
+            sort,
+          });
+          applyColumns(response);
+          return response;
         },
-      ];
-
-      if (!datalist?.id) {
-        groupings.push({
-          key: "dataList",
-          label: "Datalist",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countDatalistOption({
-                filters: resolved,
-                groupField: "dataListId",
-                offset,
-                limit,
-              }),
-            (g) => g.dataListId,
-            (g) => g.dataList?.name,
-            (g) =>
-              g.dataList && (
-                <DatalistResourceLink data={g.dataList} withTooltip />
-              )
-          ),
-        });
-      }
-
-      return groupings;
-    },
-    [countDatalistOption, resolveFilters, datalist?.id]
+      }),
+    [
+      countDatalistOption,
+      searchDatalistOptions,
+      resolveFilters,
+      applyColumns,
+      datalist?.id,
+    ]
   );
 
   return (
@@ -290,7 +305,8 @@ export function DatalistOptionsTable({ datalist }: { datalist?: DataList }) {
       filters={{
         filtersInfo: buildFilterFields(),
       }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/datalist-options/${row.id}`)
       }

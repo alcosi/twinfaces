@@ -25,7 +25,11 @@ export type TwinStatusFilterKeys =
   | "descriptionI18nLikeList";
 
 export type TwinStatusFilters = Partial<
-  Pick<components["schemas"]["TwinStatusSearchRqV1"], TwinStatusFilterKeys>
+  Pick<
+    components["schemas"]["TwinStatusSearchRqV1"],
+    // Search-only key: no filter in the UI, but the table grouping narrows by it.
+    TwinStatusFilterKeys | "inheritable"
+  >
 >;
 
 /** Fields the v2 search endpoint can sort by (by name, not id). */

@@ -3,14 +3,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import {
   SPACE_ROLE_SHEMA,
+  SpaceRoleCountGroup,
+  SpaceRoleCountGroupField,
   SpaceRoleFilterKeys,
+  SpaceRoleFilters,
   SpaceRole_DETAILED,
   useSpaceRoleCount,
   useSpaceRoleCreate,
@@ -26,12 +29,11 @@ import { isTruthy } from "@/shared/libs";
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { SpaceRolesFormFields } from "./form-fields";
 
@@ -193,65 +195,73 @@ export function SpaceRolesTable({ title }: { title?: string }) {
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/space_role/count/v1), bound to the active filters.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveFilters(
-        filters as Record<SpaceRoleFilterKeys, unknown>
-      );
-      const groupings: ChartGrouping[] = [];
-
-      // Scoped to one twin class, that column is a constant and carries no
-      // information — same reason it is dropped from the filters.
-      if (!twinClass?.id) {
-        groupings.push({
-          key: "twinClass",
-          label: "Twin class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countSpaceRoles({
-                filters: resolved,
-                groupField: "twinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassId,
-            (g) => g.twinClass?.name,
-            (g) =>
-              g.twinClass && (
-                <TwinClassResourceLink data={g.twinClass} withTooltip />
-              )
-          ),
-        });
-      }
-
-      groupings.push({
-        key: "businessAccount",
-        label: "Business account",
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countSpaceRoles({
-              filters: resolved,
-              groupField: "businessAccountId",
-              offset,
-              limit,
-            }),
-          (g) => g.businessAccountId,
-          (g) => g.businessAccount?.name,
-          (g) =>
-            g.businessAccount && (
-              <BusinessAccountResourceLink
-                data={g.businessAccount}
-                withTooltip
-              />
-            )
-        ),
-      });
-
-      return groupings;
-    },
-    [resolveFilters, countSpaceRoles, twinClass?.id]
+  // Server-side breakdowns backed by /private/space_role/count/v1, bound to
+  // the active filters: the pie charts, and the grouping of the table view,
+  // whose groups open through the matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        SpaceRole_DETAILED,
+        SpaceRoleCountGroup,
+        SpaceRoleFilters
+      >({
+        fields: [
+          // Scoped to one twin class, that column is a constant and carries no
+          // information — same reason it is dropped from the filters.
+          ...(!twinClass?.id
+            ? [
+                {
+                  key: "twinClass",
+                  label: "Twin class",
+                  groupField: "twinClassId",
+                  getValue: (g: SpaceRoleCountGroup) => g.twinClassId,
+                  getText: (g: SpaceRoleCountGroup) => g.twinClass?.name,
+                  renderLabel: (g: SpaceRoleCountGroup) =>
+                    g.twinClass && (
+                      <TwinClassResourceLink data={g.twinClass} withTooltip />
+                    ),
+                  narrow: narrowBy.idList<SpaceRoleFilters>("twinClassIdList"),
+                },
+              ]
+            : []),
+          {
+            key: "businessAccount",
+            label: "Business account",
+            groupField: "businessAccountId",
+            getValue: (g) => g.businessAccountId,
+            getText: (g) => g.businessAccount?.name,
+            renderLabel: (g) =>
+              g.businessAccount && (
+                <BusinessAccountResourceLink
+                  data={g.businessAccount}
+                  withTooltip
+                />
+              ),
+            narrow: narrowBy.idList<SpaceRoleFilters>("businessAccountIdList"),
+          },
+        ],
+        resolveFilters: ({ filters }) =>
+          resolveFilters(filters as Record<SpaceRoleFilterKeys, unknown>),
+        count: ({ filters, groupField, offset, limit }) =>
+          countSpaceRoles({
+            filters,
+            groupField: groupField as SpaceRoleCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: async ({ filters, pagination, sort }) => {
+          const response = await searchSpaceRole({
+            pagination,
+            filters,
+            sort,
+          });
+          return {
+            data: response.data ?? [],
+            pagination: response.pagination ?? {},
+          };
+        },
+      }),
+    [resolveFilters, countSpaceRoles, searchSpaceRole, twinClass?.id]
   );
 
   return (
@@ -277,7 +287,8 @@ export function SpaceRolesTable({ title }: { title?: string }) {
       ]}
       getRowId={(row) => row.id!}
       filters={{ filtersInfo: buildFilterFields() }}
-      chartGroupings={buildChartGroupings}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       onRowClick={(row) =>
         router.push(`/${PlatformArea.core}/space-roles/${row.id}`)
       }

@@ -45,7 +45,8 @@ export type FactoryPipelineFilterKeys =
 export type FactoryPipelineFilters = Partial<
   Pick<
     components["schemas"]["FactoryPipelineSearchDTOv1"],
-    FactoryPipelineFilterKeys
+    // Search-only key: no filter in the UI, but the table grouping narrows by it.
+    FactoryPipelineFilterKeys | "nextFactoryLimitScope"
   >
 >;
 

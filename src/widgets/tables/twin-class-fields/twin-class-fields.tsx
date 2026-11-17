@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { Copy, EllipsisVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useRef } from "react";
+import { useCallback, useContext, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -10,8 +10,11 @@ import { Featurer_DETAILED } from "@/entities/featurer";
 import { Permission_DETAILED } from "@/entities/permission";
 import { TwinClass_DETAILED } from "@/entities/twin-class";
 import {
+  TwinClassFieldCountGroup,
+  TwinClassFieldCountGroupField,
   TwinClassFieldV1_DETAILED,
   TwinClassFieldV2FilterKeys,
+  TwinClassFieldV2Filters,
   useTwinClassFieldCount,
   useTwinClassFieldCreate,
   useTwinClassFieldFilters,
@@ -34,13 +37,12 @@ import {
 import { GuidWithCopy } from "@/shared/ui/guid";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  buildCountGroupingLoad,
+  buildCountGroupings,
+  narrowBy,
 } from "../../crud-data-table";
 import { TWIN_CLASS_FIELD_SCHEMA } from "./constants";
 import { TwinClassFieldFormFields } from "./form-fields";
@@ -307,21 +309,33 @@ export function TwinClassFieldsTable({
   const { searchByFilters } = useTwinClassFieldSearch();
   const { countTwinClassField } = useTwinClassFieldCount();
 
+  // Maps the table filter values to the search payload, scoped to the
+  // (optional) twin class. Shared by the table fetcher and the server-side
+  // breakdowns so both honour the active filters.
+  const resolveFilters = useCallback(
+    (rawFilters: Record<string, unknown>): TwinClassFieldV2Filters => {
+      const mapped = mapFiltersToPayload(
+        rawFilters as Record<TwinClassFieldV2FilterKeys, unknown>
+      );
+      return {
+        ...mapped,
+        twinClassIdMap: twinClassId
+          ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
+          : mapped.twinClassIdMap,
+      };
+    },
+    [mapFiltersToPayload, twinClassId]
+  );
+
   async function fetchFields(
     pagination: PaginationState,
     filters: FiltersState,
     sort?: SortV1
   ): Promise<PagedResponse<TwinClassFieldV1_DETAILED>> {
-    const _filters = mapFiltersToPayload(filters.filters);
     try {
       const response = await searchByFilters({
         pagination,
-        filters: {
-          ..._filters,
-          twinClassIdMap: twinClassId
-            ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
-            : _filters.twinClassIdMap,
-        },
+        filters: resolveFilters(filters.filters),
         sort,
       });
 
@@ -335,271 +349,220 @@ export function TwinClassFieldsTable({
     }
   }
 
-  // Builds the pie-chart groupings backed by the server-side count endpoint
-  // (/private/twin_class_fields/count/v1), bound to the active filters and the
-  // (optional) scoping twin class.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = mapFiltersToPayload(
-        filters as Record<TwinClassFieldV2FilterKeys, unknown>
-      );
-      const scopedFilters = {
-        ...resolved,
-        twinClassIdMap: twinClassId
-          ? reduceToObject({ list: toArray(twinClassId), defaultValue: true })
-          : resolved.twinClassIdMap,
-      };
-
-      return [
-        {
-          key: "twinClass",
-          label: "Class",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "twinClassId",
-                offset,
-                limit,
-              }),
-            (g) => g.twinClassId,
-            (g) => g.twinClass?.name,
-            (g) =>
+  // Server-side breakdowns backed by /private/twin_class_fields/count/v1,
+  // bound to the active filters and the (optional) scoping twin class: the pie
+  // charts, and the grouping of the table view, whose groups open through the
+  // matching search filters.
+  const { chartGroupings, grouping } = useMemo(
+    () =>
+      buildCountGroupings<
+        TwinClassFieldV1_DETAILED,
+        TwinClassFieldCountGroup,
+        TwinClassFieldV2Filters
+      >({
+        fields: [
+          {
+            key: "twinClass",
+            label: "Class",
+            groupField: "twinClassId",
+            getValue: (g) => g.twinClassId,
+            getText: (g) => g.twinClass?.name,
+            renderLabel: (g) =>
               g.twinClass && (
                 <TwinClassResourceLink
                   data={g.twinClass as TwinClass_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "fieldTyper",
-          label: "Field typer",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "fieldTyperFeaturerId",
-                offset,
-                limit,
-              }),
-            (g) =>
+              ),
+            narrow: narrowBy.idMap<TwinClassFieldV2Filters>("twinClassIdMap"),
+          },
+          {
+            key: "fieldTyper",
+            label: "Field typer",
+            groupField: "fieldTyperFeaturerId",
+            getValue: (g) =>
               g.fieldTyperFeaturerId != null
                 ? String(g.fieldTyperFeaturerId)
                 : undefined,
-            (g) => g.fieldTyperFeaturer?.name,
-            (g) =>
+            getText: (g) => g.fieldTyperFeaturer?.name,
+            renderLabel: (g) =>
               g.fieldTyperFeaturer && (
                 <FeaturerResourceLink
                   data={g.fieldTyperFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "twinSorter",
-          label: "Twin sorter",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "twinSorterFeaturerId",
-                offset,
-                limit,
-              }),
-            (g) =>
+              ),
+            narrow:
+              narrowBy.numberList<TwinClassFieldV2Filters>("fieldTyperIdList"),
+          },
+          {
+            key: "twinSorter",
+            label: "Twin sorter",
+            groupField: "twinSorterFeaturerId",
+            getValue: (g) =>
               g.twinSorterFeaturerId != null
                 ? String(g.twinSorterFeaturerId)
                 : undefined,
-            (g) => g.twinSorterFeaturer?.name,
-            (g) =>
+            getText: (g) => g.twinSorterFeaturer?.name,
+            renderLabel: (g) =>
               g.twinSorterFeaturer && (
                 <FeaturerResourceLink
                   data={g.twinSorterFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "fieldInitializer",
-          label: "Field initializer",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "fieldInitializerFeaturerId",
-                offset,
-                limit,
-              }),
-            (g) =>
+              ),
+            narrow:
+              narrowBy.numberList<TwinClassFieldV2Filters>("twinSorterIdList"),
+          },
+          {
+            key: "fieldInitializer",
+            label: "Field initializer",
+            groupField: "fieldInitializerFeaturerId",
+            getValue: (g) =>
               g.fieldInitializerFeaturerId != null
                 ? String(g.fieldInitializerFeaturerId)
                 : undefined,
-            (g) => g.fieldInitializerFeaturer?.name,
-            (g) =>
+            getText: (g) => g.fieldInitializerFeaturer?.name,
+            renderLabel: (g) =>
               g.fieldInitializerFeaturer && (
                 <FeaturerResourceLink
                   data={g.fieldInitializerFeaturer as Featurer_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "viewPermission",
-          label: "View permission",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "viewPermissionId",
-                offset,
-                limit,
-              }),
-            (g) => g.viewPermissionId,
-            (g) => g.viewPermission?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.numberList<TwinClassFieldV2Filters>(
+              "fieldInitiatorIdList"
+            ),
+          },
+          {
+            key: "viewPermission",
+            label: "View permission",
+            groupField: "viewPermissionId",
+            getValue: (g) => g.viewPermissionId,
+            getText: (g) => g.viewPermission?.name,
+            renderLabel: (g) =>
               g.viewPermission && (
                 <PermissionResourceLink
                   data={g.viewPermission as Permission_DETAILED}
                   withTooltip
                 />
-              )
-          ),
-        },
-        {
-          key: "editPermission",
-          label: "Edit permission",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "editPermissionId",
-                offset,
-                limit,
-              }),
-            (g) => g.editPermissionId,
-            (g) => g.editPermission?.name,
-            (g) =>
+              ),
+            narrow: narrowBy.idList<TwinClassFieldV2Filters>(
+              "viewPermissionIdList"
+            ),
+          },
+          {
+            key: "editPermission",
+            label: "Edit permission",
+            groupField: "editPermissionId",
+            getValue: (g) => g.editPermissionId,
+            getText: (g) => g.editPermission?.name,
+            renderLabel: (g) =>
               g.editPermission && (
                 <PermissionResourceLink
                   data={g.editPermission as Permission_DETAILED}
                   withTooltip
                 />
-              )
-          ),
+              ),
+            narrow: narrowBy.idList<TwinClassFieldV2Filters>(
+              "editPermissionIdList"
+            ),
+          },
+          {
+            key: "required",
+            label: "Required",
+            groupField: "required",
+            getValue: (g) =>
+              g.required == null ? undefined : String(g.required),
+            getText: (g) => boolLabel(g.required, "Required", "Not required"),
+            narrow: narrowBy.ternary<TwinClassFieldV2Filters>("required"),
+          },
+          {
+            key: "system",
+            label: "System",
+            groupField: "system",
+            getValue: (g) => (g.system == null ? undefined : String(g.system)),
+            getText: (g) => boolLabel(g.system, "System", "Not system"),
+            narrow: narrowBy.ternary<TwinClassFieldV2Filters>("system"),
+          },
+          {
+            key: "inheritable",
+            label: "Inheritable",
+            groupField: "inheritable",
+            getValue: (g) =>
+              g.inheritable == null ? undefined : String(g.inheritable),
+            getText: (g) =>
+              boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
+            narrow: narrowBy.ternary<TwinClassFieldV2Filters>("inheritable"),
+          },
+          {
+            key: "dependentField",
+            label: "Dependent",
+            groupField: "dependentField",
+            getValue: (g) =>
+              g.dependentField == null ? undefined : String(g.dependentField),
+            getText: (g) =>
+              boolLabel(g.dependentField, "Dependent", "Not dependent"),
+            narrow: narrowBy.ternary<TwinClassFieldV2Filters>("dependentField"),
+          },
+          {
+            key: "hasDependentFields",
+            label: "Has dependent fields",
+            groupField: "hasDependentFields",
+            getValue: (g) =>
+              g.hasDependentFields == null
+                ? undefined
+                : String(g.hasDependentFields),
+            getText: (g) => boolLabel(g.hasDependentFields, "Yes", "No"),
+            narrow:
+              narrowBy.ternary<TwinClassFieldV2Filters>("hasDependentFields"),
+          },
+          {
+            key: "projectionField",
+            label: "Projected",
+            groupField: "projectionField",
+            getValue: (g) =>
+              g.projectionField == null ? undefined : String(g.projectionField),
+            getText: (g) =>
+              boolLabel(g.projectionField, "Projected", "Not projected"),
+            narrow:
+              narrowBy.ternary<TwinClassFieldV2Filters>("projectionField"),
+          },
+          {
+            key: "hasProjectedFields",
+            label: "Has projected fields",
+            groupField: "hasProjectedFields",
+            getValue: (g) =>
+              g.hasProjectedFields == null
+                ? undefined
+                : String(g.hasProjectedFields),
+            getText: (g) => boolLabel(g.hasProjectedFields, "Yes", "No"),
+            narrow: narrowBy.ternary<TwinClassFieldV2Filters>(
+              "hasProjectionFields"
+            ),
+          },
+        ],
+        resolveFilters: ({ filters }) => resolveFilters(filters),
+        count: ({ filters, groupField, offset, limit }) =>
+          countTwinClassField({
+            filters,
+            groupField: groupField as TwinClassFieldCountGroupField,
+            offset,
+            limit,
+          }),
+        fetchRows: async ({ filters, pagination, sort }) => {
+          const response = await searchByFilters({
+            pagination,
+            filters,
+            sort,
+          });
+          return {
+            data: response.data ?? [],
+            pagination: response.pagination ?? {},
+          };
         },
-        {
-          key: "required",
-          label: "Required",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "required",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.required, "Required", "Not required"),
-            (g) => boolLabel(g.required, "Required", "Not required")
-          ),
-        },
-        {
-          key: "system",
-          label: "System",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "system",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.system, "System", "Not system"),
-            (g) => boolLabel(g.system, "System", "Not system")
-          ),
-        },
-        {
-          key: "inheritable",
-          label: "Inheritable",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "inheritable",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable"),
-            (g) => boolLabel(g.inheritable, "Inheritable", "Not inheritable")
-          ),
-        },
-        {
-          key: "dependentField",
-          label: "Dependent",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "dependentField",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.dependentField, "Dependent", "Not dependent"),
-            (g) => boolLabel(g.dependentField, "Dependent", "Not dependent")
-          ),
-        },
-        {
-          key: "hasDependentFields",
-          label: "Has dependent fields",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "hasDependentFields",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.hasDependentFields, "Yes", "No"),
-            (g) => boolLabel(g.hasDependentFields, "Yes", "No")
-          ),
-        },
-        {
-          key: "projectionField",
-          label: "Projected",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "projectionField",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.projectionField, "Projected", "Not projected"),
-            (g) => boolLabel(g.projectionField, "Projected", "Not projected")
-          ),
-        },
-        {
-          key: "hasProjectedFields",
-          label: "Has projected fields",
-          load: buildCountGroupingLoad(
-            ({ offset, limit }) =>
-              countTwinClassField({
-                filters: scopedFilters,
-                groupField: "hasProjectedFields",
-                offset,
-                limit,
-              }),
-            (g) => boolLabel(g.hasProjectedFields, "Yes", "No"),
-            (g) => boolLabel(g.hasProjectedFields, "Yes", "No")
-          ),
-        },
-      ];
-    },
-    [countTwinClassField, mapFiltersToPayload, twinClassId]
+      }),
+    [resolveFilters, countTwinClassField, searchByFilters]
   );
 
   const form = useForm<TwinClassFieldFormValues>({
@@ -692,7 +655,8 @@ export function TwinClassFieldsTable({
         ]}
         getRowId={(row) => row.id}
         fetcher={fetchFields}
-        chartGroupings={buildChartGroupings}
+        chartGroupings={chartGroupings}
+        grouping={grouping}
         onRowClick={(row) =>
           router.push(`/${PlatformArea.core}/fields/${row.id}`)
         }

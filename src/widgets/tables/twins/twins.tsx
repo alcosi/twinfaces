@@ -10,6 +10,7 @@ import {
   TWIN_CLASS_FIELD_TYPE_TO_SEARCH_PAYLOAD,
   TWIN_SCHEMA,
   TWIN_SELF_FIELD_KEY_TO_ID_MAP,
+  TwinCountGroup,
   TwinFormValues,
   TwinSelfFieldId,
   useCreateTwin,
@@ -25,6 +26,7 @@ import { TwinClassField } from "@/entities/twin-class-field";
 import {
   TwinCreateRq,
   TwinFilterKeys,
+  TwinFilters,
   Twin_DETAILED,
 } from "@/entities/twin/server";
 import { TwinFieldUI } from "@/entities/twinField";
@@ -47,23 +49,15 @@ import {
 import { GuidWithCopy } from "@/shared/ui";
 
 import {
-  ChartDataContext,
-  ChartGrouping,
   CrudDataTable,
   DataTableHandle,
   FiltersState,
   SortableHeader,
-  TableGrouping,
-  buildCountGroupingLoad,
+  buildCountGroupings,
 } from "../../crud-data-table";
 import { TC001Form } from "../../faces/widgets/views/index.client";
 import { TwinFormFields } from "./form-fields";
-import {
-  TWIN_GROUP_DEFINITIONS,
-  TWIN_NO_VALUE_GROUP_LABEL,
-  findTwinGroupDefinition,
-  narrowTwinFiltersToGroup,
-} from "./grouping";
+import { TWIN_GROUP_FIELDS } from "./grouping";
 
 // Default header titles for the twin self (static) columns, keyed by field id.
 const STATIC_FIELD_TITLES: Record<string, string> = {
@@ -478,82 +472,22 @@ export function TwinsTable({
     }
   }
 
-  // Server-side pie-chart breakdowns backed by /private/twin/count/v1, bound to
-  // the active filters. Only static fields whose grouped value the count
-  // response models are offered; dynamic-field grouping is not yet returned by
-  // the endpoint, though dynamic fields remain sortable.
-  const buildChartGroupings = useCallback(
-    ({ filters }: ChartDataContext): ChartGrouping[] => {
-      const resolved = resolveTwinFilters(filters);
-
-      return TWIN_GROUP_DEFINITIONS.map((definition) => ({
-        key: definition.key,
-        label: definition.label,
-        load: buildCountGroupingLoad(
-          ({ offset, limit }) =>
-            countTwins({
-              filters: resolved,
-              groupField: definition.groupFieldId,
-              offset,
-              limit,
-            }),
-          definition.getValue,
-          definition.getText,
-          definition.renderLabel
-        ),
-      }));
-    },
-    [countTwins, resolveTwinFilters]
-  );
-
-  // Multi-level grouping of the table view, on the same count endpoint: a
-  // level is counted under the groups opened above it, and the last level's
-  // rows are searched under the whole path. Not offered for a search by id —
-  // the count endpoint knows only plain filters, so its groups would not
-  // match the rows that search returns.
-  const tableGrouping = useMemo<TableGrouping<Twin_DETAILED> | undefined>(
+  // Server-side breakdowns backed by /private/twin/count/v1, bound to the
+  // active filters: the pie charts, and the multi-level grouping of the table
+  // view. The table can't be grouped for a search by id — the count endpoint
+  // knows only plain filters, so its groups would not match the rows that
+  // search returns.
+  const { chartGroupings, grouping } = useMemo(
     () =>
-      searchId
-        ? undefined
-        : {
-            fields: TWIN_GROUP_DEFINITIONS.map(({ key, label }) => ({
-              key,
-              label,
-            })),
-            countGroups: async ({ fieldKey, path, offset, limit, context }) => {
-              const definition = findTwinGroupDefinition(fieldKey);
-              const { items, total } = await countTwins({
-                filters: narrowTwinFiltersToGroup(
-                  resolveTwinFilters(context.filters),
-                  path
-                ),
-                groupField: definition.groupFieldId,
-                offset,
-                limit,
-              });
-
-              return {
-                total,
-                items: items.map((group) => ({
-                  value: definition.getValue(group) ?? null,
-                  label:
-                    definition.renderLabel(group) ??
-                    definition.getText(group) ??
-                    TWIN_NO_VALUE_GROUP_LABEL,
-                  count: group.count,
-                })),
-              };
-            },
-            fetchRows: ({ path, pagination, context }) =>
-              searchTwins({
-                pagination,
-                filters: narrowTwinFiltersToGroup(
-                  resolveTwinFilters(context.filters),
-                  path
-                ),
-                sort: context.sort,
-              }),
-          },
+      buildCountGroupings<Twin_DETAILED, TwinCountGroup, TwinFilters>({
+        fields: TWIN_GROUP_FIELDS,
+        resolveFilters: ({ filters }) => resolveTwinFilters(filters),
+        count: countTwins,
+        fetchRows: searchId
+          ? undefined
+          : ({ filters, pagination, sort }) =>
+              searchTwins({ pagination, filters, sort }),
+      }),
     [searchId, countTwins, searchTwins, resolveTwinFilters]
   );
 
@@ -602,8 +536,8 @@ export function TwinsTable({
       fetcher={(pagination, filters, sort) =>
         fetchTwins({ pagination, filters, sort })
       }
-      chartGroupings={buildChartGroupings}
-      grouping={tableGrouping}
+      chartGroupings={chartGroupings}
+      grouping={grouping}
       filters={{
         filtersInfo: buildFilterFields(enabledFilters),
       }}
