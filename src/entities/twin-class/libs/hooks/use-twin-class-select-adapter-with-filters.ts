@@ -29,7 +29,19 @@ export function useTwinClassSelectAdapterWithFilters(
   }
 
   async function getById(id: string) {
-    return await fetchTwinClassById({ id });
+    // A class picked here (e.g. one just created from the combobox) drives the
+    // twin create form, which renders the class fields — so they must come too.
+    return await fetchTwinClassById({
+      id,
+      query: {
+        lazyRelation: false,
+        showTwinClassMode: "DETAILED",
+        showTwin2TwinClassMode: "SHORT",
+        showTwinClassHead2TwinClassMode: "DETAILED",
+        showTwinClass2TwinClassFieldMode: "DETAILED",
+        showTwinClassFieldCollectionMode: "SHOW",
+      },
+    });
   }
 
   async function getItemsPaginated(

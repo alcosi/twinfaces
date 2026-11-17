@@ -46,8 +46,9 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassMarker2DataListOptionMode: "DETAILED",
           showTwinClassTag2DataListOptionMode: "DETAILED",
           showTwinClass2TwinClassFieldMode: "DETAILED",
-          // TODO testing if this showMode needed enable him
-          // showTwinClassFieldCollectionMode: "SHOW",
+          // Without it the API returns neither `fieldIds` nor the fields
+          // themselves, and the twin create form has no class fields to render.
+          showTwinClassFieldCollectionMode: "SHOW",
           showTwinClass2PermissionMode: "DETAILED",
           showTwinClassSegmentMode: "SHOW",
           showTwinClassFreezeMode: "DETAILED",
@@ -163,6 +164,8 @@ export function createTwinClassApi(settings: ApiSettings) {
           showTwinClassMode: "DETAILED",
           showTwinClassHead2TwinClassMode: "DETAILED",
           showTwinClassExtends2TwinClassMode: "DETAILED",
+          showTwinClass2TwinClassFieldMode: "DETAILED",
+          showTwinClassFieldCollectionMode: "SHOW",
         },
         path: { searchId },
       },
