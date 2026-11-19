@@ -22,7 +22,7 @@ export async function WT002({ widget, twinId }: WidgetFaceProps) {
   }
 
   const {
-    widget: { buttons },
+    widget: { buttons, pointedTwinId },
     relatedObjects,
   } = wtResult.data as { widget: FaceWT002; relatedObjects: RelatedObjects };
 
@@ -31,7 +31,10 @@ export async function WT002({ widget, twinId }: WidgetFaceProps) {
       if (!button.modalFaceId) return { trigger: button, faceData: undefined };
 
       const modalFace = relatedObjects?.faceMap?.[button.modalFaceId];
-      const modalData = await fetchModalCreateData(modalFace!, twinId!);
+      const modalData = await fetchModalCreateData(
+        modalFace!,
+        pointedTwinId ?? twinId
+      );
 
       return { trigger: button, faceData: modalData };
     })

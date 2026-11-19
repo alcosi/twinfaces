@@ -2,17 +2,17 @@
 
 import Image from "next/image";
 
-import { FaceTW005, FaceTW005Button } from "@/entities/face";
+import { FaceWT007, FaceWT007Button } from "@/entities/face";
 import { TransitionPerformButton } from "@/features/twin-flow-transition/transition-perform-button";
 import { isPopulatedString, isTruthy } from "@/shared/libs";
 
 type Props = {
-  transitionButtons: NonNullable<FaceTW005["buttons"]>;
+  transitionButtons: NonNullable<FaceWT007["buttons"]>;
   transitionIdList: string[];
   twinId: string;
 };
 
-export function TW005Buttons({
+export function WT007Buttons({
   transitionButtons,
   transitionIdList,
   twinId,
@@ -35,7 +35,7 @@ export function TW005Buttons({
     }, [])
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-  function renderButton(btn: FaceTW005Button) {
+  function renderButton(btn: FaceWT007Button) {
     const { id, transitionId, label, icon, showWhenInactive } = btn;
 
     const disabled =

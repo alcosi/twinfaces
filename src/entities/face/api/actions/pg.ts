@@ -11,7 +11,7 @@ type FetchPGFaceOptions = {
   endpoint:
     | "/private/face/pg001/{faceId}/v1"
     | "/private/face/pg002/{faceId}/v1";
-  twinId?: string;
+  twinId: string;
   query?: Record<string, string | boolean>;
 };
 
@@ -48,7 +48,7 @@ async function fetchPGFace<T>({
 
 export async function fetchPG001Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FacePG001> {
   return fetchPGFace<FacePG001>({
     faceId,
@@ -62,7 +62,7 @@ export async function fetchPG001Face(
 
 export async function fetchPG002Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FacePG002> {
   return fetchPGFace<FacePG002>({
     faceId,

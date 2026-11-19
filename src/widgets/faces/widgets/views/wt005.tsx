@@ -1,4 +1,4 @@
-import { fetchTW002Face, getAuthHeaders } from "@/entities/face";
+import { fetchWT005Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { cn, isPopulatedArray, safe } from "@/shared/libs";
 import {
@@ -9,9 +9,9 @@ import {
 } from "@/shared/ui";
 
 import { StatusAlert } from "../../components";
-import { TWidgetFaceProps } from "../types";
+import { WidgetFaceProps } from "../types";
 
-export async function TW002(props: TWidgetFaceProps) {
+export async function WT005(props: WidgetFaceProps) {
   const { twinId, widget } = props;
   const header = await getAuthHeaders();
   const query = {
@@ -19,18 +19,18 @@ export async function TW002(props: TWidgetFaceProps) {
     showTwinFieldCollectionFilterEmptyMode: "ANY",
   } as const;
 
-  const twidgetResult = await safe(() =>
-    fetchTW002Face(widget.widgetFaceId, twinId)
+  const widgetResult = await safe(() =>
+    fetchWT005Face(widget.widgetFaceId, twinId)
   );
 
-  if (!twidgetResult.ok) {
+  if (!widgetResult.ok) {
     return (
-      <StatusAlert variant="error" message="Widget TW002 failed to load." />
+      <StatusAlert variant="error" message="Widget WT005 failed to load." />
     );
   }
 
   const twinResult = await safe(() =>
-    fetchTwinById(twidgetResult.data.widget?.pointedTwinId!, {
+    fetchTwinById(widgetResult.data.widget?.pointedTwinId!, {
       header,
       query,
     })
@@ -38,15 +38,15 @@ export async function TW002(props: TWidgetFaceProps) {
 
   if (!twinResult.ok) {
     return (
-      <StatusAlert variant="warn" message="Failed to load twin for TW002" />
+      <StatusAlert variant="warn" message="Failed to load twin for WT005" />
     );
   }
 
-  if (!isPopulatedArray(twidgetResult.data.widget?.accordionItems)) {
+  if (!isPopulatedArray(widgetResult.data.widget?.accordionItems)) {
     return (
       <StatusAlert
         variant="warn"
-        message="No accordionItems defined for TW002"
+        message="No accordionItems defined for WT005"
       />
     );
   }
@@ -56,7 +56,7 @@ export async function TW002(props: TWidgetFaceProps) {
       <AccordionItem key={0} value="0">
         <AccordionTrigger>Default</AccordionTrigger>
         <AccordionContent>
-          <p>{JSON.stringify(twidgetResult.data.widget.accordionItems)}(</p>
+          <p>{JSON.stringify(widgetResult.data.widget.accordionItems)}(</p>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

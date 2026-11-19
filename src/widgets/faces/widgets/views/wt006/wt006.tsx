@@ -1,4 +1,4 @@
-import { fetchTW004Face } from "@/entities/face";
+import { fetchWT006Face } from "@/entities/face";
 import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
@@ -6,30 +6,30 @@ import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
 import { cn, isMultiElementArray, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
-import { TWidgetFaceProps } from "../../types";
+import { WidgetFaceProps } from "../../types";
 import { buildFieldEditorProps } from "./utils";
 
-export async function TW004(props: TWidgetFaceProps) {
+export async function WT006(props: WidgetFaceProps) {
   const { twinId, widget, className } = props;
 
   const isAdmin = await isAuthUserGranted({
     permission: KEY_TO_ID_PERMISSION_MAP.DOMAIN_MANAGE,
   });
 
-  const twidgetResult = await safe(
+  const widgetResult = await safe(
     withRedirectOnUnauthorized(() =>
-      fetchTW004Face(widget.widgetFaceId, twinId)
+      fetchWT006Face(widget.widgetFaceId, twinId)
     )
   );
 
-  if (!twidgetResult.ok || !twidgetResult.data.widget) {
+  if (!widgetResult.ok || !widgetResult.data.widget) {
     return (
-      <StatusAlert variant="error" message="Widget TW004 failed to load." />
+      <StatusAlert variant="error" message="Widget WT006 failed to load." />
     );
   }
 
-  const twidget = twidgetResult.data.widget;
-  const { id, name, label, fields = [] } = twidget;
+  const widgetConfig = widgetResult.data.widget;
+  const { id, name, label, fields = [] } = widgetConfig;
 
   const sortedFields = fields.toSorted(
     (a, b) => (a.order ?? 0) - (b.order ?? 0)
@@ -38,7 +38,7 @@ export async function TW004(props: TWidgetFaceProps) {
   const fieldEditorPropResults = await Promise.allSettled(
     sortedFields.map(async (field) => {
       return await buildFieldEditorProps(
-        twidget.pointedTwinId!,
+        widgetConfig.pointedTwinId!,
         field.twinClassFieldId!
       );
     })
@@ -57,7 +57,7 @@ export async function TW004(props: TWidgetFaceProps) {
           key={id}
           id={id!}
           label={el.label || "N/A"}
-          twinId={twidget.pointedTwinId!}
+          twinId={widgetConfig.pointedTwinId!}
           twin={twin}
           relatedObjects={relatedObjects}
           field={field}
@@ -81,7 +81,7 @@ export async function TW004(props: TWidgetFaceProps) {
       {isMultiElementArray(fields) && label && (
         <span className="text-base font-bold">{label}</span>
       )}
-      <div className={cn(className, twidget.styleClasses)}>
+      <div className={cn(className, widgetConfig.styleClasses)}>
         {renderedFields}
       </div>
     </div>
