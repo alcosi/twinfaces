@@ -16,7 +16,8 @@ The **Faces Driven UI System** is the core module for dynamic, face-based widget
 - **Face**: A backend-defined UI entity that can represent a layout or a widget. It is the main building block for dynamic UI.
 - **Layout**: A Face that arranges widgets (e.g., pages, tabs). Layouts contain references to widget Faces.
 - **Widget**: A Face that renders a specific UI element (e.g., table, editor). Widgets are the interactive or display components within layouts.
-- **TWidget**: A subtype of Widget, typically used for widgets that are tightly coupled to a "Twin" entity (e.g., TW001). TWidgets may have special data requirements or behaviors.
+
+> **Note (TWINS-943):** the historical `TW`/`WT` split was eliminated — all widgets are now unified under the `WT` prefix with a continuous numbering (`WT001`–`WT010`). Every widget endpoint requires the `twinId` query param, and every widget DTO exposes `pointedTwinId` — the twin the widget actually works with. Always use `pointedTwinId` (not the request `twinId`) for the widget's data calls.
 
 #### UML Diagram
 
@@ -26,24 +27,20 @@ Below is a UML-style diagram (using Mermaid) that shows the same relationships i
 flowchart TD
   Face --> Layout
   Face --> Widget
-  Widget --> TWidget
   Layout -->|contains| Widget
-  Layout -->|contains| TWidget
 ```
 
 **What this means:**
 
 - `Layout` and `Widget` are both types of `Face` (they inherit from Face).
-- `TWidget` is a special kind of `Widget` (inherits from Widget).
-- A `Layout` can include (contain) many `Widget` and `TWidget` components.
+- A `Layout` can include (contain) many `Widget` components.
 
 ### Other Concepts
 
 - **Renderer**: A component that resolves a Face and renders the appropriate React component.
 - **Component Type Prefixes**:
   - `PG`: Page Layout (e.g., `PG001`)
-  - `WT`: Widget Table (e.g., `WT001`)
-  - `TW`: Twin Widget (e.g., `TW001`)
+  - `WT`: Widget (e.g., `WT001`)
   - `TC`: Twin Create (e.g., `TC001`)
 
 ---
@@ -69,26 +66,24 @@ src/widgets/faces/
 │   ├── renderer.tsx
 │   ├── types.ts
 │   └── views/
-│       ├── tw001.tsx
-│       ├── tw002.tsx
-│       ├── tc/
-│       ├── tw004/
-│       ├── tw005/
+│       ├── tc001/
 │       ├── wt001/
+│       ├── wt002/
 │       ├── wt003/
+│       ├── wt004/
+│       ├── wt005.tsx
+│       ├── wt005/
 │       └── ...etc (other widget implementations)
 ```
 
 #### Key Folders & File Responsibilities
 
 - **components/**
-
   - `widgets-container.tsx`: Renders a list of widgets for a given layout.
   - `status-alert.tsx`: Standardized alert component for error/info/success states.
   - Other utility/helper components used by faces (e.g., loading indicators, error boundaries, etc.). Place only face-specific helpers here.
 
 - **layouts/**
-
   - `renderer.tsx`: Main entry for resolving and rendering layout faces.
   - `types.ts`: Type definitions for layout faces.
   - `views/`: Implementations of specific layout types (e.g., `pg001.tsx`, `pg002.tsx`, etc.).
@@ -97,9 +92,9 @@ src/widgets/faces/
   - `renderer.tsx`: Main entry for resolving and rendering widget faces.
   - `types.ts`: Type definitions for widget faces.
   - `views/`: Implementations of specific widget types:
-    - `tw001.tsx`, `tw002.tsx`: Twin widget implementations.
-    - `tc/`: Twin Create widgets(e.g., `tc-form.tsx`).
-    - `tw004/`, `tw005/`, `wt001/`, `wt003/`: Subfolders for complex widgets, each containing main logic and supporting files (e.g., `tw004.tsx`, `utils.ts`).
+    - `wt005.tsx`: Simple single-file widget implementation.
+    - `tc001/`: Twin Create widgets (e.g., `tc001-form.tsx`).
+    - `wt001/`, `wt004/`, `wt006/`: Subfolders for complex widgets, each containing main logic and supporting files (e.g., `wt006.tsx`, `utils.ts`).
 
 ---
 
@@ -108,26 +103,28 @@ src/widgets/faces/
 1. **LayoutRenderer**: Receives a layout Face ID, fetches the Face, and resolves the layout type (e.g., `PG001`).
 2. **Layout**: Renders containers for widgets as defined by the Face.
 3. **WidgetsContainer**: Iterates over widget Faces and delegates rendering.
-4. **WidgetRenderer**: Resolves the widget type (e.g., `WT001`, `TW001`) and renders the corresponding component.
-5. **WT/TW Components**: Implement the actual widget logic and UI.
+4. **WidgetRenderer**: Resolves the widget type (e.g., `WT001`, `WT004`) and renders the corresponding component.
+5. **WT Components**: Implement the actual widget logic and UI.
 
 ```
-LayoutRenderer → Layout → WidgetsContainer → WidgetRenderer → WT/TW Component
+LayoutRenderer → Layout → WidgetsContainer → WidgetRenderer → WT Component
 ```
 
 ---
 
 🧩 **Widget Implementations**
 
-| Widget Name | File Path                             | Notes                   |
-| ----------- | ------------------------------------- | ----------------------- |
-| TW001       | `faces/widgets/views/tw001.tsx`       | Twin image/media slider |
-| TW002       | `faces/widgets/views/tw002.tsx`       | Twin info accordion     |
-| TW004       | `faces/widgets/views/tw004/tw004.tsx` | Twin field editor       |
-| TW005       | `faces/widgets/views/tw005/tw005.tsx` | Twin transition buttons |
-| WT001       | `faces/widgets/views/wt001/wt001.tsx` | Table widget            |
-| WT003       | `faces/widgets/views/wt003/wt003.tsx` | Alert widget            |
-| TC widgets  | `faces/widgets/views/tc/`             | Twin create widgets     |
+| Widget Name | File Path                             | Notes                     |
+| ----------- | ------------------------------------- | ------------------------- |
+| WT001       | `faces/widgets/views/wt001/wt001.tsx` | Twins table               |
+| WT002       | `faces/widgets/views/wt002/wt002.tsx` | Twin create buttons       |
+| WT003       | `faces/widgets/views/wt003/wt003.tsx` | Alert/messages widget     |
+| WT004       | `faces/widgets/views/wt004/wt004.tsx` | Twin image/media gallery  |
+| WT005       | `faces/widgets/views/wt005.tsx`       | Twin i18n field accordion |
+| WT006       | `faces/widgets/views/wt006/wt006.tsx` | Twin field view/edit      |
+| WT007       | `faces/widgets/views/wt007/wt007.tsx` | Twin transition buttons   |
+| WT010       | `faces/widgets/views/wt010/wt010.tsx` | Twin class change         |
+| TC widgets  | `faces/widgets/views/tc001/`          | Twin create widgets       |
 
 ---
 

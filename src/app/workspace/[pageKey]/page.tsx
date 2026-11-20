@@ -16,23 +16,26 @@ export default async function Page(props: Props) {
 
   const { pageKey } = params;
 
-  const pageFaceId = await resolvePageFaceId(pageKey);
+  const page = await resolvePageMenuItem(pageKey);
 
-  if (isUndefined(pageFaceId)) return notFound();
+  if (isUndefined(page?.targetPageFaceId)) return notFound();
 
-  return <LayoutRenderer pageFaceId={pageFaceId} />;
+  // Face component endpoints require twinId (TWINS-943); for general pages it
+  // is the FACE_PAGE twin the navbar menu item points to.
+  return (
+    <LayoutRenderer
+      pageFaceId={page.targetPageFaceId}
+      twinId={page.targetTwinId}
+    />
+  );
 }
 
-async function resolvePageFaceId(pageKey: string): Promise<string | undefined> {
+async function resolvePageMenuItem(pageKey: string) {
   const result = await safe(
     withRedirectOnUnauthorized(() => fetchSidebarFace())
   );
 
   if (!result.ok) return;
 
-  const page = result.data.userAreaMenuItems?.find(
-    (item) => item.key === pageKey
-  );
-
-  return page?.targetPageFaceId;
+  return result.data.userAreaMenuItems?.find((item) => item.key === pageKey);
 }

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { fetchPG002Face } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TabSkeleton } from "@/features/ui/skeletons";
-import { isNumber, isPopulatedArray, safe } from "@/shared/libs";
+import { isNumber, isPopulatedArray, isUndefined, safe } from "@/shared/libs";
 
 import { Tab, TabsLayout } from "../../../layout";
 import { StatusAlert, WidgetsContainer } from "../../components";
@@ -11,6 +11,18 @@ import { Widget } from "../../widgets/types";
 import { PGFaceProps } from "../types";
 
 export async function PG002({ pageFaceId, twinId }: PGFaceProps) {
+  // twinId is a required query param for face component endpoints (TWINS-943);
+  // general pages take it from the navbar menu item's targetTwinId.
+  if (isUndefined(twinId)) {
+    return (
+      <StatusAlert
+        variant="warn"
+        title="Missing twinId"
+        message="This page is not linked to a twin. Check the targetTwinId of the navbar menu item."
+      />
+    );
+  }
+
   const pageResult = await safe(
     withRedirectOnUnauthorized(() => fetchPG002Face(pageFaceId, twinId))
   );

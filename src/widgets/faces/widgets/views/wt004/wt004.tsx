@@ -1,39 +1,39 @@
-import { fetchTW001Face, getAuthHeaders } from "@/entities/face";
+import { fetchWT004Face, getAuthHeaders } from "@/entities/face";
 import { fetchTwinById } from "@/entities/twin/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { MediaType } from "@/features/ui/sliders";
 import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
-import { TWidgetFaceProps } from "../../types";
-import { TW001Client } from "./tw001-client";
+import { WidgetFaceProps } from "../../types";
+import { WT004Client } from "./wt004-client";
 
-export async function TW001(props: TWidgetFaceProps) {
+export async function WT004(props: WidgetFaceProps) {
   const { twinId, widget, className } = props;
   const header = await getAuthHeaders();
   const query = {
-    showFaceTwidget2TwinMode: "DETAILED",
+    showFaceWidget2TwinMode: "DETAILED",
     showAttachment2TwinMode: "DETAILED",
     showTwin2AttachmentCollectionMode: "ALL",
     showTwin2AttachmentMode: "DETAILED",
   } as const;
 
-  const twidgetResult = await safe(
+  const widgetResult = await safe(
     withRedirectOnUnauthorized(() =>
-      fetchTW001Face(widget.widgetFaceId, twinId)
+      fetchWT004Face(widget.widgetFaceId, twinId)
     )
   );
 
-  if (!twidgetResult.ok || !twidgetResult.data.widget) {
+  if (!widgetResult.ok || !widgetResult.data.widget) {
     return (
-      <StatusAlert variant="error" message="Widget TW001 failed to load." />
+      <StatusAlert variant="error" message="Widget WT004 failed to load." />
     );
   }
-  const twidget = twidgetResult.data.widget;
+  const widgetConfig = widgetResult.data.widget;
 
   const twinResult = await safe(
     withRedirectOnUnauthorized(() =>
-      fetchTwinById(twidget.pointedTwinId!, { header, query })
+      fetchTwinById(widgetConfig.pointedTwinId!, { header, query })
     )
   );
 
@@ -42,10 +42,10 @@ export async function TW001(props: TWidgetFaceProps) {
   }
   const { twin } = twinResult.data;
   const allAttachments = twin.attachments ?? [];
-  const relevantAttachments = twidget.imagesTwinClassFieldId
+  const relevantAttachments = widgetConfig.imagesTwinClassFieldId
     ? allAttachments.filter(
         (attachment) =>
-          attachment.twinClassFieldId === twidget.imagesTwinClassFieldId
+          attachment.twinClassFieldId === widgetConfig.imagesTwinClassFieldId
       )
     : allAttachments;
 
@@ -61,14 +61,16 @@ export async function TW001(props: TWidgetFaceProps) {
 
   return (
     <div
-      data-face-id={twidget.id}
+      data-face-id={widgetConfig.id}
       className={cn("h-auto w-full max-w-[480px] object-contain", className)}
     >
-      {twidget.label && <p>{twidget.label}</p>}
-      <TW001Client
+      {widgetConfig.label && <p>{widgetConfig.label}</p>}
+      <WT004Client
         items={typedMedia}
-        twinId={twidget.pointedTwinId!}
-        options={{ imagesTwinClassFieldId: twidget.imagesTwinClassFieldId }}
+        twinId={widgetConfig.pointedTwinId!}
+        options={{
+          imagesTwinClassFieldId: widgetConfig.imagesTwinClassFieldId,
+        }}
       />
     </div>
   );

@@ -51,12 +51,12 @@ export function AppSidebar({
 
   const router = useRouter();
   const pathname = usePathname();
-  const initialArea: keyof typeof PlatformArea =
-    mode === "admin"
-      ? PlatformArea.core
-      : pathname?.startsWith("/core")
-        ? PlatformArea.core
-        : PlatformArea.workspace;
+  // `/core`, `/workspace` and `/browse` each have their own layout, so the
+  // sidebar remounts on every cross-section navigation: the active area must
+  // follow the URL, otherwise opening a user-area page lands on the admin tab.
+  const initialArea: keyof typeof PlatformArea = pathname?.startsWith("/core")
+    ? PlatformArea.core
+    : PlatformArea.workspace;
   const [area, setArea] = useState<keyof typeof PlatformArea>(initialArea);
 
   function onDomainSwitch(domain: DomainView_SHORT) {

@@ -33,25 +33,25 @@ export type FacePG002Widget = components["schemas"]["FacePG002WidgetV1"];
 export type FaceWT001 = components["schemas"]["FaceWT001v1"];
 export type FaceWT002 = components["schemas"]["FaceWT002v1"];
 export type FaceWT003 = components["schemas"]["FaceWT003DTOv1"];
-export type FaceTW001 = components["schemas"]["FaceTW001v1"];
-export type FaceTW002 = components["schemas"]["FaceTW002v1"];
-export type FaceTW004 = components["schemas"]["FaceTW004v1"];
-export type FaceTW005 = components["schemas"]["FaceTW005v1"];
-export type FaceTW007 = components["schemas"]["FaceTW007v1"];
+export type FaceWT004 = components["schemas"]["FaceWT004v1"];
+export type FaceWT005 = components["schemas"]["FaceWT005v1"];
+export type FaceWT006 = components["schemas"]["FaceWT006v2"];
+export type FaceWT007 = components["schemas"]["FaceWT007v1"];
+export type FaceWT010 = components["schemas"]["FaceWT010v1"];
 export type FaceTC001 = components["schemas"]["FaceTC001v1"];
 
 export type FaceWT002Button = components["schemas"]["FaceWT002ButtonV1"];
 
-export type FaceTW005Button = components["schemas"]["FaceTW005ButtonV1"];
+export type FaceWT007Button = components["schemas"]["FaceWT007ButtonV1"];
 
 export type FaceWT001ViewRs = components["schemas"]["FaceWT001ViewRsV1"];
 export type FaceWT002ViewRs = components["schemas"]["FaceWT002ViewRsV1"];
 export type FaceWT003ViewRs = components["schemas"]["FaceWT003ViewRsV1"];
-export type FaceTW001ViewRs = components["schemas"]["FaceTW001ViewRsV1"];
-export type FaceTW002ViewRs = components["schemas"]["FaceTW002ViewRsV1"];
-export type FaceTW004ViewRs = components["schemas"]["FaceTW004ViewRsV2"];
-export type FaceTW005ViewRs = components["schemas"]["FaceTW005ViewRsV1"];
-export type FaceTW007ViewRs = components["schemas"]["FaceTW007ViewRsV1"];
+export type FaceWT004ViewRs = components["schemas"]["FaceWT004ViewRsV1"];
+export type FaceWT005ViewRs = components["schemas"]["FaceWT005ViewRsV1"];
+export type FaceWT006ViewRs = components["schemas"]["FaceWT006ViewRsV2"];
+export type FaceWT007ViewRs = components["schemas"]["FaceWT007ViewRsV1"];
+export type FaceWT010ViewRs = components["schemas"]["FaceWT010ViewRsV1"];
 export type FaceTC001ViewRs = components["schemas"]["FaceTC001ViewRsV1"];
 // NOTE error it type BE team need to fix
 export type FaceBC001ViewRs = components["schemas"]["FaceBC001ViewRsV1"];

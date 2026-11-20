@@ -7,28 +7,29 @@ import { getAuthHeaders } from "../../libs";
 import {
   FaceBC001ViewRs,
   FaceTC001ViewRs,
-  FaceTW001ViewRs,
-  FaceTW002ViewRs,
-  FaceTW004ViewRs,
-  FaceTW005ViewRs,
-  FaceTW007ViewRs,
   FaceWT001ViewRs,
   FaceWT002ViewRs,
   FaceWT003ViewRs,
+  FaceWT004ViewRs,
+  FaceWT005ViewRs,
+  FaceWT006ViewRs,
+  FaceWT007ViewRs,
+  FaceWT010ViewRs,
 } from "../types";
 
 type FetchFaceOptions = {
   faceId: string;
-  twinId?: string;
+  // Required by every face component endpoint (TWINS-943).
+  twinId: string;
   endpoint:
     | "/private/face/wt001/{faceId}/v1"
     | "/private/face/wt002/{faceId}/v1"
     | "/private/face/wt003/{faceId}/v1"
-    | "/private/face/tw001/{faceId}/v1"
-    | "/private/face/tw002/{faceId}/v1"
-    | "/private/face/tw004/{faceId}/v2"
-    | "/private/face/tw005/{faceId}/v1"
-    | "/private/face/tw007/{faceId}/v1"
+    | "/private/face/wt004/{faceId}/v1"
+    | "/private/face/wt005/{faceId}/v1"
+    | "/private/face/wt006/{faceId}/v2"
+    | "/private/face/wt007/{faceId}/v1"
+    | "/private/face/wt010/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1"
     | "/private/face/bc001/{faceId}/v1";
   query: Record<string, string>;
@@ -67,7 +68,7 @@ async function fetchFace<T>({
 
 export async function fetchWT001Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FaceWT001ViewRs> {
   return fetchFace<FaceWT001ViewRs>({
     faceId,
@@ -81,7 +82,7 @@ export async function fetchWT001Face(
 
 export async function fetchWT002Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FaceWT002ViewRs> {
   return fetchFace<FaceWT002ViewRs>({
     faceId,
@@ -96,7 +97,7 @@ export async function fetchWT002Face(
 
 export async function fetchWT003Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FaceWT003ViewRs> {
   return fetchFace<FaceWT003ViewRs>({
     faceId,
@@ -106,17 +107,17 @@ export async function fetchWT003Face(
   });
 }
 
-export async function fetchTW001Face(
+export async function fetchWT004Face(
   faceId: string,
   twinId: string
-): Promise<FaceTW001ViewRs> {
-  return fetchFace<FaceTW001ViewRs>({
-    endpoint: "/private/face/tw001/{faceId}/v1",
+): Promise<FaceWT004ViewRs> {
+  return fetchFace<FaceWT004ViewRs>({
+    endpoint: "/private/face/wt004/{faceId}/v1",
     twinId,
     faceId,
     query: {
-      showFaceTW0012TwinClassFieldMode: "DETAILED",
-      showFaceTwidget2TwinMode: "DETAILED",
+      showFaceWT0042TwinClassFieldMode: "DETAILED",
+      showFaceWidget2TwinMode: "DETAILED",
       showAttachment2TwinMode: "DETAILED",
       showTwin2AttachmentCollectionMode: "ALL",
       showTwin2AttachmentMode: "DETAILED",
@@ -124,54 +125,54 @@ export async function fetchTW001Face(
   });
 }
 
-export async function fetchTW002Face(
+export async function fetchWT005Face(
   faceId: string,
   twinId: string
-): Promise<FaceTW002ViewRs> {
-  return fetchFace<FaceTW002ViewRs>({
-    endpoint: "/private/face/tw002/{faceId}/v1",
+): Promise<FaceWT005ViewRs> {
+  return fetchFace<FaceWT005ViewRs>({
+    endpoint: "/private/face/wt005/{faceId}/v1",
     twinId,
     faceId,
     query: {},
   });
 }
 
-export async function fetchTW004Face(
+export async function fetchWT006Face(
   faceId: string,
   twinId: string
-): Promise<FaceTW004ViewRs> {
-  return fetchFace<FaceTW004ViewRs>({
-    endpoint: "/private/face/tw004/{faceId}/v2",
+): Promise<FaceWT006ViewRs> {
+  return fetchFace<FaceWT006ViewRs>({
+    endpoint: "/private/face/wt006/{faceId}/v2",
     twinId,
     faceId,
     query: {
-      showFaceTW0042TwinClassFieldMode: "SHORT",
-      showFaceTwidget2TwinMode: "DETAILED",
+      showFaceWT0062TwinClassFieldMode: "SHORT",
+      showFaceWidget2TwinMode: "DETAILED",
     },
   });
 }
 
-export async function fetchTW005Face(
+export async function fetchWT007Face(
   faceId: string,
   twinId: string
-): Promise<FaceTW005ViewRs> {
-  return fetchFace<FaceTW005ViewRs>({
-    endpoint: "/private/face/tw005/{faceId}/v1",
+): Promise<FaceWT007ViewRs> {
+  return fetchFace<FaceWT007ViewRs>({
+    endpoint: "/private/face/wt007/{faceId}/v1",
     twinId,
     faceId,
     query: {
-      showFaceTW005Button2TransitionMode: "DETAILED",
-      showFaceTwidget2TwinMode: "DETAILED",
+      showFaceWT007Button2TransitionMode: "DETAILED",
+      showFaceWidget2TwinMode: "DETAILED",
     },
   });
 }
 
-export async function fetchTW007Face(
+export async function fetchWT010Face(
   faceId: string,
   twinId: string
-): Promise<FaceTW007ViewRs> {
-  return fetchFace<FaceTW007ViewRs>({
-    endpoint: "/private/face/tw007/{faceId}/v1",
+): Promise<FaceWT010ViewRs> {
+  return fetchFace<FaceWT010ViewRs>({
+    endpoint: "/private/face/wt010/{faceId}/v1",
     twinId,
     faceId,
     query: {},
@@ -198,7 +199,7 @@ export async function fetchTC001Face(
 
 export async function fetchBC001Face(
   faceId: string,
-  twinId?: string
+  twinId: string
 ): Promise<FaceBC001ViewRs> {
   return fetchFace<FaceBC001ViewRs>({
     faceId,
