@@ -14,6 +14,7 @@ import {
   FaceWT005ViewRs,
   FaceWT006ViewRs,
   FaceWT007ViewRs,
+  FaceWT008ViewRs,
   FaceWT010ViewRs,
 } from "../types";
 
@@ -29,6 +30,7 @@ type FetchFaceOptions = {
     | "/private/face/wt005/{faceId}/v1"
     | "/private/face/wt006/{faceId}/v2"
     | "/private/face/wt007/{faceId}/v1"
+    | "/private/face/wt008/{faceId}/v1"
     | "/private/face/wt010/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1"
     | "/private/face/bc001/{faceId}/v1";
@@ -164,6 +166,18 @@ export async function fetchWT007Face(
       showFaceWT007Button2TransitionMode: "DETAILED",
       showFaceWidget2TwinMode: "DETAILED",
     },
+  });
+}
+
+export async function fetchWT008Face(
+  faceId: string,
+  twinId: string
+): Promise<FaceWT008ViewRs> {
+  return fetchFace<FaceWT008ViewRs>({
+    endpoint: "/private/face/wt008/{faceId}/v1",
+    twinId,
+    faceId,
+    query: {},
   });
 }
 

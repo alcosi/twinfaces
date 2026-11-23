@@ -43,7 +43,15 @@ async function filterAccessibleMenuItems(
     result.push({ ...item, children: filteredChildren });
   }
 
-  return result;
+  return result.sort(byMenuOrder);
+}
+
+// NB001 `order`: smaller values are shown first among siblings. Items without
+// an order keep their backend sequence after the ordered ones (sort is stable).
+function byMenuOrder(a: FaceNB001MenuItem, b: FaceNB001MenuItem): number {
+  return (
+    (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER)
+  );
 }
 
 export async function SidebarLayout({ children }: Props) {
