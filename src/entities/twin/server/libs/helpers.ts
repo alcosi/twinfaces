@@ -36,10 +36,34 @@ export function hydrateTwinFromMap<T extends Twin_HYDRATED>(
 
   if (dto.ownerUserId && relatedObjects.userMap) {
     hydrated.ownerUser = relatedObjects.userMap[dto.ownerUserId];
+
+    if (relatedObjects.userGroupMap) {
+      hydrated.ownerUserGroups = hydrated.ownerUser?.userGroupIds?.reduce<
+        NonNullable<T["ownerUserGroups"]>
+      >((acc, groupId) => {
+        const group = relatedObjects.userGroupMap?.[groupId];
+        if (group) acc.push(group);
+
+        return acc;
+      }, []);
+    }
   }
 
   if (dto.headTwinId && relatedObjects.twinMap) {
     hydrated.headTwin = relatedObjects.twinMap[dto.headTwinId];
+  }
+
+  if (dto.links?.forwardLinks && relatedObjects.twinMap) {
+    hydrated.forwardLinkedTwins = Object.values(dto.links.forwardLinks).reduce<
+      NonNullable<T["forwardLinkedTwins"]>
+    >((acc, link) => {
+      const twin = link.dstTwinId
+        ? relatedObjects.twinMap?.[link.dstTwinId]
+        : undefined;
+      if (twin) acc.push(twin);
+
+      return acc;
+    }, []);
   }
 
   if (dto.tagIdList && relatedObjects.dataListsOptionMap) {

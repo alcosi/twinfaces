@@ -70,6 +70,7 @@ export async function WT004(props: WidgetFaceProps) {
         twinId={widgetConfig.pointedTwinId!}
         options={{
           imagesTwinClassFieldId: widgetConfig.imagesTwinClassFieldId,
+          displayType: widgetConfig.key === "image_list" ? "list" : "carousel",
         }}
       />
     </div>

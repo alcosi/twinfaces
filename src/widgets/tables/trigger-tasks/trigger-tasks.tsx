@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnDef, PaginationState } from "@tanstack/table-core";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";

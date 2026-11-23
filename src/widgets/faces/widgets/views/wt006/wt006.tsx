@@ -3,7 +3,7 @@ import { KEY_TO_ID_PERMISSION_MAP } from "@/entities/permission/server";
 import { isAuthUserGranted } from "@/entities/user/server";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { TwinFieldEditor } from "@/features/twin/ui/field-editor";
-import { cn, isMultiElementArray, safe } from "@/shared/libs";
+import { cn, safe } from "@/shared/libs";
 
 import { StatusAlert } from "../../../components";
 import { WidgetFaceProps } from "../../types";
@@ -56,7 +56,7 @@ export async function WT006(props: WidgetFaceProps) {
         <TwinFieldEditor
           key={id}
           id={id!}
-          label={el.label || "N/A"}
+          label={label ? undefined : el.label || "N/A"}
           twinId={widgetConfig.pointedTwinId!}
           twin={twin}
           relatedObjects={relatedObjects}
@@ -78,8 +78,13 @@ export async function WT006(props: WidgetFaceProps) {
 
   return (
     <div data-face-id={id} className={cn(className)}>
-      {isMultiElementArray(fields) && label && (
-        <span className="text-base font-bold">{label}</span>
+      {/* The widget caption is shown for any number of fields; per-field
+          captions are then redundant and hidden above. Face style classes may
+          restyle the caption (twMerge lets them win conflicts). */}
+      {label && (
+        <span className={cn("text-base font-bold", widgetConfig.styleClasses)}>
+          {label}
+        </span>
       )}
       <div className={cn(className, widgetConfig.styleClasses)}>
         {renderedFields}

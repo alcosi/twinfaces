@@ -95,6 +95,7 @@ function Component(
       active: true,
       outputStatusId: "",
       nextFactoryId: "",
+      name: "",
       description: undefined,
     },
   });
@@ -130,6 +131,7 @@ function Component(
       active: true,
       optional: false,
       order: 0,
+      name: "",
       description: undefined,
     },
   });

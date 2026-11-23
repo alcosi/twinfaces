@@ -37,6 +37,7 @@ export type FaceWT004 = components["schemas"]["FaceWT004v1"];
 export type FaceWT005 = components["schemas"]["FaceWT005v1"];
 export type FaceWT006 = components["schemas"]["FaceWT006v2"];
 export type FaceWT007 = components["schemas"]["FaceWT007v1"];
+export type FaceWT008 = components["schemas"]["FaceWT008v1"];
 export type FaceWT010 = components["schemas"]["FaceWT010v1"];
 export type FaceTC001 = components["schemas"]["FaceTC001v1"];
 
@@ -51,6 +52,7 @@ export type FaceWT004ViewRs = components["schemas"]["FaceWT004ViewRsV1"];
 export type FaceWT005ViewRs = components["schemas"]["FaceWT005ViewRsV1"];
 export type FaceWT006ViewRs = components["schemas"]["FaceWT006ViewRsV2"];
 export type FaceWT007ViewRs = components["schemas"]["FaceWT007ViewRsV1"];
+export type FaceWT008ViewRs = components["schemas"]["FaceWT008ViewRsV1"];
 export type FaceWT010ViewRs = components["schemas"]["FaceWT010ViewRsV1"];
 export type FaceTC001ViewRs = components["schemas"]["FaceTC001ViewRsV1"];
 // NOTE error it type BE team need to fix

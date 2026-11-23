@@ -22,6 +22,7 @@ import {
   WT005,
   WT006,
   WT007,
+  WT008,
   WT010,
 } from "./views";
 
@@ -39,6 +40,7 @@ const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT005,
   WT006,
   WT007,
+  WT008,
   WT010,
 };
 
@@ -55,6 +57,7 @@ const WIDGET_SKELETONS: Record<keyof typeof WIDGETS, FC> = {
   WT005: () => <Skeleton className="h-36 w-full" />,
   WT006: () => <WidgetItemSkeleton />,
   WT007: () => <Skeleton className="h-10 w-20 rounded-md" />,
+  WT008: () => <Skeleton className="h-40 w-full rounded-lg" />,
   WT010: () => <Skeleton className="h-10 w-20 rounded-md" />,
 };
 

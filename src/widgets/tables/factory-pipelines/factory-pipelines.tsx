@@ -325,6 +325,7 @@ export function FactoryPipelinesTable({
         active: true,
         outputStatusId: outputTwinStatusId || "",
         nextFactoryId: "",
+        name: "",
         description: undefined,
       },
     }
@@ -568,6 +569,7 @@ export function FactoryPipelinesTable({
           colDefs.active,
           ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
+          colDefs.name,
           colDefs.description,
           actionsCol,
         ]}
@@ -586,6 +588,7 @@ export function FactoryPipelinesTable({
           colDefs.active,
           ...(showOutputTwinStatusColumn ? [colDefs.outputTwinStatus] : []),
           colDefs.nextFactory,
+          colDefs.name,
           colDefs.description,
           actionsCol,
         ]}

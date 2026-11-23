@@ -51,6 +51,32 @@ export function createCommentApi(settings: ApiSettings) {
     });
   }
 
+  // Search by a backend-configured comment search. The search itself defines
+  // which comments match; the caller only supplies its named params (e.g.
+  // `twinId`) and paging.
+  function searchConfigured({
+    searchId,
+    params,
+    pagination,
+  }: {
+    searchId: string;
+    params?: Record<string, string>;
+    pagination: PaginationState;
+  }) {
+    return settings.client.POST("/private/comment/search/{searchId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { searchId },
+        query: {
+          ...COMMENT_RELATION_MODES,
+          offset: pagination.pageIndex * pagination.pageSize,
+          limit: pagination.pageSize,
+        },
+      },
+      body: { params },
+    });
+  }
+
   function count({
     filters,
     groupFields,
@@ -118,6 +144,7 @@ export function createCommentApi(settings: ApiSettings) {
 
   return {
     search,
+    searchConfigured,
     count,
     getById,
     create,

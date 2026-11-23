@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { Control, useWatch } from "react-hook-form";
 
