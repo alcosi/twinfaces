@@ -1,3 +1,5 @@
+"use client";
+
 import { ComboboxFormItem, FormItemProps } from "@/components/form-fields";
 
 import { useValidTwinsForLinkSelectAdapter as useByTwinIdAdapter } from "@/entities/twin";
