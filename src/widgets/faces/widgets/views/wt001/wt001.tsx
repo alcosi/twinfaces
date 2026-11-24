@@ -49,9 +49,27 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
     ? await fetchModalCreateData(modalFace!, pointedTwinId ?? twinId)
     : undefined;
 
+  // The face may list the same field more than once; a duplicated column
+  // breaks the table (duplicate React keys, cells rendered twice), so keep the
+  // first occurrence per twinClassFieldId.
   const sortedEnabledColumns = Array.isArray(columns)
-    ? [...columns].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    ? [...columns]
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .filter(
+          (col, index, all) =>
+            !col.twinClassFieldId ||
+            all.findIndex(
+              (other) => other.twinClassFieldId === col.twinClassFieldId
+            ) === index
+        )
     : [];
+
+  if (Array.isArray(columns) && sortedEnabledColumns.length < columns.length) {
+    console.warn(
+      `[WT001] face ${widget.widgetFaceId} has duplicated columns; ` +
+        `${columns.length - sortedEnabledColumns.length} dropped`
+    );
+  }
 
   return (
     <WT001Client
@@ -62,7 +80,9 @@ export async function WT001({ widget, twinId }: WidgetFaceProps) {
       isAdmin={isAdmin}
       modalCreateData={modalCreateData}
       searchId={searchId}
-      searchParams={searchParams}
+      // Configured searches take the twin the widget points to as their
+      // `twinId` param (same as WT008); an explicit config value wins.
+      searchParams={{ twinId: pointedTwinId ?? twinId, ...searchParams }}
     />
   );
 }
