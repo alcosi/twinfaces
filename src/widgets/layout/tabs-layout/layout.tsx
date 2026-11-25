@@ -44,6 +44,18 @@ export function TabsLayout({ tabs, rightSlot }: Props) {
 
   return (
     <Tabs value={activeTab} onValueChange={handleOnValueChange}>
+      {/* Targets for the `#tab` URL hash. Without them the browser/router
+          scroll the tab content itself into view, which slides its top under
+          the sticky header and tab bar. Anchoring to the top of the tab bar
+          (offset by the header) keeps the page where it starts. */}
+      {tabs.map((tab) => (
+        <span
+          key={tab.key}
+          id={tab.key}
+          aria-hidden
+          className="block scroll-mt-[var(--header-height)]"
+        />
+      ))}
       <nav className="border-border bg-background sticky top-[var(--header-height)] z-20 flex w-full border-b">
         <div className="min-w-0 flex-1 overflow-x-auto">
           <TabsList className="flex min-w-max items-center gap-1 p-2">

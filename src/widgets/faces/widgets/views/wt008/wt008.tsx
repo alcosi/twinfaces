@@ -12,6 +12,7 @@ import { WT008Client } from "./wt008-client";
  * Comments come from the backend-configured comment search
  * (`twinCommentSearchId`); the twin the widget points to is passed to it as the
  * `twinId` search param, the same way configured twin searches receive theirs.
+ * Users with the COMMENT action on that twin also get a field to add one.
  */
 export async function WT008({ twinId, widget, className }: WidgetFaceProps) {
   const result = await safe(
@@ -28,6 +29,14 @@ export async function WT008({ twinId, widget, className }: WidgetFaceProps) {
 
   const { id, label, pointedTwinId, twinCommentSearchId, styleClasses } =
     result.data.widget;
+  const commentTwinId = pointedTwinId ?? twinId;
+
+  // A comment can be added only when the current user has COMMENT among the
+  // pointed twin's actions; otherwise the feed is read-only.
+  const canComment =
+    result.data.relatedObjects?.twinMap?.[commentTwinId]?.actions?.includes(
+      "COMMENT"
+    ) ?? false;
 
   if (isFalsy(twinCommentSearchId)) {
     return (
@@ -44,7 +53,8 @@ export async function WT008({ twinId, widget, className }: WidgetFaceProps) {
       <WT008Client
         title={label || "Comments"}
         searchId={twinCommentSearchId}
-        twinId={pointedTwinId ?? twinId}
+        twinId={commentTwinId}
+        canComment={canComment}
       />
     </div>
   );

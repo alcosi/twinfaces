@@ -33,7 +33,7 @@ export function WorkspaceAreaSidebarMenu({ items }: Props) {
           getItemProps={(item) => ({
             key: item.key || "",
             label: item.label ?? "N/A",
-            url: item.targetPageFaceId
+            url: item.targetTwinId
               ? `/${PlatformArea.workspace}/${slugify(item.key)}`
               : undefined,
             iconSource: item.icon,
@@ -53,7 +53,7 @@ function AccordionMenu({ items }: Props) {
   ) => {
     return items.map((item) => {
       const keyPath = `${parentKey}-${item.key}`;
-      const url = item.targetPageFaceId
+      const url = item.targetTwinId
         ? `/${PlatformArea.workspace}/${slugify(item.key)}`
         : undefined;
 
@@ -64,7 +64,12 @@ function AccordionMenu({ items }: Props) {
             label={item.label!}
             url={url}
             iconSource={item.icon ?? ""}
-            className={cn("px-2", `ml-${level * 2}`)}
+            // Same text style as the group items, which get it from
+            // SidebarGroupLabel + AccordionTrigger.
+            className={cn(
+              "text-sidebar-foreground/70 px-2 font-medium",
+              `ml-${level * 2}`
+            )}
           />
         );
       }
@@ -73,7 +78,7 @@ function AccordionMenu({ items }: Props) {
         <AccordionItem
           key={keyPath}
           value={keyPath}
-          className="px-0 border-b-0"
+          className="border-b-0 px-0"
         >
           <AccordionTrigger
             className={cn(
@@ -95,7 +100,7 @@ function AccordionMenu({ items }: Props) {
             <AccordionContent
               className={cn("mt-1 py-1", `ml-${(level + 1) * 2}`)}
             >
-              <div className="border-l border-border ml-2">
+              <div className="border-border ml-2 border-l">
                 {renderItems(item.children!, level, keyPath)}
               </div>
             </AccordionContent>
@@ -106,7 +111,7 @@ function AccordionMenu({ items }: Props) {
   };
 
   return (
-    <Accordion type="multiple" className="w-full p-0 pt-2 space-y-1">
+    <Accordion type="multiple" className="w-full space-y-1 p-0 pt-2">
       {renderItems(items)}
     </Accordion>
   );

@@ -177,7 +177,11 @@ export async function fetchWT008Face(
     endpoint: "/private/face/wt008/{faceId}/v1",
     twinId,
     faceId,
-    query: {},
+    // The pointed twin and its actions decide whether a comment can be added.
+    query: {
+      showFaceWidget2TwinMode: "DETAILED",
+      showTwinActionMode: "SHOW",
+    },
   });
 }
 
