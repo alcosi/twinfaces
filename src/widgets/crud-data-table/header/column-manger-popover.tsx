@@ -149,7 +149,9 @@ function DraggableCheckbox({
       style={style}
       className="hover:bg-muted flex flex-row items-center gap-2 rounded-lg px-2 py-1.5 transition-colors"
     >
-      <Label className="grow cursor-default text-sm">{column.name}</Label>
+      <Label className="text-foreground/70 grow cursor-default text-sm">
+        {column.name}
+      </Label>
 
       <CheckboxFormItem
         key={column.id}

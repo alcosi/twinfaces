@@ -134,8 +134,14 @@ export function createCommentApi(settings: ApiSettings) {
     });
   }
 
-  function create() {
-    // TODO: Add implementation
+  function create({ twinId, text }: { twinId: string; text: string }) {
+    return settings.client.POST("/private/comment/twin/{twinId}/v1", {
+      params: {
+        header: getApiDomainHeaders(settings),
+        path: { twinId },
+      },
+      body: { comment: { text } },
+    });
   }
 
   function update() {

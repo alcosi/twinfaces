@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 import { useCrudDataTableStore } from "@/features/crud-data-table";
 import { isPopulatedString } from "@/shared/libs";
@@ -88,6 +88,10 @@ function getInitialState<TData extends DataTableRow<TData>, TValue>(
   };
 }
 
+type ViewSettingsAction =
+  | { kind: "update"; updates: TableViewStateUpdate }
+  | { kind: "reset"; state: TableViewState };
+
 type ViewSettingsOptions<TData extends DataTableRow<TData>, TValue> = {
   defaultVisibleColumns?: DataTableProps<TData, TValue>["columns"];
   orderedColumns?: DataTableProps<TData, TValue>["columns"];
@@ -121,8 +125,11 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>({
   );
   const savedState = hasNavigatedToNewPage ? null : store.get(tableStorageKey);
 
-  const [viewSettings, updateViewSettings] = useReducer(
-    (state: TableViewState, updates: TableViewStateUpdate): TableViewState => {
+  const [viewSettings, dispatch] = useReducer(
+    (state: TableViewState, action: ViewSettingsAction): TableViewState => {
+      if (action.kind === "reset") return action.state;
+
+      const { updates } = action;
       const result = {
         ...state,
         ...updates,
@@ -139,6 +146,33 @@ export function useViewSettings<TData extends DataTableRow<TData>, TValue>({
       defaultLayoutMode
     )
   );
+
+  const updateViewSettings = useCallback(
+    (updates: TableViewStateUpdate) => dispatch({ kind: "update", updates }),
+    []
+  );
+
+  // The storage key includes the column signature, and some tables (WT001)
+  // only get part of their columns on the first render — the rest arrive once
+  // the twin class fields are fetched. When the key changes, the state still
+  // holds what was read under the old key (e.g. only the static columns as
+  // visible), so re-read it from the entry the table really belongs to.
+  const loadedStorageKeyRef = useRef(tableStorageKey);
+  useEffect(() => {
+    if (loadedStorageKeyRef.current === tableStorageKey) return;
+    loadedStorageKeyRef.current = tableStorageKey;
+
+    dispatch({
+      kind: "reset",
+      state: getInitialState(
+        savedState,
+        hasNavigatedToNewPage,
+        defaultVisibleColumns,
+        orderedColumns,
+        defaultLayoutMode
+      ),
+    });
+  }, [tableStorageKey]);
 
   useEffect(() => {
     if (hasNavigatedToNewPage && lastStorageKey) {

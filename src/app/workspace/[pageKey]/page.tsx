@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { FaceNB001MenuItem, fetchSidebarFace } from "@/entities/face";
 import { withRedirectOnUnauthorized } from "@/features/auth";
 import { isUndefined, safe, slugify } from "@/shared/libs";
-import { LayoutRenderer } from "@/widgets/faces/layouts";
+import { TwinPageRenderer } from "@/widgets/faces/layouts";
 import { PersonnelUsersTable } from "@/widgets/tables/users/personnel-users-table";
 
 type Props = {
@@ -23,16 +23,11 @@ export default async function Page(props: Props) {
 
   const page = await resolvePageMenuItem(pageKey);
 
-  if (isUndefined(page?.targetPageFaceId)) return notFound();
+  if (isUndefined(page?.targetTwinId)) return notFound();
 
-  // Face component endpoints require twinId (TWINS-943); for general pages it
-  // is the FACE_PAGE twin the navbar menu item points to.
-  return (
-    <LayoutRenderer
-      pageFaceId={page.targetPageFaceId}
-      twinId={page.targetTwinId}
-    />
-  );
+  // The menu item points to a FACE_PAGE twin; the page face is the one that
+  // twin resolves to (`targetPageFaceId` is deprecated).
+  return <TwinPageRenderer twinId={page.targetTwinId} />;
 }
 
 async function resolvePageMenuItem(pageKey: string) {

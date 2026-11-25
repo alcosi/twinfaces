@@ -2849,6 +2849,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/private/twin/count/{searchId}/v1": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Count twins by saved search id */
+        post: operations["twinCountBySearchIdV1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/private/twin/count/v1": {
         parameters: {
             query?: never;
@@ -20961,6 +20978,29 @@ export interface components {
             /** @description twin set id list */
             twinIds?: string[];
         };
+        TwinCountBySearchRsV1: {
+            /**
+             * Format: int32
+             * @description request processing status (see ErrorCode enum)
+             * @example 0
+             */
+            status?: number;
+            /**
+             * @description User friendly, localized request processing status description
+             * @example success
+             */
+            msg?: string;
+            /**
+             * @description request processing status description, technical
+             * @example success
+             */
+            statusDetails?: string;
+            /**
+             * Format: int64
+             * @description twins count matching the saved search
+             */
+            count?: number;
+        };
         TwinCountRqV1: {
             /** @description Search params */
             search?: components["schemas"]["TwinSearchExtendedV2"];
@@ -29616,6 +29656,17 @@ export interface components {
              * @description target twin id
              */
             targetTwinId?: string;
+            /**
+             * Format: uuid
+             * @description saved twin search id for the counter badge
+             * @example 8c580967-c050-47cf-ac27-4096c6dda2d1
+             */
+            counterTwinSearchId?: string;
+            /**
+             * Format: int64
+             * @description twins count matching the saved search; filled only when counterTwinSearchId is set
+             */
+            counter?: number;
             /**
              * Format: int32
              * @description display order among siblings, smaller values are shown first
@@ -52637,6 +52688,49 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Response"];
+                };
+            };
+            /** @description Access is denied */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": Record<string, never>;
+                };
+            };
+        };
+    };
+    twinCountBySearchIdV1: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @example f67ad556-dd27-4871-9a00-16fb0e8a4102 */
+                DomainId: string;
+                /** @example 608c6d7d-99c8-4d87-89c6-2f72d0f5d673,9a3f6075-f175-41cd-a804-934201ec969c */
+                AuthToken: string;
+                /** @example WEB */
+                Channel: string;
+            };
+            path: {
+                /** @example 8c580967-c050-47cf-ac27-4096c6dda2d1 */
+                searchId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TwinSearchByAliasRqV1"];
+            };
+        };
+        responses: {
+            /** @description Twins count */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TwinCountBySearchRsV1"];
                 };
             };
             /** @description Access is denied */
