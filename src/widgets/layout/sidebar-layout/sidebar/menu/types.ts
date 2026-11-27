@@ -33,6 +33,10 @@ type MenuItemBase = {
   label: string;
   url?: string;
   hidden?: boolean;
+  /** Not selectable: rendered dimmed and without a link. */
+  disabled?: boolean;
+  /** Badge number next to the label; not rendered when empty or 0. */
+  counter?: number | null;
   className?: string;
   buttonClassName?: string;
 };

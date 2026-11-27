@@ -23,10 +23,12 @@ export default async function Page(props: Props) {
 
   const page = await resolvePageMenuItem(pageKey);
 
-  if (isUndefined(page?.targetTwinId)) return notFound();
+  // A disabled item is not selectable in the menu, so its page is not
+  // reachable by a typed-in URL either.
+  if (isUndefined(page?.targetTwinId) || page.disabled) return notFound();
 
   // The menu item points to a FACE_PAGE twin; the page face is the one that
-  // twin resolves to (`targetPageFaceId` is deprecated).
+  // twin resolves to.
   return <TwinPageRenderer twinId={page.targetTwinId} />;
 }
 

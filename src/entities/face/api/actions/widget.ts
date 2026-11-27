@@ -16,6 +16,7 @@ import {
   FaceWT007ViewRs,
   FaceWT008ViewRs,
   FaceWT010ViewRs,
+  FaceWT011ViewRs,
 } from "../types";
 
 type FetchFaceOptions = {
@@ -32,6 +33,7 @@ type FetchFaceOptions = {
     | "/private/face/wt007/{faceId}/v1"
     | "/private/face/wt008/{faceId}/v1"
     | "/private/face/wt010/{faceId}/v1"
+    | "/private/face/wt011/{faceId}/v1"
     | "/private/face/tc001/{faceId}/v1"
     | "/private/face/bc001/{faceId}/v1";
   query: Record<string, string>;
@@ -224,5 +226,23 @@ export async function fetchBC001Face(
     endpoint: "/private/face/bc001/{faceId}/v1",
     twinId,
     query: {},
+  });
+}
+
+export async function fetchWT011Face(
+  faceId: string,
+  twinId: string
+): Promise<FaceWT011ViewRs> {
+  return fetchFace<FaceWT011ViewRs>({
+    endpoint: "/private/face/wt011/{faceId}/v1",
+    twinId,
+    faceId,
+    // Field labels/requiredness come from the twin class fields; the pointed
+    // twin's actions decide whether the form can be edited.
+    query: {
+      showFaceWT011Field2TwinClassFieldMode: "DETAILED",
+      showFaceWidget2TwinMode: "DETAILED",
+      showTwinActionMode: "SHOW",
+    },
   });
 }

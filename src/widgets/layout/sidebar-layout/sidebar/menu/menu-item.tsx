@@ -23,12 +23,16 @@ export function MenuItem({
   iconSource,
   Icon,
   hidden,
+  disabled,
+  counter,
   className,
   buttonClassName,
 }: MenuItemProps) {
   const { open } = useSidebar();
   const pathname = usePathname() || "";
-  const isActive = url ? isItemActive(slugify(url), pathname) : false;
+  const href = disabled ? undefined : url;
+  const isActive = href ? isItemActive(slugify(href), pathname) : false;
+  const counterLabel = counter && counter > 0 ? formatCounter(counter) : null;
 
   function renderIcon() {
     if (Icon) {
@@ -47,13 +51,35 @@ export function MenuItem({
       );
     }
 
+    // No icon configured: the expanded menu shows just the label. The
+    // collapsed menu shows icons only, so it keeps a placeholder there to stay
+    // visible and clickable.
+    if (open) return null;
+
     return <div className="border-primary h-4 w-4 rounded-md border" />;
   }
 
   const iconAndLabel = (
     <>
-      {renderIcon()}
-      {open && <span>{label}</span>}
+      {open ? (
+        renderIcon()
+      ) : (
+        <span className="relative inline-flex">
+          {renderIcon()}
+          {counterLabel && (
+            <span className="bg-brand-500 ring-sidebar absolute -top-1 -right-1 h-2 w-2 rounded-full ring-2" />
+          )}
+        </span>
+      )}
+      {open && <span className="truncate">{label}</span>}
+      {open && counterLabel && (
+        <span
+          aria-label={`${counter} items`}
+          className="bg-brand-500/10 text-brand-600 ml-auto shrink-0 rounded-full px-1.5 py-0.5 text-xs leading-none font-semibold tabular-nums"
+        >
+          {counterLabel}
+        </span>
+      )}
     </>
   );
 
@@ -63,10 +89,15 @@ export function MenuItem({
       className={cn(
         "rounded-lg border border-transparent transition-colors",
         isActive && "bg-brand-500/10 text-brand-600 font-semibold",
+        disabled && "pointer-events-none opacity-50",
         buttonClassName
       )}
     >
-      {url ? <Link href={url}>{iconAndLabel}</Link> : <div>{iconAndLabel}</div>}
+      {href ? (
+        <Link href={href}>{iconAndLabel}</Link>
+      ) : (
+        <div aria-disabled={disabled || undefined}>{iconAndLabel}</div>
+      )}
     </SidebarMenuButton>
   );
 
@@ -75,7 +106,7 @@ export function MenuItem({
       title={label}
       className={cn(
         "w-full list-none",
-        url && "cursor-pointer",
+        href && "cursor-pointer",
         hidden && "hidden",
         className
       )}
@@ -84,7 +115,7 @@ export function MenuItem({
     </SidebarMenuItem>
   );
 
-  if (!url) {
+  if (!href) {
     return menuItem;
   }
 
@@ -94,7 +125,7 @@ export function MenuItem({
       <ContextMenuContent>
         <ContextMenuItem
           className="cursor-pointer rounded-md"
-          onSelect={() => window.open(url, "_blank", "noopener,noreferrer")}
+          onSelect={() => window.open(href, "_blank", "noopener,noreferrer")}
         >
           <ExternalLink className="mr-2 h-4 w-4" />
           Open in new tab
@@ -102,4 +133,8 @@ export function MenuItem({
       </ContextMenuContent>
     </ContextMenu>
   );
+}
+
+function formatCounter(value: number): string {
+  return value > 99 ? "99+" : String(value);
 }

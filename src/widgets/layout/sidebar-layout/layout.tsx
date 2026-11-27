@@ -46,11 +46,13 @@ async function filterAccessibleMenuItems(
   return result.sort(byMenuOrder);
 }
 
-// NB001 `order`: smaller values are shown first among siblings. Items without
-// an order keep their backend sequence after the ordered ones (sort is stable).
+// NB001 siblings are sorted by `order` (smaller first), then by `key`, the same
+// way the backend sorts them. Items without an order go after the ordered ones.
 function byMenuOrder(a: FaceNB001MenuItem, b: FaceNB001MenuItem): number {
   return (
-    (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER)
+    (a.order ?? Number.MAX_SAFE_INTEGER) -
+      (b.order ?? Number.MAX_SAFE_INTEGER) ||
+    (a.key ?? "").localeCompare(b.key ?? "")
   );
 }
 
