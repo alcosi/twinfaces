@@ -129,11 +129,13 @@ function AccordionMenu({
       : undefined) ??
     groups[0];
 
+  // Same look as the user area menu (WorkspaceAreaSidebarMenu): group rows
+  // with an icon, children indented behind a left rule.
   return (
     <Accordion
       type="single"
       collapsible
-      className="w-full p-2"
+      className="w-full space-y-1 p-0 pt-2"
       defaultValue={activeGroup?.title.toLowerCase() ?? ""}
     >
       {groups.map((group) => (
@@ -143,29 +145,41 @@ function AccordionMenu({
   );
 }
 
+const LEAF_ITEM_CLASS = "text-sidebar-foreground/70 px-2 font-medium";
+
 function AccordionGroup({ title, items }: Group) {
   const pathname = usePathname() || "";
+  // The collapsed sidebar represents a group by its first item, so the
+  // expanded group header uses that item's icon too.
+  const GroupIcon = items[0]?.icon;
 
   return (
     <AccordionItem value={title.toLowerCase()} className="border-b-0 px-0">
-      <AccordionTrigger className="hover:bg-muted/50 rounded-lg px-2 py-0 hover:no-underline">
-        <SidebarGroupLabel className="h-7 text-[11px] font-semibold tracking-wide">
-          {title}
+      <AccordionTrigger className="relative py-0 text-sm hover:no-underline">
+        <SidebarGroupLabel className="w-full">
+          {GroupIcon ? (
+            <MenuItem label={title} Icon={GroupIcon} />
+          ) : (
+            <MenuItem label={title} />
+          )}
         </SidebarGroupLabel>
       </AccordionTrigger>
-      <AccordionContent className="border-brand-500/20 ml-2 list-none border-l py-0 pl-2">
-        {items.map((item) =>
-          item.children ? (
-            <NestedItem key={item.url} item={item} pathname={pathname} />
-          ) : (
-            <MenuItem
-              key={item.url}
-              label={item.title}
-              url={item.url}
-              Icon={item.icon}
-            />
-          )
-        )}
+      <AccordionContent className="mt-1 ml-2 py-1">
+        <div className="border-border ml-2 border-l">
+          {items.map((item) =>
+            item.children ? (
+              <NestedItem key={item.url} item={item} pathname={pathname} />
+            ) : (
+              <MenuItem
+                key={item.url}
+                label={item.title}
+                url={item.url}
+                Icon={item.icon}
+                className={LEAF_ITEM_CLASS}
+              />
+            )
+          )}
+        </div>
       </AccordionContent>
     </AccordionItem>
   );
@@ -183,19 +197,27 @@ function NestedItem({ item, pathname }: { item: GroupItem; pathname: string }) {
       defaultValue={hasActiveChild ? item.url : undefined}
       className="border-b-0"
     >
-      <AccordionItem value={item.url} className="border-b-0">
-        <AccordionTrigger className="py-0 text-sm hover:no-underline">
-          <MenuItem label={item.title} url={item.url} Icon={item.icon} />
+      <AccordionItem value={item.url} className="border-b-0 px-0">
+        <AccordionTrigger className="relative py-0 text-sm hover:no-underline">
+          <MenuItem
+            label={item.title}
+            url={item.url}
+            Icon={item.icon}
+            className={LEAF_ITEM_CLASS}
+          />
         </AccordionTrigger>
-        <AccordionContent className="border-brand-500/20 ml-2 list-none border-l py-0 pl-2">
-          {item.children!.map((child) => (
-            <MenuItem
-              key={child.url}
-              label={child.title}
-              url={child.url}
-              Icon={child.icon}
-            />
-          ))}
+        <AccordionContent className="mt-1 ml-2 py-1">
+          <div className="border-border ml-2 border-l">
+            {item.children!.map((child) => (
+              <MenuItem
+                key={child.url}
+                label={child.title}
+                url={child.url}
+                Icon={child.icon}
+                className={LEAF_ITEM_CLASS}
+              />
+            ))}
+          </div>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

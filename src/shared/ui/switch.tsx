@@ -25,7 +25,10 @@ const Switch = React.forwardRef<
         className
       )}
       {...props}
-      disabled={ignorePermissions ? props.disabled : !canUpdate}
+      // The route permission can only add a restriction; it must not lift a
+      // `disabled` the caller passed (e.g. a field the server says is
+      // read-only).
+      disabled={props.disabled || (!ignorePermissions && !canUpdate)}
       ref={ref}
     >
       <SwitchPrimitives.Thumb

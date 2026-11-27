@@ -24,6 +24,7 @@ import {
   WT007,
   WT008,
   WT010,
+  WT011,
 } from "./views";
 
 type Props = {
@@ -42,6 +43,7 @@ const WIDGETS: Record<string, FC<WidgetFaceProps>> = {
   WT007,
   WT008,
   WT010,
+  WT011,
 };
 
 const WIDGET_SKELETONS: Record<keyof typeof WIDGETS, FC> = {
@@ -59,6 +61,7 @@ const WIDGET_SKELETONS: Record<keyof typeof WIDGETS, FC> = {
   WT007: () => <Skeleton className="h-10 w-20 rounded-md" />,
   WT008: () => <Skeleton className="h-40 w-full rounded-lg" />,
   WT010: () => <Skeleton className="h-10 w-20 rounded-md" />,
+  WT011: () => <Skeleton className="h-64 w-full rounded-lg" />,
 };
 
 export async function WidgetRenderer({ twinId, widget, className }: Props) {
