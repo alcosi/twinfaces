@@ -38,6 +38,8 @@ export function WorkspaceAreaSidebarMenu({ items }: Props) {
               : undefined,
             iconSource: item.icon,
             hidden: false,
+            disabled: item.disabled,
+            counter: item.counter,
           })}
         />
       )}
@@ -64,6 +66,8 @@ function AccordionMenu({ items }: Props) {
             label={item.label!}
             url={url}
             iconSource={item.icon ?? ""}
+            disabled={item.disabled}
+            counter={item.counter}
             // Same text style as the group items, which get it from
             // SidebarGroupLabel + AccordionTrigger.
             className={cn(
@@ -78,6 +82,7 @@ function AccordionMenu({ items }: Props) {
         <AccordionItem
           key={keyPath}
           value={keyPath}
+          disabled={item.disabled}
           className="border-b-0 px-0"
         >
           <AccordionTrigger
@@ -92,6 +97,11 @@ function AccordionMenu({ items }: Props) {
                 label={item.label ?? "N/A"}
                 url={url}
                 iconSource={item.icon!}
+                disabled={item.disabled}
+                counter={item.counter}
+                // The accordion chevron is absolutely positioned over the
+                // right edge; keep the counter badge clear of it.
+                buttonClassName="pr-8"
               />
             </SidebarGroupLabel>
           </AccordionTrigger>
